@@ -1,4 +1,4 @@
-import { MenuAdmin } from "@/components/admin/MenuAdmin";
+import { UserMenu } from "@/components/user/MenuAdmin";
 
 type AdminLayoutProps = {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ type AdminLayoutProps = {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <>
-      <MenuAdmin />
+      <UserMenu />
       {children}
     </>
   );
