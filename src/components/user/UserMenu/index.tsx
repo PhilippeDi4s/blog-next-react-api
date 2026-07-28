@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { useState, useTransition } from "react";
 
-export function MenuAdmin() {
+export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
