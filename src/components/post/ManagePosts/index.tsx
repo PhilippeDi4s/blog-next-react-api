@@ -1,9 +1,9 @@
 import { postRepository } from "@/repositories/post";
 import clsx from "clsx";
 import Link from "next/link";
-import { DeletePostButton } from "../../admin/DeletePostButton";
+import { DeletePostButton } from "../DeletePostButton";
 
-export async function PostsListAdmin() {
+export async function ManagePosts() {
   const posts = await postRepository.findAll();
 
   return (

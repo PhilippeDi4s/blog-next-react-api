@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/admin/LoginForm";
+import { LoginForm } from "@/components/auth/LoginForm";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { Metadata } from "next";
 
