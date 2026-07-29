@@ -3,7 +3,7 @@ import { z } from "zod";
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
   email: z.string().trim().email({ message: "E-mail inválido" }),
-  password: z
+  passwordHash: z
     .string()
     .trim()
     .min(6, "Senha precisa ter um mínimo de 6 caracteres"),
@@ -15,17 +15,17 @@ const CreateUserBase = z.object({
 
 export const CreateUserSchema = CreateUserBase.refine(
   (data) => {
-    return data.password === data.confirmPassword;
+    return data.passwordHash === data.confirmPassword;
   },
   {
     path: ["confirmPassword"], 
     message: "As senhas não conferem",
   },
-).transform(({ email, name, password }) => {
+).transform(({ email, name, passwordHash }) => {
   return {
     name,
     email,
-    password,
+    passwordHash,
   };
 });
 
@@ -67,7 +67,7 @@ export const UpdatePasswordSchema = z
   });
 
 export const UpdateUserSchema = CreateUserBase.omit({
-  password: true,
+  passwordHash: true,
   confirmPassword: true,
 }).extend({});
 

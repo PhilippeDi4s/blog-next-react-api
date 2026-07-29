@@ -1,10 +1,12 @@
 import { LoginUserForm } from "@/components/user/LoginUserForm";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { SpinLoader } from "@/components/feedBack/SpinLoader";
 
-export const metadata: Metadata ={
-  title: 'Login'
-}
+export const metadata: Metadata = {
+  title: "Login",
+};
 
 export default async function AdminPostsPage() {
   const allowLogin = Boolean(Number(process.env.ALLOW_LOGIN || 1));
@@ -17,5 +19,9 @@ export default async function AdminPostsPage() {
       />
     );
   }
-  return <LoginUserForm />;
+  return (
+    <Suspense fallback={<SpinLoader/>}>
+      <LoginUserForm />
+    </Suspense>
+  );
 }

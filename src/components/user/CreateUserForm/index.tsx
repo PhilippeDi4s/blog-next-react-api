@@ -52,7 +52,7 @@ export function CreateUserForm() {
         />
         <InputText
           type="password"
-          name="password"
+          name="passwordHash"
           labelText="Senha"
           placeholder="Sua senha"
           disabled={isPending}
@@ -60,7 +60,7 @@ export function CreateUserForm() {
         />
         <InputText
           type="password"
-          name="password2"
+          name="confirmPassword"
           labelText="Repetir senha"
           placeholder="Sua senha novamente"
           disabled={isPending}
