@@ -1,4 +1,4 @@
-import { UserMenu } from "@/components/user/MenuAdmin";
+import { UserMenu } from "@/components/user/UserMenu";
 
 type AdminLayoutProps = {
   children: React.ReactNode;

@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/user/LoginForm";
+import { LoginUserForm } from "@/components/user/LoginUserForm";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { Metadata } from "next";
 
@@ -17,5 +17,5 @@ export default async function AdminPostsPage() {
       />
     );
   }
-  return <LoginForm />;
+  return <LoginUserForm />;
 }

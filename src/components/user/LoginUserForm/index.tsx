@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
 import clsx from "clsx";
 import { LogInIcon } from "lucide-react";
+import Link from "next/link";
 import { useActionState, useEffect } from "react";
 
-export function LoginForm() {
+export function LoginUserForm() {
   const initialState = {
     userName: "",
     error: "",
@@ -51,6 +52,10 @@ export function LoginForm() {
           <LogInIcon />
           Entrar
         </Button>
+
+        <p className="text-sm/tight">
+          <Link href="/user/new">Criar minha conta</Link>
+        </p>
 
         {!!state.error && <span className="text-red-600">{state.error}</span>}
       </form>
