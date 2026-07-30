@@ -1,7 +1,7 @@
 "use server";
 
 import { makePartialPublicPost, PublicPost } from "@/dto/post/dto";
-import { PostCreateSchema } from "@/lib/post/queries/validations";
+import { PostCreateSchema } from "@/lib/post/schemas";
 import { PostModel } from "@/models/post/post-models";
 import { postRepository } from "@/repositories/post";
 import { generateSlubByText } from "@/utils/generate-slug-by-text";

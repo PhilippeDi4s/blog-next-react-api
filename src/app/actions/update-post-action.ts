@@ -5,7 +5,7 @@ import {
   PublicPost,
   makePublicPostFromDb,
 } from "@/dto/post/dto";
-import { PostUpdateSchema } from "@/lib/post/queries/validations";
+import { PostUpdateSchema } from "@/lib/post/schemas";
 import { postRepository } from "@/repositories/post";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
