@@ -6,15 +6,15 @@ import { Button } from "@/components/ui/Button";
 import { ImageUploader } from "../ImageUploader";
 import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
-import { createPostAction } from "@/app/actions/create-post-action";
-import { makePartialPublicPost, PublicPost } from "@/dto/post/dto";
+import { createPostAction } from "@/app/actions/post/create-post-action";
 import { showMessage } from "@/adapters";
-import { updatePostAction } from "@/app/actions/update-post-action";
+import { updatePostAction } from "@/app/actions/post/update-post-action";
 import { useRouter, useSearchParams } from "next/navigation";
+import { PublicPostDto, PublicPostSchema } from "@/lib/post/schemas";
 
 type ManagePostFormUpdateProps = {
   mode: "update";
-  publicPost: PublicPost;
+  publicPost: PublicPostDto;
 };
 
 type ManagePostFormInsertProps = {
@@ -43,7 +43,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   };
 
   const initialState = {
-    formState: makePartialPublicPost(publicPost),
+    formState: PublicPostSchema.parse(publicPost || {}),
     errors: [],
   };
 

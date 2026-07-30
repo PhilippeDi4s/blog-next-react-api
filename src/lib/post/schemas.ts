@@ -41,22 +41,10 @@ const PostBaseSchema = z.object({
     .transform((val) => val === "on" || val === "true" || val === true),
 });
 
-export const PostCreateSchema = PostBaseSchema;
+export const CreatePostSchema = PostBaseSchema;
+export const UpdatePostSchema = PostBaseSchema;
 
-export const PostUpdateSchema = PostBaseSchema.extend({
-  
-});
-
-export const CreatePostForApiSchema = PostBaseSchema.omit({
-  author: true,
-  published: true,
-}).extend({});
-
-export const UpdatePostForApiSchema = PostBaseSchema.omit({
-  author: true,
-}).extend({});
-
-export const PublicPostForApiSchema = PostBaseSchema.extend({
+export const PublicPostSchema = PostBaseSchema.extend({
   id: z.string().default(""),
   slug: z.string().default(""),
   title: z.string().default(""),
@@ -71,6 +59,6 @@ export const PublicPostForApiSchema = PostBaseSchema.extend({
   createdAt: z.string().default(""),
 });
 
-export type CreatePostForApiDto = z.infer<typeof CreatePostForApiSchema>;
-export type UpdatePostForApiDto = z.infer<typeof UpdatePostForApiSchema>;
-export type PublicPostForApiDto = z.infer<typeof PublicPostForApiSchema>;
+export type CreatePostDto = z.infer<typeof CreatePostSchema>;
+export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;
+export type PublicPostDto = z.infer<typeof PublicPostSchema>;

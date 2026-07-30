@@ -1,10 +1,10 @@
 import { ManagePostForm } from "@/components/user/ManagePostForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
-import { makePublicPostFromDb } from "@/dto/post/dto";
 import { findPostByIdAdmin } from "@/lib/post/queries/admin";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { PublicPostSchema } from "@/lib/post/schemas";
 
 export const metadata: Metadata = {
   title: "Editar post",
@@ -28,11 +28,15 @@ export default function AdminPostsIdPage({ params }: AdminPostsIdPageProps) {
 export async function PostEditPageContent({ params }: AdminPostsIdPageProps) {
   const { id } = await params;
 
-  const post = await findPostByIdAdmin(id);
+  const postRes = await findPostByIdAdmin(id);
 
-  if (!post) notFound();
+  if (!postRes.success) {
+    console.log(postRes.errors);
+    notFound();
+  }
 
-  const publicPost = makePublicPostFromDb(post);
+  const post = postRes.data;
+  const publicPost = PublicPostSchema.parse(post);
 
   return <ManagePostForm mode="update" publicPost={publicPost} />;
 }
