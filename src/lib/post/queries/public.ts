@@ -1,28 +1,33 @@
-import { postRepository } from "@/repositories/post";
+import { apiRequest } from "@/utils/api-request";
 import { cacheTag } from "next/cache";
-import { notFound } from "next/navigation";
+import { PostModel } from "@/models/post/post-models";
 
 export const findAllPublicPostsCached = async () => {
   "use cache";
 
   cacheTag("posts");
 
-  return await postRepository.findAllPublic();
+  const postResponse = await apiRequest<PostModel[]>("/post", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+  });
+
+  return postResponse;
 };
 
 export const findPublicPostBySlugCached = async (slug: string) => {
   "use cache";
 
-  const post = await postRepository
-    .findBySlugPublic(slug)
-    .catch(() => undefined);
-
-  if (!post) notFound();
-
   cacheTag("posts");
-  cacheTag(`post-${post.id}`);
-  
-  return post;
+  cacheTag(`post-${slug}`);
+
+  const postResponse = await apiRequest<PostModel>(`/post/${slug}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+  });
+  return postResponse;
 };
-
-

@@ -22,6 +22,7 @@ export async function deletePostAction(id: string) {
 
   const postResponse = await authenticatedApiRequest<PublicPostDto>(
     `/post/me/${id}`,
+    isAuthenticated,
     {
       headers: {
         "Content-Type": "application/json",
@@ -37,6 +38,7 @@ export async function deletePostAction(id: string) {
 
   const deletePostResponse = await authenticatedApiRequest<PublicPostDto>(
     `/post/me/${id}`,
+    isAuthenticated,
     {
       method: "DELETE",
       headers: {

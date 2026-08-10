@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { DeletePostButton } from "../../user/DeletePostButton";
-import { findAllPostsAdmin } from "@/lib/post/queries/admin";
+import { getAdminPosts } from "@/lib/post/queries/admin";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 export async function PostsListAdmin() {
-  const postsRes = await findAllPostsAdmin();
+  const postsRes = await getAdminPosts();
 
   if (!postsRes.success) {
     console.log(postsRes.errors);

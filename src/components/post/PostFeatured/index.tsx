@@ -3,20 +3,19 @@ import { PostImage } from "../PostImage";
 import { PostSummary } from "../PostSummary";
 import { findAllPublicPostsCached } from "@/lib/post/queries/public";
 import Link from "next/link";
-import { ErrorMessage } from "../../feedBack/ErrorMessage";
 
 export async function PostFeatured() {
-  const posts = await findAllPublicPostsCached();
+  const postsRes = await findAllPublicPostsCached();
+
+  if (!postsRes.success) return null;
+
+  const posts = postsRes.data;
+
+  if (posts.length < 1) return null;
+
   const post = posts[0];
 
-  if (!post || posts.length <= 0) {
-    return (
-      <ErrorMessage
-        contentTitle="Ops 😅"
-        content={<p>Nenhum Post foi criado ainda</p>}
-      />
-    );
-  }
+  
   return (
     <section>
       <Link

@@ -52,6 +52,7 @@ export async function createPostAction(
 
   const createPostResponse = await authenticatedApiRequest<PublicPostDto>(
     `/post/me`,
+    isAuthenticated,
     {
       method: "POST",
       headers: {

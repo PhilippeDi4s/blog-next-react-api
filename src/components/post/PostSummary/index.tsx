@@ -16,7 +16,7 @@ export function PostSummary({createdAt, titleTag, postTitle, excerpt}:PostSummar
         {postTitle}
       </PostHeading>
 
-      <p>{excerpt}</p>
+      <p className="wrap-break-word hyphens-auto ">{excerpt}</p>
     </div>
   );
 }

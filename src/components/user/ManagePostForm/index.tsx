@@ -19,6 +19,7 @@ type ManagePostFormUpdateProps = {
 
 type ManagePostFormInsertProps = {
   mode: "create";
+  currentUserName: string;
 };
 
 type ManagePostFormProps =
@@ -29,6 +30,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   const { mode } = props;
   const searchParams = useSearchParams();
   const created = searchParams.get("created");
+  const updated = searchParams.get("updated");
   const router = useRouter();
 
   let publicPost;
@@ -71,11 +73,16 @@ export function ManagePostForm(props: ManagePostFormProps) {
     }
   }, [created, router]);
 
-  useEffect(()=>{
-    if(state.success){
-      showMessage.succsses('Post atualizado com sucesso!')
+  useEffect(() => {
+    if (updated === "1") {
+      showMessage.dismiss();
+      showMessage.succsses("Post atualizado com sucesso!");
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete("updated");
+      router.replace(url.toString());
     }
-  }, [state.success])
+  }, [updated, router]);
 
   const { formState } = state;
   const [contentValue, setContentValue] = useState(publicPost?.content || "");
@@ -88,7 +95,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
         placeholder="ID gerado automaticamente"
         readOnly
         defaultValue={formState.id}
-        disabled={isPending}
+        disabled
         type="text"
       />
       <InputText
@@ -97,18 +104,32 @@ export function ManagePostForm(props: ManagePostFormProps) {
         placeholder="Slug gerado automaticamente"
         readOnly
         defaultValue={formState.slug}
-        disabled={isPending}
+        disabled
         type="text"
       />
 
-      <InputText
-        labelText="Autor"
-        name="author"
-        placeholder="Digite o nome do autor"
-        type="text"
-        defaultValue={formState.author}
-        disabled={isPending}
-      />
+      {props.mode === "create" && (
+        <InputText
+          labelText="Autor"
+          name="author"
+          placeholder="Digite o nome do autor"
+          type="text"
+          defaultValue={props.currentUserName}
+          readOnly
+          disabled
+        />
+      )}
+      {props.mode === "update" && (
+        <InputText
+          labelText="Autor"
+          name="author"
+          placeholder="Digite o nome do autor"
+          type="text"
+          defaultValue={formState.author.name}
+          readOnly
+          disabled
+        />
+      )}
 
       <InputText
         labelText="Título"
@@ -150,7 +171,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
       <InputCheckbox
         labelText="Publicar?"
         name="published"
-        placeholder="Digite a URL da imagem"
+        placeholder="publicar?"
         type="checkbox"
         defaultChecked={formState.published}
         disabled={isPending}

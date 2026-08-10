@@ -10,6 +10,7 @@ import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { makeRandomString } from "@/utils/make-random-string";
 import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 type UpdatePostActionState = {
   formState: PublicPostDto;
@@ -61,6 +62,7 @@ export async function updatePostAction(
 
   const updatePostResponse = await authenticatedApiRequest<PublicPostDto>(
     `/post/me/${id}`,
+    isAuthenticated,
     {
       method: "PATCH",
       body: JSON.stringify(newPost),
@@ -79,14 +81,17 @@ export async function updatePostAction(
 
   const post = updatePostResponse.data;
 
-  revalidateTag("posts", "post");
-  revalidateTag(`post-${post.slug}`, "post");
+  revalidateTag("posts", "max");
+  revalidateTag(`post-${post.id}`, "max");
+  
+  redirect(`/admin/post/${post.id}?updated=1`)
 
   return {
     formState: PublicPostSchema.parse(post),
     errors: [],
     success: makeRandomString(),
   };
+
 }
 
 function getLoginSessionForApi() {

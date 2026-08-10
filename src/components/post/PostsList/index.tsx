@@ -3,9 +3,31 @@ import clsx from "clsx";
 import { PostSummary } from "../PostSummary";
 import { findAllPublicPostsCached } from "@/lib/post/queries/public";
 import Link from "next/link";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 export async function PostsList() {
-  const posts = await findAllPublicPostsCached();
+  const postsRes = await findAllPublicPostsCached();
+
+  if (!postsRes.success) {
+    console.log(postsRes.errors);
+    return (
+      <ErrorMessage
+        contentTitle="Ei 😅"
+        content="Não foi possível carregar os posts. Tente novamente em alguns instantes"
+      />
+    );
+  }
+
+  const posts = postsRes.data;
+  
+  if (!posts || posts.length <= 0) {
+    return (
+      <ErrorMessage
+        contentTitle="Ops 😅"
+        content={<p>Nenhum Post foi criado ainda</p>}
+      />
+    );
+  }
 
   return (
     <section

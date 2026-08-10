@@ -2,9 +2,6 @@
 import cloudinary from "@/lib/cloudinary";
 import { fileTypeFromBuffer } from "file-type";
 import sharp from "sharp";
-// import { mkdir, writeFile } from "fs/promises";
-// import { extname, resolve } from "path";
-// import sharp from "sharp";
 
 type UploadImageActionResult = {
   url: string;

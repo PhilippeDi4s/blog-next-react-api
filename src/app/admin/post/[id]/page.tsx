@@ -1,6 +1,6 @@
 import { ManagePostForm } from "@/components/user/ManagePostForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
-import { findPostByIdAdmin } from "@/lib/post/queries/admin";
+import { getAdminPostById } from "@/lib/post/queries/admin";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -28,7 +28,7 @@ export default function AdminPostsIdPage({ params }: AdminPostsIdPageProps) {
 export async function PostEditPageContent({ params }: AdminPostsIdPageProps) {
   const { id } = await params;
 
-  const postRes = await findPostByIdAdmin(id);
+  const postRes = await getAdminPostById(id);
 
   if (!postRes.success) {
     console.log(postRes.errors);

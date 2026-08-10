@@ -11,11 +11,20 @@ type PostsSlugPageProps = {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  const post = await findPublicPostBySlugCached(slug);
+  const postRes = await findPublicPostBySlugCached(slug);
+
+ if(!postRes.success){
+  return{
+    title: 'ERROR',
+    description: "",
+  }
+ };
+
+  const post = postRes.data
 
   return {
     title: post.title,
@@ -24,7 +33,6 @@ export async function generateMetadata({
 }
 
 export default function PostsSlugPage({ params }: PostsSlugPageProps) {
-
   return (
     <Suspense fallback={<SpinLoader />}>
       <PostContent params={params} />
@@ -35,5 +43,5 @@ export default function PostsSlugPage({ params }: PostsSlugPageProps) {
 async function PostContent({ params }: PostsSlugPageProps) {
   const { slug } = await params;
 
-  return <SinglePost slug={slug}/>
+  return <SinglePost slug={slug} />;
 }

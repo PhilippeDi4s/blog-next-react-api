@@ -1,13 +1,11 @@
+import { ApiRequest, apiRequest } from "@/utils/api-request";
 import "server-only";
-import { getLoginSession } from "@/lib/login/manage-login";
-import { ApiRequest, apiRequest } from "./api-request";
 
 export async function authenticatedApiRequest<T>(
   path: string,
+  jwtToken: string | null,
   options?: RequestInit,
 ): Promise<ApiRequest<T>> {
-  const jwtToken = await getLoginSession();
-
   if (!jwtToken) {
     return {
       success: false,

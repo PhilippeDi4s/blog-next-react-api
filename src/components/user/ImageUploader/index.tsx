@@ -59,8 +59,6 @@ export function ImageUploader({disabled}:ImageUploaderProps) {
   }
   return (
     <div className="py-4">
-      {/* TODO: BTN PARA ESCOLHER IMAGENS */}
-      {/* TODO: TFAZER LISTAGEM DE IMAGENS SELECIONADAS E ENVIADAS PARA ESSE POST EM ESPECÍFICO */}
       <Button type="button" onClick={handleChooseFile} disabled={isUploading || disabled}>
         <ImageUpIcon /> Enviar uma imagem
       </Button>
