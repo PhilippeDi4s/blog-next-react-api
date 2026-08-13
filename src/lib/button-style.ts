@@ -1,4 +1,3 @@
-// lib/button-styles.ts
 import clsx from "clsx";
 
 export type BtnVariants = "danger" | "default" | "ghost";
@@ -30,7 +29,7 @@ export function getButtonClasses({
   return clsx(
     btnVariants[variant],
     btnSize[size],
-    "rounded",
+    "rounded-xl",
     "transition",
     "cursor-pointer",
     "hover:brightness-50",

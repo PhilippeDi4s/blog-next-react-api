@@ -1,14 +1,23 @@
 "use client";
 
+import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/button-style";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
 
-interface CopyLinkButtonProps {
+type CopyLinkButtonProps = {
   url: string;
   text: string;
-}
+  variant: BtnVariants;
+  size?: BtnSize;
+} & React.ComponentProps<"button">
 
-export function CopyLinkButton({ url, text }: CopyLinkButtonProps) {
+export function CopyLinkButton({
+  url,
+  text,
+  variant = "default",
+  size="md",
+  ...props
+}: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -25,15 +34,19 @@ export function CopyLinkButton({ url, text }: CopyLinkButtonProps) {
     <button
       onClick={handleCopy}
       type="button"
-      className="cursor-pointer hover:brightness-50 flex items-center gap-2 transition"
+      className={getButtonClasses({
+        variant,
+        size,
+        className: props.className,
+      })}
     >
       {copied ? (
         <>
-          Copiado! <CopyCheckIcon className="size-[1.2em]"/>
+          Copiado! <CopyCheckIcon className="size-[1.2em]" />
         </>
       ) : (
         <>
-          {text} <CopyIcon className="size-[1.2em]"/>
+          {text} <CopyIcon className="size-[1.2em]" />
         </>
       )}
     </button>
