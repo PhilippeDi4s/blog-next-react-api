@@ -11,6 +11,8 @@ import { showMessage } from "@/adapters";
 import { updatePostAction } from "@/app/actions/post/update-post-action";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PublicPostDto, PublicPostSchema } from "@/lib/post/schemas";
+import { LinkButton } from "@/components/ui/Link";
+import { GalleryVerticalEndIcon } from "lucide-react";
 
 type ManagePostFormUpdateProps = {
   mode: "update";
@@ -149,7 +151,14 @@ export function ManagePostForm(props: ManagePostFormProps) {
         disabled={isPending}
       />
 
-      <ImageUploader disabled={isPending} />
+      <ImageUploader
+        disabled={isPending}
+        actions={
+          <LinkButton href="/imageGallery" variant="ghost">
+            <GalleryVerticalEndIcon /> Galeria de imagens
+          </LinkButton>
+        }
+      />
 
       <InputText
         labelText="URL da imagem de capa"

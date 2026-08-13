@@ -1,17 +1,18 @@
-import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/button-style";
+import { BtnVariants, BtnSize, getButtonClasses } from "@/lib/button-style";
+import Link from "next/link";
 
-type ButtonProps = {
+type LinkButtonProps = {
   variant?: BtnVariants;
   size?: BtnSize;
-} & React.ComponentProps<"button">;
+} & React.ComponentProps<typeof Link>;
 
-export function Button({
+export function LinkButton({
   variant = "default",
   size = "md",
   ...props
-}: ButtonProps) {
+}: LinkButtonProps) {
   return (
-    <button
+    <Link
       {...props}
       className={getButtonClasses({
         variant,
