@@ -66,7 +66,7 @@ export function ImageList() {
               openModal(image)
             }
             key={image.image_id}
-            className="relative aspect-square overflow-hidden rounded"
+            className="relative aspect-square overflow-hidden rounded cursor-pointer lg:hover:scale-105 transition"
           >
             <Image
               src={image.url}

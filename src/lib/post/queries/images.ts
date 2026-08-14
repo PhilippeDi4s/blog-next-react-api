@@ -1,5 +1,8 @@
-"use server"
-import { getLoginSession } from "@/lib/login/manage-login";
+"use server";
+import {
+  getLoginSession,
+  requireLoginSessionOrRedirect,
+} from "@/lib/login/manage-login";
 import { ImageModel } from "@/models/image/image-model";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { internalApiRequest } from "@/utils/internal-api-request";
@@ -36,10 +39,7 @@ const findImageByIdCached = async (id: string) => {
 };
 
 export async function getAllImages() {
-  const jwtToken = await getLoginSession();
-  if (!jwtToken) {
-    throw new Error("Usuário não autenticado");
-  }
+  await requireLoginSessionOrRedirect();
   return findAllImagesCached();
 }
 
@@ -52,9 +52,6 @@ export async function getAllImagesOwned() {
 }
 
 export async function findImageById(id: string) {
-  const jwtToken = await getLoginSession();
-  if (!jwtToken) {
-    throw new Error("Usuário não autenticado");
-  }
+  await requireLoginSessionOrRedirect();
   return findImageByIdCached(id);
 }
