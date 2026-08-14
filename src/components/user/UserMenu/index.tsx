@@ -93,13 +93,13 @@ export function UserMenu() {
       </a>
       <Link
         className={linkClasses}
-        href="/admin/post"
+        href="/author/post"
         onClick={() => setIsOpen(false)}
       >
         <FileTextIcon />
         Posts
       </Link>
-      <Link className={linkClasses} href="/admin/post/new">
+      <Link className={linkClasses} href="/author/post/new">
         <CirclePlusIcon />
         Criar Post
       </Link>

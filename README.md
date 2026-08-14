@@ -4,7 +4,7 @@
 
 **Nome do projeto:** `blog` (versão `0.1.0`, conforme `package.json`)
 
-**The Blog** é uma aplicação web de blog construída com Next.js. A área pública exibe posts publicados em Markdown — com destaque para o post mais recente e listagem completa — enquanto a área administrativa (`/admin`) permite autenticação, criação, edição, exclusão e publicação de posts com upload de imagens de capa.
+**The Blog** é uma aplicação web de blog construída com Next.js. A área pública exibe posts publicados em Markdown — com destaque para o post mais recente e listagem completa — enquanto a área do autor (`/author`) permite autenticação, criação, edição, exclusão e publicação de posts com upload de imagens de capa.
 
 **Motivação:** centralizar publicação e leitura de conteúdo editorial em uma stack moderna de React/Next.js, com persistência em PostgreSQL (Neon), cache de leitura e painel administrativo protegido por sessão JWT.
 
@@ -87,7 +87,7 @@ Nenhum framework de testes configurado no projeto (sem Jest, Vitest, Playwright 
 blog-next-react/
 ├── drizzle.config.ts          # Configuração do Drizzle Kit (PostgreSQL / Neon)
 ├── eslint.config.mjs          # Regras ESLint (Next.js core-web-vitals + TypeScript)
-├── middleware.ts              # Proteção das rotas /admin/* via JWT em cookie
+├── middleware.ts              # Proteção das rotas /author/* via JWT em cookie
 ├── next.config.ts             # Config Next.js (cache de componentes, domínios de imagem)
 ├── postcss.config.mjs         # Plugin PostCSS do Tailwind CSS v4
 ├── package.json               # Scripts, dependências e metadados do projeto
@@ -102,8 +102,8 @@ blog-next-react/
     │   ├── error.tsx          # Boundary de erro global
     │   ├── not-found.tsx      # Página 404
     │   ├── post/[slug]/       # Página de leitura de um post publicado
-    │   ├── admin/
-    │   │   ├── login/         # Formulário de login administrativo
+    │   ├── author/
+    │   │   ├── login/         # Formulário de login do autor
     │   │   └── post/          # CRUD de posts (listagem, novo, edição)
     │   └── actions/           # Server Actions (login, CRUD, upload)
     │       ├── create-post-action.ts
@@ -113,7 +113,7 @@ blog-next-react/
     │       └── upload/
     │
     ├── components/            # Componentes React reutilizáveis
-    │   ├── admin/             # Formulários, editor Markdown, upload, menu admin
+    │   ├── author/             # Formulários, editor Markdown, upload, menu do autor
     │   ├── post/              # Cards, listagens, post individual, imagens
     │   ├── layout/            # Header e Footer
     │   ├── form/              # Ações de formulário e bridge de pending state
@@ -129,7 +129,7 @@ blog-next-react/
     ├── repositories/post/     # Padrão Repository (interface + implementação Drizzle)
     ├── lib/
     │   ├── login/             # Hash de senha, JWT, sessão em cookie
-    │   ├── post/queries/      # Queries cacheadas (público e admin) + validações Zod
+    │   ├── post/queries/      # Queries cacheadas (público e autor) + validações Zod
     │   └── cloudinary.ts      # Configuração do SDK Cloudinary
     │
     ├── models/post/           # Tipos de domínio (PostModel)
@@ -216,7 +216,7 @@ Copie `.env.local-EXAMPPLE` para `.env.local` na raiz do projeto. O Next.js carr
 |---|---|---|
 | `DATABASE_URL` | Sim | Connection string PostgreSQL do Neon |
 | `JWT_SECRET_KEY` | Sim | Chave secreta para assinar tokens JWT (`jose`) |
-| `LOGIN_USER` | Sim | Nome de usuário permitido no login admin |
+| `LOGIN_USER` | Sim | Nome de usuário permitido no login do autor |
 | `LOGIN_PASS` | Sim | Hash bcrypt da senha em Base64 (gerado por `generate-password-hash.ts`) |
 | `CLOUDINARY_CLOUD_NAME` | Sim* | Cloud name do Cloudinary (*obrigatório para upload de capa) |
 | `CLOUDINARY_API_KEY` | Sim* | API key do Cloudinary |
@@ -297,9 +297,9 @@ Não há microserviços: autenticação, CRUD, upload e renderização coexistem
 | **App Router + Server Actions** | Mutações (login, CRUD, upload) no servidor sem API REST separada; formulários com `useActionState` |
 | **Repository Pattern** | `PostRepository` desacopla queries Drizzle da lógica de aplicação; facilita substituição do adapter de dados |
 | **Neon + Drizzle (HTTP driver)** | PostgreSQL serverless adequado a deploys edge/serverless; ORM tipado com migrações versionadas |
-| **JWT em cookie httpOnly** | Sessão admin stateless; `middleware.ts` protege `/admin/*` antes da renderização |
-| **Credenciais via env vars** | Usuário/senha admin não ficam em banco; senha armazenada como hash bcrypt em Base64 |
-| **`"use cache"` + `cacheTag`** | Leitura pública e admin cacheada; `revalidateTag` após create/update/delete |
+| **JWT em cookie httpOnly** | Sessão do autor stateless; `middleware.ts` protege `/author/*` antes da renderização |
+| **Credenciais via env vars** | Usuário/senha do autor não ficam em banco; senha armazenada como hash bcrypt em Base64 |
+| **`"use cache"` + `cacheTag`** | Leitura pública e do autor cacheada; `revalidateTag` após create/update/delete |
 | **Cloudinary + sharp** | Redimensionamento local (800px, PNG) antes do upload; domínio permitido em `next.config.ts` |
 | **Markdown sanitizado** | `react-markdown` + `rehype-sanitize` na leitura; `sanitize-html` na validação Zod do conteúdo |
 | **Tailwind CSS v4 + dark mode** | Estilização utilitária; layout raiz com `className="dark"` |
@@ -314,19 +314,19 @@ sequenceDiagram
     participant A as loginAction
     participant C as Cookie JWT
 
-    U->>A: POST /admin/login
+    U->>A: POST /author/login
     A->>A: Valida LOGIN_USER + LOGIN_PASS
     A->>C: Define cookie httpOnly
-    U->>M: GET /admin/post
+    U->>M: GET /author/post
     M->>M: verifyJwt(cookie)
-    M-->>U: next() ou redirect /admin/login
+    M-->>U: next() ou redirect /author/login
 ```
 
 ### Comunicação entre partes
 
 | Origem | Destino | Mecanismo |
 |---|---|---|
-| Browser → Admin | Server Actions | FormData via POST interno Next.js |
+| Browser → Author | Server Actions | FormData via POST interno Next.js |
 | Server Actions → DB | DrizzlePostRepository | SQL via `@neondatabase/serverless` |
 | Server Actions → Imagens | Cloudinary SDK | Stream upload após processamento com sharp |
 | Middleware → Auth | `verifyJwt` (jose) | Leitura de cookie na edge |
@@ -354,7 +354,7 @@ npm run lint
 # Fluxo completo local
 npm run dev
 # Acessar http://localhost:3000 (área pública)
-# Acessar http://localhost:3000/admin/login (área admin)
+# Acessar http://localhost:3000/author/login (área do autor)
 ```
 
 ---
@@ -365,7 +365,7 @@ npm run dev
 |---|---|---|
 | `/` | Público | Home com post em destaque e listagem |
 | `/post/[slug]` | Público | Leitura de post publicado |
-| `/admin/login` | Público | Login administrativo |
-| `/admin/post` | Autenticado | Listagem de todos os posts |
-| `/admin/post/new` | Autenticado | Criação de post |
-| `/admin/post/[id]` | Autenticado | Edição de post |
+| `/author/login` | Público | Login do autor |
+| `/author/post` | Autenticado | Listagem de todos os posts |
+| `/author/post/new` | Autenticado | Criação de post |
+| `/author/post/[id]` | Autenticado | Edição de post |

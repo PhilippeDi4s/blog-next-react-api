@@ -1,6 +1,6 @@
 import { ManagePostForm } from "@/components/user/ManagePostForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
-import { getAdminPostById } from "@/lib/post/queries/admin";
+import { getAuthorPostById } from "@/lib/post/queries/author";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   title: "Editar post",
 };
 
-type AdminPostsIdPageProps = {
+type AuthorPostsIdPageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default function AdminPostsIdPage({ params }: AdminPostsIdPageProps) {
+export default function AuthorPostsIdPage({ params }: AuthorPostsIdPageProps) {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-extrabold">Editar Post</h1>
@@ -25,10 +25,10 @@ export default function AdminPostsIdPage({ params }: AdminPostsIdPageProps) {
   );
 }
 
-export async function PostEditPageContent({ params }: AdminPostsIdPageProps) {
+export async function PostEditPageContent({ params }: AuthorPostsIdPageProps) {
   const { id } = await params;
 
-  const postRes = await getAdminPostById(id);
+  const postRes = await getAuthorPostById(id);
 
   if (!postRes.success) {
     console.log(postRes.errors);

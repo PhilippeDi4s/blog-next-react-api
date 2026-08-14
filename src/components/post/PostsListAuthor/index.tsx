@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { DeletePostButton } from "../../user/DeletePostButton";
-import { getAdminPosts } from "@/lib/post/queries/admin";
+import { getAuthorPosts } from "@/lib/post/queries/author";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
-export async function PostsListAdmin() {
-  const postsRes = await getAdminPosts();
+export async function PostsListAuthor() {
+  const postsRes = await getAuthorPosts();
 
   if (!postsRes.success) {
     console.log(postsRes.errors);
@@ -36,7 +36,7 @@ export async function PostsListAdmin() {
             )}
             key={post.id}
           >
-            <Link href={`/admin/post/${post.id}`}>{post.title}</Link>
+            <Link href={`/author/post/${post.id}`}>{post.title}</Link>
             {!post.published && (
               <span className="text-xs text-slate-600 dark:text-slate-300 italic">
                 (Não publicado)

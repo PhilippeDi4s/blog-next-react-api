@@ -3,7 +3,7 @@ import { PostModel } from "@/models/post/post-models";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { cacheTag } from "next/cache";
 
-export const findAllPostsAdmin = async (jwtToken: string | null) => {
+export const findAllPostsAuthor = async (jwtToken: string | null) => {
   "use cache";
   cacheTag("posts");
 
@@ -12,7 +12,7 @@ export const findAllPostsAdmin = async (jwtToken: string | null) => {
   });
 };
 
-export const findPostByIdAdmin = async (
+export const findPostByIdAuthor = async (
   id: string,
   jwtToken: string | null,
 ) => {
@@ -25,12 +25,12 @@ export const findPostByIdAdmin = async (
   });
 };
 
-export async function getAdminPosts() {
+export async function getAuthorPosts() {
   const jwtToken = await getLoginSession();
-  return findAllPostsAdmin(jwtToken || null);
+  return findAllPostsAuthor(jwtToken || null);
 }
 
-export async function getAdminPostById(id: string) {
+export async function getAuthorPostById(id: string) {
   const jwtToken = await getLoginSession();
-  return findPostByIdAdmin(id, jwtToken || null);
+  return findPostByIdAuthor(id, jwtToken || null);
 }

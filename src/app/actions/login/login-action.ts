@@ -61,5 +61,5 @@ export async function loginAction(state: LoginActionState, formData: FormData) {
   }
 
   await createLoginSession(loginResponse.data.accessToken);
-  redirect("/admin/post");
+  redirect("/author/post");
 }

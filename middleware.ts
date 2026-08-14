@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const isLoginPage = request.nextUrl.pathname.startsWith("/admin/login");
-  const isAdminPage = request.nextUrl.pathname.startsWith("/admin");
+  const isLoginPage = request.nextUrl.pathname.startsWith("/author/login");
+  const isAuthorPage = request.nextUrl.pathname.startsWith("/author");
   const isGetRequest = request.method === "GET";
 
-  const shouldBeAuthenticated = isAdminPage && !isLoginPage;
+  const shouldBeAuthenticated = isAuthorPage && !isLoginPage;
   const shouldRedirect = shouldBeAuthenticated && isGetRequest;
 
   if (!shouldRedirect) {
@@ -27,5 +27,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: "/author/:path*",
 };

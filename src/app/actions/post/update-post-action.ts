@@ -84,7 +84,7 @@ export async function updatePostAction(
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");
   
-  redirect(`/admin/post/${post.id}?updated=1`)
+  redirect(`/author/post/${post.id}?updated=1`)
 
   return {
     formState: PublicPostSchema.parse(post),
