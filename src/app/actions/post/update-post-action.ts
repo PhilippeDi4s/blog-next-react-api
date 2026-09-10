@@ -1,9 +1,9 @@
 "use server";
 
-import { getLoginSession } from "@/lib/login/manage-login";
+import { getLoginSession } from "@/lib/auth/session";
 import {
-  PublicPostDto,
-  PublicPostSchema,
+  FormStatePostDto,
+  FormStatePostSchema,
   UpdatePostSchema,
 } from "@/lib/post/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
@@ -13,7 +13,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 type UpdatePostActionState = {
-  formState: PublicPostDto;
+  formState: FormStatePostDto;
   errors: string[];
   success?: string;
 };
@@ -22,7 +22,7 @@ export async function updatePostAction(
   prevState: UpdatePostActionState,
   formData: FormData,
 ): Promise<UpdatePostActionState> {
-  const isAuthenticated = await getLoginSession();
+  const jwt = await getLoginSession();
 
   if (!(formData instanceof FormData)) {
     return {
@@ -43,9 +43,9 @@ export async function updatePostAction(
   const formDataToObj = Object.fromEntries(formData.entries());
   const zodParsedObj = UpdatePostSchema.safeParse(formDataToObj);
 
-  if (!isAuthenticated) {
+  if (!jwt) {
     return {
-      formState: PublicPostSchema.parse(formDataToObj),
+      formState: FormStatePostSchema.parse(formDataToObj),
       errors: ["Faça login em outra aba antes de salvar."],
     };
   }
@@ -54,15 +54,15 @@ export async function updatePostAction(
     const errors = getZodErrorMessages(zodParsedObj.error);
     return {
       errors,
-      formState: PublicPostSchema.parse(formDataToObj),
+      formState: FormStatePostSchema.parse(formDataToObj),
     };
   }
 
   const newPost = zodParsedObj.data;
 
-  const updatePostResponse = await authenticatedApiRequest<PublicPostDto>(
+  const updatePostResponse = await authenticatedApiRequest<FormStatePostDto>(
     `/post/me/${id}`,
-    isAuthenticated,
+    jwt,
     {
       method: "PATCH",
       body: JSON.stringify(newPost),
@@ -74,7 +74,7 @@ export async function updatePostAction(
 
   if (!updatePostResponse.success) {
     return {
-      formState: PublicPostSchema.parse(formDataToObj),
+      formState: FormStatePostSchema.parse(formDataToObj),
       errors: updatePostResponse.errors,
     };
   }
@@ -85,15 +85,4 @@ export async function updatePostAction(
   revalidateTag(`post-${post.id}`, "max");
   
   redirect(`/author/post/${post.id}?updated=1`)
-
-  return {
-    formState: PublicPostSchema.parse(post),
-    errors: [],
-    success: makeRandomString(),
-  };
-
-}
-
-function getLoginSessionForApi() {
-  throw new Error("Function not implemented.");
 }

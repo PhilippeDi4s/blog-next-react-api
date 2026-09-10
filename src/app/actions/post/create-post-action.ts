@@ -1,10 +1,10 @@
 "use server";
 
-import { getLoginSession } from "@/lib/login/manage-login";
+import { getLoginSession } from "@/lib/auth/session";
 import {
   CreatePostSchema,
-  PublicPostDto,
-  PublicPostSchema,
+  FormStatePostDto,
+  FormStatePostSchema,
 } from "@/lib/post/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
@@ -12,7 +12,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 type CreatePostActionState = {
-  formState: PublicPostDto;
+  formState: FormStatePostDto;
   errors: string[];
   success?: string;
 };
@@ -21,7 +21,7 @@ export async function createPostAction(
   prevState: CreatePostActionState,
   formData: FormData,
 ): Promise<CreatePostActionState> {
-  const isAuthenticated = await getLoginSession();
+  const jwt = await getLoginSession();
 
   if (!(formData instanceof FormData)) {
     return {
@@ -33,9 +33,9 @@ export async function createPostAction(
   const formDataToObj = Object.fromEntries(formData.entries());
   const zodParsedObj = CreatePostSchema.safeParse(formDataToObj);
 
-  if (!isAuthenticated) {
+  if (!jwt) {
     return {
-      formState: PublicPostSchema.parse(formDataToObj),
+      formState: FormStatePostSchema.parse(formDataToObj),
       errors: ["Faça login em outra aba antes de salvar."],
     };
   }
@@ -44,15 +44,15 @@ export async function createPostAction(
     const errors = getZodErrorMessages(zodParsedObj.error);
     return {
       errors,
-      formState: PublicPostSchema.parse(formDataToObj),
+      formState: FormStatePostSchema.parse(formDataToObj),
     };
   }
 
   const newPost = zodParsedObj.data;
 
-  const createPostResponse = await authenticatedApiRequest<PublicPostDto>(
+  const createPostResponse = await authenticatedApiRequest<FormStatePostDto>(
     `/post/me`,
-    isAuthenticated,
+    jwt,
     {
       method: "POST",
       headers: {
@@ -64,7 +64,7 @@ export async function createPostAction(
 
   if (!createPostResponse.success) {
     return {
-      formState: PublicPostSchema.parse(formDataToObj),
+      formState: FormStatePostSchema.parse(formDataToObj),
       errors: createPostResponse.errors,
     };
   }

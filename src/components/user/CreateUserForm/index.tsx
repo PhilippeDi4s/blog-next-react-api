@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { UserRoundIcon } from "lucide-react";
 import Link from "next/link";
-import { PublicUserSchema } from "@/lib/user/schemas";
+import { UserSummarySchema  } from "@/lib/user/schemas";
 import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { createUserAction } from "@/app/actions/user/create-user-action";
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 
 export function CreateUserForm() {
   const [state, action, isPending] = useActionState(createUserAction, {
-    user: PublicUserSchema.parse({}),
+    user: UserSummarySchema .parse({}),
     errors: [],
     success: false,
   });

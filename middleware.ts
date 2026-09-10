@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const PROTECTED_PREFIXES = ["/author", "/admin"];
+
 export async function middleware(request: NextRequest) {
-  const isLoginPage = request.nextUrl.pathname.startsWith("/author/login");
-  const isAuthorPage = request.nextUrl.pathname.startsWith("/author");
+  const { pathname } = request.nextUrl;
+
+  const isProtectedPage = PROTECTED_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix),
+  );
   const isGetRequest = request.method === "GET";
 
-  const shouldBeAuthenticated = isAuthorPage && !isLoginPage;
-  const shouldRedirect = shouldBeAuthenticated && isGetRequest;
+  const shouldRedirect = isProtectedPage && isGetRequest;
 
   if (!shouldRedirect) {
     return NextResponse.next();
@@ -27,5 +31,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/author/:path*",
+  matcher: ["/author/:path*", "/admin/:path*"],
 };

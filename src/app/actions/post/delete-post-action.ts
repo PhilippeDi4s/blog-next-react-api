@@ -1,7 +1,7 @@
 "use server";
 
-import { getLoginSession } from "@/lib/login/manage-login";
-import { PublicPostDto } from "@/lib/post/schemas";
+import { getLoginSession } from "@/lib/auth/session";
+import { FormStatePostDto } from "@/lib/post/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 
@@ -20,7 +20,7 @@ export async function deletePostAction(id: string) {
     };
   }
 
-  const postResponse = await authenticatedApiRequest<PublicPostDto>(
+  const postResponse = await authenticatedApiRequest<FormStatePostDto>(
     `/post/me/${id}`,
     isAuthenticated,
     {
@@ -36,7 +36,7 @@ export async function deletePostAction(id: string) {
     };
   }
 
-  const deletePostResponse = await authenticatedApiRequest<PublicPostDto>(
+  const deletePostResponse = await authenticatedApiRequest<FormStatePostDto>(
     `/post/me/${id}`,
     isAuthenticated,
     {

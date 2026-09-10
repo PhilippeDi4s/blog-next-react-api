@@ -8,6 +8,7 @@ import {
   FileTextIcon,
   HomeIcon,
   HourglassIcon,
+  ImageIcon,
   LogOutIcon,
   MenuIcon,
 } from "lucide-react";
@@ -102,6 +103,10 @@ export function UserMenu() {
       <Link className={linkClasses} href="/author/post/new">
         <CirclePlusIcon />
         Criar Post
+      </Link>
+      <Link className={linkClasses} href="/imageGallery">
+        <ImageIcon />
+        Minhas imagens
       </Link>
       <a href="#" className={linkClasses} onClick={handleLogout}>
         {isPending &&(

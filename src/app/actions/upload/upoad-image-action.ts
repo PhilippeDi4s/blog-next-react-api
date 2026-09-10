@@ -1,8 +1,8 @@
 "use server";
 
-import { getLoginSession } from "@/lib/login/manage-login";
-import { ImageModel } from "@/models/image/image-model";
+import { getLoginSession } from "@/lib/auth/session";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { url } from "inspector";
 import { revalidateTag } from "next/cache";
 
 type UploadImageActionResult = {
@@ -14,32 +14,40 @@ export async function uploadImageAction(
   formData: FormData,
 ): Promise<UploadImageActionResult> {
   const jwtToken = await getLoginSession();
-  if (!jwtToken) {
-    return { url: "", error: "Faça login em outra aba antes de salvar." };
-  }
-  const makeResult = ({ url = "", error = "" }) => ({ url, error });
 
   if (!(formData instanceof FormData)) {
-    return makeResult({ error: "Dados inválidos" });
+    return {
+      error: "Dados inválidos",
+      url: "",
+    };
   }
 
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
-    return makeResult({ error: "Arquivo inválido" });
+    return {
+      error: "Arquivo inválido",
+      url: "",
+    };
   }
 
   const allowedTypesEnv = process.env.NEXT_PUBLIC_ALLOWED_IMAGE_TYPES;
 
   if (!allowedTypesEnv) {
     console.error("NEXT_PUBLIC_ALLOWED_IMAGE_TYPES não foi configurada");
-    return makeResult({ error: "Erro de configuração do servidor" });
+    return {
+      error: "Erro de configuração do servidor",
+      url: "",
+    };
   }
 
   const allowedTypes = allowedTypesEnv.split(",").map((type) => type.trim());
 
   if (!allowedTypes.includes(file.type)) {
-    return makeResult({ error: "Formato não permitido" });
+    return {
+      error: "Formato não permitido",
+      url: "",
+    };
   }
 
   const imageMaxUploadSize = Number(
@@ -47,7 +55,10 @@ export async function uploadImageAction(
   );
 
   if (file.size > imageMaxUploadSize) {
-    return makeResult({ error: "Arquivo muito grande" });
+    return {
+      error: "Arquivo muito grande",
+      url: "",
+    };
   }
 
   const uploadImageRes = await authenticatedApiRequest<ImageModel>(
@@ -60,11 +71,17 @@ export async function uploadImageAction(
   );
 
   if (!uploadImageRes.success) {
-    return makeResult({ error: "Não foi possível conectar ao servidor." });
+    return {
+      error: "Não foi possivél conectar ao servidor",
+      url: "",
+    };
   }
 
   const savedImage: ImageModel = uploadImageRes.data;
 
   revalidateTag("images", "max");
-  return makeResult({ url: `${savedImage.url}` });
+  return {
+    error: "",
+    url: `${savedImage.url}`,
+  };
 }

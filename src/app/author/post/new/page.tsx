@@ -1,14 +1,12 @@
 import { ManagePostForm } from "@/components/user/ManagePostForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Suspense } from "react";
-import { getCurrentUser } from "@/lib/user/get-current-user";
 import { redirect } from "next/navigation";
+import { getAuthenticatedUserOrRedirect } from "@/lib/auth/session";
 
-export default async function AdminPostsNewPage() {
+export default async function NewPostPagePage() {
 
-  const currentUser = await getCurrentUser()
-
-  if(!currentUser) redirect("/login")
+  const currentUser = await getAuthenticatedUserOrRedirect()
 
   return (
     <div className="flex flex-col gap-6">

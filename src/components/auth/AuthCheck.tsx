@@ -1,6 +1,6 @@
-import { requireLoginSessionOrRedirect } from "@/lib/login/manage-login";
+import { getAuthenticatedUserOrRedirect } from "@/lib/auth/session";
 
 export async function AuthCheck() {
-  await requireLoginSessionOrRedirect();
+  await getAuthenticatedUserOrRedirect();
   return null;
 }

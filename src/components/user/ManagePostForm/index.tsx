@@ -10,13 +10,13 @@ import { createPostAction } from "@/app/actions/post/create-post-action";
 import { showMessage } from "@/adapters";
 import { updatePostAction } from "@/app/actions/post/update-post-action";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PublicPostDto, PublicPostSchema } from "@/lib/post/schemas";
+import { FormStatePostDto, FormStatePostSchema } from "@/lib/post/schemas";
 import { LinkButton } from "@/components/ui/Link";
 import { GalleryVerticalEndIcon } from "lucide-react";
 
 type ManagePostFormUpdateProps = {
   mode: "update";
-  publicPost: PublicPostDto;
+  publicPost: FormStatePostDto;
 };
 
 type ManagePostFormInsertProps = {
@@ -47,7 +47,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   };
 
   const initialState = {
-    formState: PublicPostSchema.parse(publicPost || {}),
+    formState: FormStatePostSchema.parse(publicPost || {}),
     errors: [],
   };
 

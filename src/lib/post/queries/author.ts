@@ -1,13 +1,13 @@
-import { getLoginSession } from "@/lib/login/manage-login";
-import { PostModel } from "@/models/post/post-models";
+import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { cacheTag } from "next/cache";
+import { PostResponseDto } from "../schemas";
 
 export const findAllPostsAuthor = async (jwtToken: string | null) => {
   "use cache";
   cacheTag("posts");
 
-  return authenticatedApiRequest<PostModel[]>(`/post/me`, jwtToken, {
+  return authenticatedApiRequest<PostResponseDto[]>(`/post/me`, jwtToken, {
     headers: { "Content-Type": "application/json" },
   });
 };
@@ -20,17 +20,17 @@ export const findPostByIdAuthor = async (
   cacheTag("posts");
   cacheTag(`post-${id}`);
 
-  return authenticatedApiRequest<PostModel>(`/post/me/${id}`, jwtToken, {
+  return authenticatedApiRequest<PostResponseDto>(`/post/me/${id}`, jwtToken, {
     headers: { "Content-Type": "application/json" },
   });
 };
 
 export async function getAuthorPosts() {
-  const jwtToken = await getLoginSession();
+  const jwtToken = await getLoginSessionOrRedirect();
   return findAllPostsAuthor(jwtToken || null);
 }
 
 export async function getAuthorPostById(id: string) {
-  const jwtToken = await getLoginSession();
+  const jwtToken = await getLoginSessionOrRedirect();
   return findPostByIdAuthor(id, jwtToken || null);
 }

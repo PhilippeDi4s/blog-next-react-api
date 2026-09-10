@@ -2,8 +2,9 @@
 
 import {
   CreateUserSchema,
-  PublicUserDto,
-  PublicUserSchema,
+  UserFormStateDto,
+  UserFormStateSchema,
+  UserSummarySchema,
 } from "@/lib/user/schemas";
 import { apiRequest } from "@/utils/api-request";
 import { simulateDelay } from "@/utils/async-delay";
@@ -11,7 +12,7 @@ import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { redirect } from "next/navigation";
 
 type CreateUserActionState = {
-  user: PublicUserDto;
+  formState: UserFormStateDto;
   errors: string[];
   success: boolean;
 };
@@ -24,7 +25,7 @@ export async function createUserAction(
 
   if (!(formData instanceof FormData)) {
     return {
-      user: state.user,
+      formState: state.formState,
       errors: ["Dados inválidos"],
       success: false,
     };
@@ -35,13 +36,13 @@ export async function createUserAction(
 
   if (!parsedFormData.success) {
     return {
-      user: PublicUserSchema.parse(formObj),
+      formState: UserSummarySchema.parse(formObj),
       errors: getZodErrorMessages(parsedFormData.error),
       success: false,
     };
   }
 
-  const createResponse = await apiRequest<PublicUserDto>("/user", {
+  const res = await apiRequest<UserFormStateDto>("/user", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,11 +50,11 @@ export async function createUserAction(
     body: JSON.stringify(parsedFormData.data),
   });
 
-  if (!createResponse.success) {
+  if (!res.success) {
     return {
-      user: PublicUserSchema.parse(formObj),
-      errors: createResponse.errors,
-      success: createResponse.success,
+      formState: UserFormStateSchema.parse(formObj),
+      errors: res.errors,
+      success: res.success,
     };
   }
 

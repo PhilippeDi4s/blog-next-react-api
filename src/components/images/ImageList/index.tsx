@@ -1,7 +1,7 @@
 "use client";
 
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
-import { getAllImages } from "@/lib/post/queries/images";
+import { getAllImages } from "@/lib/image/queries/images";
 import { ImageModel } from "@/models/image/image-model";
 import clsx from "clsx";
 import Image from "next/image";

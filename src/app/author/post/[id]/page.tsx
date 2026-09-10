@@ -4,7 +4,7 @@ import { getAuthorPostById } from "@/lib/post/queries/author";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PublicPostSchema } from "@/lib/post/schemas";
+import { FormStatePostSchema } from "@/lib/post/schemas";
 
 export const metadata: Metadata = {
   title: "Editar post",
@@ -36,7 +36,7 @@ export async function PostEditPageContent({ params }: AuthorPostsIdPageProps) {
   }
 
   const post = postRes.data;
-  const publicPost = PublicPostSchema.parse(post);
+  const publicPost = FormStatePostSchema.parse(post);
 
   return <ManagePostForm mode="update" publicPost={publicPost} />;
 }

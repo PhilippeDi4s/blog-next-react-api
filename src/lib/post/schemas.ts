@@ -1,7 +1,8 @@
 import { isUrlOrRelativePath } from "@/utils/is-url-or-relative-path";
 import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
-import { PublicUserSchema } from "../user/schemas";
+import { UserSummarySchema } from "../user/schemas";
+import { ImageSummarySchema } from "../image/schema";
 
 const ALLOWED_IMAGE_HOST = "res.cloudinary.com";
 
@@ -56,12 +57,12 @@ const PostBaseSchema = z.object({
 export const CreatePostSchema = PostBaseSchema;
 export const UpdatePostSchema = PostBaseSchema;
 
-export const PublicPostSchema = PostBaseSchema.extend({
+export const FormStatePostSchema = PostBaseSchema.extend({
   id: z.string().default(""),
   slug: z.string().default(""),
   title: z.string().default(""),
   excerpt: z.string().default(""),
-  author: PublicUserSchema.optional().default({
+  author: UserSummarySchema.optional().default({
     id: "",
     email: "",
     name: "",
@@ -71,6 +72,21 @@ export const PublicPostSchema = PostBaseSchema.extend({
   createdAt: z.string().default(""),
 });
 
+export const PostResponseSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  content: z.string(),
+  excerpt: z.string(),
+  published: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  coverImage: ImageSummarySchema,
+  author: UserSummarySchema,
+  deletedAt: z.string().nullable(),
+});
+
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
 export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;
-export type PublicPostDto = z.infer<typeof PublicPostSchema>;
+export type FormStatePostDto = z.infer<typeof FormStatePostSchema>;
+export type PostResponseDto = z.infer<typeof PostResponseSchema>;

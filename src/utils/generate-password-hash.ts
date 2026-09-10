@@ -1,4 +1,4 @@
-import { hashPassword } from '@/lib/login/manage-login';
+import { hashPassword } from '@/lib/auth/session';
 
 (async () => {
   const minhaSenha = ''; // NÃO ESQUECER DE APAGAR SUA SENHA DAQUI

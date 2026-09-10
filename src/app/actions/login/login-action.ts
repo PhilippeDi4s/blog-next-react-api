@@ -1,6 +1,5 @@
 "use server";
 
-import { createLoginSession } from "@/lib/login/manage-login";
 import { LoginSchema } from "@/lib/login/schema";
 import { apiRequest } from "@/utils/api-request";
 import { simulateDelay } from "@/utils/async-delay";
@@ -60,6 +59,5 @@ export async function loginAction(state: LoginActionState, formData: FormData) {
     };
   }
 
-  await createLoginSession(loginResponse.data.accessToken);
   redirect("/author/post");
 }

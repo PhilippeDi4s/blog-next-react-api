@@ -2,11 +2,11 @@ import { AuthCheck } from "@/components/auth/AuthCheck";
 import { UserMenu } from "@/components/user/UserMenu";
 import { Suspense } from "react";
 
-type AdminLayoutProps = {
+type AuthorLayoutProps = {
   children: React.ReactNode;
 };
 
-export default async function AdminLayout({ children }: AdminLayoutProps) {
+export default async function AuthorLayout({ children }: AuthorLayoutProps) {
   return (
     <>
       <Suspense fallback={null}>

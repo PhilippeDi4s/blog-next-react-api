@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { Roles } from "./roles";
 
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
   email: z.string().trim().email({ message: "E-mail inválido" }),
-  passwordHash: z
+  password: z
     .string()
     .trim()
     .min(6, "Senha precisa ter um mínimo de 6 caracteres"),
@@ -15,24 +16,18 @@ const CreateUserBase = z.object({
 
 export const CreateUserSchema = CreateUserBase.refine(
   (data) => {
-    return data.passwordHash === data.confirmPassword;
+    return data.password === data.confirmPassword;
   },
   {
-    path: ["confirmPassword"], 
+    path: ["confirmPassword"],
     message: "As senhas não conferem",
   },
-).transform(({ email, name, passwordHash }) => {
+).transform(({ email, name, password }) => {
   return {
     name,
     email,
-    passwordHash,
+    password,
   };
-});
-
-export const PublicUserSchema = z.object({
-  id: z.string().default(""),
-  name: z.string().default(""),
-  email: z.string().default(""),
 });
 
 export const UpdatePasswordSchema = z
@@ -55,7 +50,7 @@ export const UpdatePasswordSchema = z
       return data.newPassword === data.newPassword2;
     },
     {
-      path: ["newPassword2"], 
+      path: ["newPassword2"],
       message: "As senhas não conferem",
     },
   )
@@ -67,11 +62,36 @@ export const UpdatePasswordSchema = z
   });
 
 export const UpdateUserSchema = CreateUserBase.omit({
-  passwordHash: true,
+  password: true,
   confirmPassword: true,
 }).extend({});
 
+export const UserFormStateSchema = CreateUserBase.pick({
+  name: true,
+  email: true,
+});
+
+export const UserResponseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.email(),
+  forceLogout: z.boolean(),
+  isBlocked: z.boolean(),
+  role: z.enum(Roles),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  deletedAt: z.string().nullable(),
+});
+
+export const UserSummarySchema = z.object({
+  id: z.string().default(""),
+  name: z.string().default(""),
+  email: z.string().default(""),
+});
+
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
-export type PublicUserDto = z.infer<typeof PublicUserSchema>;
+export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
+export type UserFormStateDto = z.infer<typeof UserFormStateSchema>;
+export type UserResponseDto = z.infer<typeof UserResponseSchema>;
 export type UpdatePasswordDto = z.infer<typeof UpdatePasswordSchema>;
