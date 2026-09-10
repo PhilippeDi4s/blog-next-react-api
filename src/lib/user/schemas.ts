@@ -93,5 +93,5 @@ export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
 export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
 export type UserFormStateDto = z.infer<typeof UserFormStateSchema>;
-export type UserResponseDto = z.infer<typeof UserResponseSchema>;
 export type UpdatePasswordDto = z.infer<typeof UpdatePasswordSchema>;
+export type UserResponseDto = z.infer<typeof UserResponseSchema>;

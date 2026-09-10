@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { LogInIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 
 export function LoginUserForm() {
@@ -16,10 +16,20 @@ export function LoginUserForm() {
     errors: [],
   };
   const [state, action, isPending] = useActionState(loginAction, initialState);
+  const PARAM_MESSAGES = useMemo(
+    () =>
+      ({
+        "user-changed": "Seu usuário foi modificado. Faça login novamente.",
+        created: "Seu usuário foi criado.",
+        blocked: "Usuário bloqueado",
+        "force-logout": "Faça login novamente",
+        "user-deleted": "Usuário deletado",
+      }) satisfies Record<string, string>,
+    [],
+  );
+
   const router = useRouter();
   const searchParams = useSearchParams();
-  const userChanged = searchParams.get("userChanged");
-  const created = searchParams.get("created");
 
   useEffect(() => {
     if (state.errors.length > 0) {
@@ -29,22 +39,22 @@ export function LoginUserForm() {
   }, [state]);
 
   useEffect(() => {
-    if (userChanged === "1") {
-      toast.dismiss();
-      toast.success("Seu usuário foi modificado. Faça login novamente.");
-      const url = new URL(window.location.href);
-      url.searchParams.delete("userChanged");
-      router.replace(url.toString());
+    const url = new URL(window.location.href);
+    let changed = false;
+
+    for (const [param, message] of Object.entries(PARAM_MESSAGES)) {
+      if (searchParams.get(param) === "1") {
+        toast.dismiss();
+        toast.success(message);
+        url.searchParams.delete(param);
+        changed = true;
+      }
     }
 
-    if (created === "1") {
-      toast.dismiss();
-      toast.success("Seu usuário foi criado.");
-      const url = new URL(window.location.href);
-      url.searchParams.delete("created");
+    if (changed) {
       router.replace(url.toString());
     }
-  }, [userChanged, created, router]);
+  }, [searchParams, router, PARAM_MESSAGES]);
 
   return (
     <div

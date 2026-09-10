@@ -8,7 +8,6 @@ import {
 } from "@/lib/post/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { makeRandomString } from "@/utils/make-random-string";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -46,7 +45,7 @@ export async function updatePostAction(
   if (!jwt) {
     return {
       formState: FormStatePostSchema.parse(formDataToObj),
-      errors: ["Faça login em outra aba antes de salvar."],
+      errors: ["login expirado", "Faça login em outra aba antes de salvar."],
     };
   }
 
@@ -83,6 +82,6 @@ export async function updatePostAction(
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");
-  
-  redirect(`/author/post/${post.id}?updated=1`)
+
+  redirect(`/author/post/${post.id}?updated=1`);
 }
