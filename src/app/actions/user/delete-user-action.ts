@@ -1,7 +1,5 @@
 import { getLoginSession } from "@/lib/auth/session";
-import { UpdatePasswordSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { redirect } from "next/navigation";
 
 type UpdateUserActionState = {
@@ -23,9 +21,6 @@ export async function DeleteUserAction(
 
   const res = await authenticatedApiRequest("user/me", jwt, {
     method: "DELETE",
-    headers: {
-      "Content-Type": "aplication/json",
-    },
   });
 
   if (!res.success) {
@@ -34,5 +29,5 @@ export async function DeleteUserAction(
     };
   }
 
-  redirect("login/userDeleted");
+  redirect("login?user-deleted=1");
 }

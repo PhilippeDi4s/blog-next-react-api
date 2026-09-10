@@ -51,7 +51,7 @@ export async function UpdateUserAction(
     method: "PATCH",
     body: JSON.stringify(updatedUserData),
     headers: {
-      "Content-Type": "aplication/json",
+      "Content-Type": "application/json",
     },
   });
 
@@ -62,6 +62,6 @@ export async function UpdateUserAction(
     };
   }
 
-  redirect("login/userChanged")
+  redirect("login?user-changed=1")
 
 }

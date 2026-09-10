@@ -1,7 +1,5 @@
 import { getLoginSession } from "@/lib/auth/session";
-import {
-    UpdatePasswordSchema,
-} from "@/lib/user/schemas";
+import { UpdatePasswordSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { redirect } from "next/navigation";
@@ -45,7 +43,7 @@ export async function UpdateUserPasswordAction(
     method: "PATCH",
     body: JSON.stringify(updatedUserPasswordData),
     headers: {
-      "Content-Type": "aplication/json",
+      "Content-Type": "application/json",
     },
   });
 
@@ -55,5 +53,5 @@ export async function UpdateUserPasswordAction(
     };
   }
 
-  redirect("login/userChanged");
+  redirect("login?user-changed=1");
 }
