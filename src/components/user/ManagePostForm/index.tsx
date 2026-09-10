@@ -7,7 +7,7 @@ import { ImageUploader } from "../ImageUploader";
 import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { createPostAction } from "@/app/actions/post/create-post-action";
-import { showMessage } from "@/adapters";
+import { showMessage } from "@/lib/show-message";
 import { updatePostAction } from "@/app/actions/post/update-post-action";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormStatePostDto, FormStatePostSchema } from "@/lib/post/schemas";
@@ -68,7 +68,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   useEffect(() => {
     if (created === "1") {
       showMessage.dismiss();
-      showMessage.succsses("Post criado com sucesso");
+      showMessage.success("Post criado com sucesso");
       const url = new URL(window.location.href);
       url.searchParams.delete("created");
       router.replace(url.toString());
@@ -78,7 +78,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   useEffect(() => {
     if (updated === "1") {
       showMessage.dismiss();
-      showMessage.succsses("Post atualizado com sucesso!");
+      showMessage.success("Post atualizado com sucesso!");
 
       const url = new URL(window.location.href);
       url.searchParams.delete("updated");

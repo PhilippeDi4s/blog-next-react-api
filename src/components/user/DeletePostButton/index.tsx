@@ -6,7 +6,7 @@ import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { DefaultModal } from "@/components/ui/DefaultModal";
 import { PendingBridge } from "../../form/PendingBridge";
-import { showMessage } from "@/adapters";
+import { showMessage } from "@/lib/show-message";
 import { FormActions } from "@/components/form/FormActions";
 import { Button } from "@/components/ui/Button";
 
@@ -61,7 +61,7 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
               return;
             }
             showMessage.dismiss();
-            showMessage.succsses("Post deletado com sucesso!");
+            showMessage.success("Post deletado com sucesso!");
             closeModal();
           }}
           className="flex items-center justify-center gap-6 text-slate-100 flex-wrap"

@@ -66,6 +66,13 @@ export const UpdateUserSchema = CreateUserBase.omit({
   confirmPassword: true,
 }).extend({});
 
+export const AdminUpdateUserSchema = UpdateUserSchema.extend({
+  reason: z
+    .string()
+    .min(10, "O motivo deve conter no mínimo 10 caracteres")
+    .max(250, "O motivo deve conter no máximo 250 caracteres"),
+});
+
 export const UserFormStateSchema = CreateUserBase.pick({
   name: true,
   email: true,
