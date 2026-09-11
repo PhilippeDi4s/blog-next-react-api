@@ -10,16 +10,16 @@ import {
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 
-type BlockUserAdminActionState = {
+type ArchiveUserAdminActionState = {
   formState: AdminReasonFormStateDto;
   errors: string[];
 };
 
-export async function blockUserAdminAction(
+export async function archiveUserAdminAction(
   userId: string,
   formData: FormData,
-  prevState: BlockUserAdminActionState,
-): Promise<BlockUserAdminActionState> {
+  prevState: ArchiveUserAdminActionState,
+): Promise<ArchiveUserAdminActionState> {
   const validation = await validateActionRequest(formData);
 
   if (!validation.success) {
@@ -45,8 +45,8 @@ export async function blockUserAdminAction(
 
   const confirmAdminActionData = parsedData.data;
 
-  const res = await authenticatedApiRequest(`admin/users/${userId}/block`, token, {
-    method: "PATCH",
+  const res = await authenticatedApiRequest(`admin/users/${userId}`, token, {
+    method: "DELETE",
     body: JSON.stringify(confirmAdminActionData),
     headers: {
       "Content-Type": "application/json",
@@ -60,5 +60,5 @@ export async function blockUserAdminAction(
     };
   }
 
-  redirectWithNotice(`admin/users/${userId}`, Notice.ADMIN_BLOCKED);
+  redirectWithNotice("admin/users", Notice.USER_ARCHIVED);
 }

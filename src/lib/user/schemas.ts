@@ -1,9 +1,13 @@
 import { z } from "zod";
 import { Roles } from "./roles";
+import {
+  AdminReasonSchema,
+  ConfirmPassworSchema,
+} from "../sharedSchemas/schemas";
 
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
-  email: z.string().trim().email({ message: "E-mail inválido" }),
+  email: z.email({ message: "E-mail inválido" }).trim(),
   password: z
     .string()
     .trim()
@@ -66,16 +70,19 @@ export const UpdateUserSchema = CreateUserBase.omit({
   confirmPassword: true,
 }).extend({});
 
-export const AdminUpdateUserSchema = UpdateUserSchema.extend({
-  reason: z
-    .string()
-    .min(10, "O motivo deve conter no mínimo 10 caracteres")
-    .max(250, "O motivo deve conter no máximo 250 caracteres"),
-});
-
 export const UserFormStateSchema = CreateUserBase.pick({
   name: true,
   email: true,
+});
+
+export const AdminUpdateUserSchema = UpdateUserSchema.extend({
+  reason: AdminReasonSchema,
+});
+
+export const AdminUpdateUserRoleSchema = z.object({
+  reason: AdminReasonSchema,
+  password: ConfirmPassworSchema,
+  role: z.enum(Roles),
 });
 
 export const UserResponseSchema = z.object({

@@ -6,20 +6,20 @@ import { Notice, redirectWithNotice } from "@/lib/notifications";
 import {
   AdminReasonFormStateDto,
   AdminReasonFormStateSchema,
-  ConfirmActionAdmin,
+  AdminReasonSchema,
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 
-type BlockUserAdminActionState = {
+type ForceLogoutUserAdminActionState = {
   formState: AdminReasonFormStateDto;
   errors: string[];
 };
 
-export async function blockUserAdminAction(
+export async function ForceLogoutUserAdminAction(
   userId: string,
   formData: FormData,
-  prevState: BlockUserAdminActionState,
-): Promise<BlockUserAdminActionState> {
+  prevState: ForceLogoutUserAdminActionState,
+): Promise<ForceLogoutUserAdminActionState> {
   const validation = await validateActionRequest(formData);
 
   if (!validation.success) {
@@ -32,7 +32,7 @@ export async function blockUserAdminAction(
 
   const parsedData = parseFormData(
     formData,
-    ConfirmActionAdmin,
+    AdminReasonSchema,
     AdminReasonFormStateSchema,
   );
 
@@ -45,8 +45,8 @@ export async function blockUserAdminAction(
 
   const confirmAdminActionData = parsedData.data;
 
-  const res = await authenticatedApiRequest(`admin/users/${userId}/block`, token, {
-    method: "PATCH",
+  const res = await authenticatedApiRequest(`auth/admin/${userId}/logout`, token, {
+    method: "POST",
     body: JSON.stringify(confirmAdminActionData),
     headers: {
       "Content-Type": "application/json",
@@ -60,5 +60,5 @@ export async function blockUserAdminAction(
     };
   }
 
-  redirectWithNotice(`admin/users/${userId}`, Notice.ADMIN_BLOCKED);
+  redirectWithNotice(`admin/users/${userId}`, Notice.ADMIN_FORCE_LOGOUT);
 }

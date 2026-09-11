@@ -2,21 +2,20 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { parseFormData } from "@/lib/forms/parse-form-data";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
 import {
   AdminUpdateUserSchema,
-  UpdateUserSchema,
   UserFormStateDto,
   UserFormStateSchema,
 } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { redirect } from "next/navigation";
 
 type UpdateUserAdminActionState = {
   formState: UserFormStateDto;
   errors: string[];
 };
 
-export async function UpdateUserAdminAction(
+export async function updateUserAdminAction(
   userId: string,
   formData: FormData,
   prevState: UpdateUserAdminActionState,
@@ -65,5 +64,5 @@ export async function UpdateUserAdminAction(
     };
   }
 
-  redirectWithNotice("admin/users", Notice.USER_UPDATED);
+    redirect(`admin/users/${userId}`);
 }
