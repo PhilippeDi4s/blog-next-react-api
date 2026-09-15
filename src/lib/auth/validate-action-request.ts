@@ -2,15 +2,9 @@ import { getLoginSession } from "./session";
 
 type ActionValidationResult =
   | { success: true; token: string }
-  | { success: false; errors: string[] };
+  | { success: false; errors: FieldError[] };
 
-export async function validateActionRequest(
-  formData: unknown
-): Promise<ActionValidationResult> {
-  if (!(formData instanceof FormData)) {
-    return { success: false, errors: ["Dados inválidos"] };
-  }
-
+export async function validateActionRequest(): Promise<ActionValidationResult> {
   const token = await getLoginSession();
 
   if (!token) {

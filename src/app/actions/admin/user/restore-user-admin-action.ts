@@ -1,64 +1,42 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { parseFormData } from "@/lib/forms/parse-form-data";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
-import {
-  AdminReasonFormStateDto,
-  AdminReasonFormStateSchema,
-  ConfirmActionAdmin,
-} from "@/lib/sharedSchemas/schemas";
+import { ActionResult } from "@/lib/shared/action-result";
+import { ConfirmActionAdmin } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
+import { revalidateTag } from "next/cache";
 
-type RestoreUserAdminActionState = {
-  formState: AdminReasonFormStateDto;
-  errors: string[];
-};
 
 export async function restoreUserAdminAction(
   userId: string,
-  formData: FormData,
-  prevState: RestoreUserAdminActionState,
-): Promise<RestoreUserAdminActionState> {
-  const validation = await validateActionRequest(formData);
+  data: unknown,
+): Promise<ActionResult> {
+  const validation = await validateActionRequest();
+  if (!validation.success) return { success: false, errors: validation.errors };
 
-  if (!validation.success) {
+  const parsed = ConfirmActionAdmin.safeParse(data);
+  if (!parsed.success) {
     return {
-      errors: validation.errors,
-      formState: prevState.formState,
+      success: false,
+      errors: getZodErrorMessages(parsed.error),
+
     };
   }
-  const { token } = validation;
 
-  const parsedData = parseFormData(
-    formData,
-    ConfirmActionAdmin,
-    AdminReasonFormStateSchema,
+  const res = await authenticatedApiRequest(
+    `admin/users/${userId}/restore`,
+    validation.token,
+    {
+      method: "PATCH",
+      body: JSON.stringify(parsed.data),
+      headers: { "Content-Type": "application/json" },
+    },
   );
 
-  if (!parsedData.success) {
-    return {
-      errors: parsedData.errors,
-      formState: parsedData.formState,
-    };
-  }
+  if (!res.success) return { success: false, errors: res.errors };
 
-  const confirmAdminActionData = parsedData.data;
-
-  const res = await authenticatedApiRequest(`admin/users/${userId}/restore`, token, {
-    method: "PATCH",
-    body: JSON.stringify(confirmAdminActionData),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!res.success) {
-    return {
-      errors: res.errors,
-      formState: parsedData.formState,
-    };
-  }
-
-  redirectWithNotice(`admin/users/${userId}`, Notice.USER_RESTORED);
+  revalidateTag("users", "max");
+  revalidateTag(`user-${userId}`, "max");
+  return { success: true, errors: [] };
 }

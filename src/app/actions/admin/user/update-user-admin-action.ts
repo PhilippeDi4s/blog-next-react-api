@@ -1,68 +1,40 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { parseFormData } from "@/lib/forms/parse-form-data";
-import {
-  AdminUpdateUserSchema,
-  UserFormStateDto,
-  UserFormStateSchema,
-} from "@/lib/user/schemas";
+import { ActionResult } from "@/lib/shared/action-result";
+import { AdminUpdateUserSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { redirect } from "next/navigation";
-
-type UpdateUserAdminActionState = {
-  formState: UserFormStateDto;
-  errors: string[];
-};
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
+import { revalidateTag } from "next/cache";
 
 export async function updateUserAdminAction(
   userId: string,
-  formData: FormData,
-  prevState: UpdateUserAdminActionState,
-): Promise<UpdateUserAdminActionState> {
-  const validation = await validateActionRequest(formData);
+  data: unknown,
+): Promise<ActionResult> {
+  const validation = await validateActionRequest();
+  if (!validation.success) return { success: false, errors: validation.errors };
 
-  if (!validation.success) {
+  const parsed = AdminUpdateUserSchema.safeParse(data);
+  if (!parsed.success) {
     return {
-      formState: prevState.formState,
-      errors: validation.errors,
+      success: false,
+      errors: getZodErrorMessages(parsed.error),
     };
   }
-  const { token } = validation;
-
-  const parsedData = parseFormData(
-    formData,
-    AdminUpdateUserSchema,
-    UserFormStateSchema,
-  );
-
-  if (!parsedData.success) {
-    return {
-      errors: parsedData.errors,
-      formState: parsedData.formState,
-    };
-  }
-
-  const updatedUserData = parsedData.data;
 
   const res = await authenticatedApiRequest(
     `admin/users/update/${userId}`,
-    token,
+    validation.token,
     {
       method: "PATCH",
-      body: JSON.stringify(updatedUserData),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify(parsed.data),
+      headers: { "Content-Type": "application/json" },
     },
   );
 
-  if (!res.success) {
-    return {
-      errors: res.errors,
-      formState: parsedData.formState,
-    };
-  }
+  if (!res.success) return { success: false, errors: res.errors };
 
-    redirect(`admin/users/${userId}`);
+  revalidateTag("users", "max");
+  revalidateTag(`user-${userId}`, "max");
+  return { success: true, errors: [] };
 }

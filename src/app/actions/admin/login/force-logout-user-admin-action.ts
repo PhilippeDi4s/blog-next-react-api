@@ -1,64 +1,36 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { parseFormData } from "@/lib/forms/parse-form-data";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
-import {
-  AdminReasonFormStateDto,
-  AdminReasonFormStateSchema,
-  AdminReasonSchema,
-} from "@/lib/sharedSchemas/schemas";
+import { ActionResult } from "@/lib/shared/action-result";
+import { ConfirmActionAdmin } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
+import { revalidateTag } from "next/cache";
 
-type ForceLogoutUserAdminActionState = {
-  formState: AdminReasonFormStateDto;
-  errors: string[];
-};
-
-export async function ForceLogoutUserAdminAction(
+export async function forceLogoutUserAdminAction(
   userId: string,
-  formData: FormData,
-  prevState: ForceLogoutUserAdminActionState,
-): Promise<ForceLogoutUserAdminActionState> {
-  const validation = await validateActionRequest(formData);
+  data: unknown,
+): Promise<ActionResult> {
+  const validation = await validateActionRequest();
+  if (!validation.success) return { success: false, errors: validation.errors };
 
-  if (!validation.success) {
-    return {
-      errors: validation.errors,
-      formState: prevState.formState,
-    };
+  const parsed = ConfirmActionAdmin.safeParse(data);
+  if (!parsed.success) {
+    return { success: false, errors: getZodErrorMessages(parsed.error) };
   }
-  const { token } = validation;
 
-  const parsedData = parseFormData(
-    formData,
-    AdminReasonSchema,
-    AdminReasonFormStateSchema,
+  const res = await authenticatedApiRequest(
+    `auth/admin/${userId}/logout`,
+    validation.token,
+    {
+      method: "POST",
+      body: JSON.stringify(parsed.data),
+      headers: { "Content-Type": "application/json" },
+    },
   );
 
-  if (!parsedData.success) {
-    return {
-      errors: parsedData.errors,
-      formState: parsedData.formState,
-    };
-  }
+  if (!res.success) return { success: false, errors: res.errors };
 
-  const confirmAdminActionData = parsedData.data;
-
-  const res = await authenticatedApiRequest(`auth/admin/${userId}/logout`, token, {
-    method: "POST",
-    body: JSON.stringify(confirmAdminActionData),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!res.success) {
-    return {
-      errors: res.errors,
-      formState: parsedData.formState,
-    };
-  }
-
-  redirectWithNotice(`admin/users/${userId}`, Notice.ADMIN_FORCE_LOGOUT);
+  revalidateTag(`user-${userId}`, "max");
+  return { success: true, errors: [] };
 }

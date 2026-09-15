@@ -1,53 +1,44 @@
-// hooks/use-user-admin-form.ts
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  UserFormData,
-  getUserFormDiff,
-  hasSensitiveChanges,
-} from "@/lib/user/user-form-diff";
-import {
-  buildUserActions,
-  ActionResult,
-  PendingAction,
-} from "@/lib/user/build-user-actions";
+import { getUserFormDiff } from "@/lib/user/user-form-diff";
+import { AdminUpdateUserPayloadDto } from "@/lib/user/schemas";
+
+import { buildUserActions, PendingAction } from "@/lib/user/build-user-actions";
+import { ActionResult, FieldError } from "../shared/action-result";
 
 type SettledResult = PromiseSettledResult<ActionResult>;
 
-export function useUserAdminForm(userId: string, original: UserFormData) {
+export function useUserAdminForm(
+  userId: string,
+  original: AdminUpdateUserPayloadDto,
+) {
   const router = useRouter();
 
-  const [current, setCurrent] = useState<UserFormData>(original);
+  const [current, setCurrent] = useState<AdminUpdateUserPayloadDto>(original);
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingActions, setPendingActions] = useState<PendingAction[]>([]);
   const [reasons, setReasons] = useState<Record<string, string>>({});
+  const [reasonError, setReasonError] = useState<Record<string, string>>({});
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
 
   function handleSubmit() {
     const changed = getUserFormDiff(original, current);
     if (Object.keys(changed).length === 0) return;
 
-    if (hasSensitiveChanges(changed)) {
-      // monta a lista só pra exibição (sem senha ainda) — run() não é chamado aqui
-      const preview = buildUserActions(userId, current, changed);
-      setPendingActions(preview);
-      setReasons({});
-      setModalOpen(true);
-      return;
-    }
-
-    const actions = buildUserActions(userId, current, changed);
-    void runActions(actions.map((a) => () => a.run("")));
+    const actions = buildUserActions(userId, current, changed, "");
+    setPendingActions(actions);
+    setReasons({});
+    setModalOpen(true);
   }
 
   function canConfirm(password: string): boolean {
-    const reasonsFilled = pendingActions
-      .filter((a) => a.requiresReason)
-      .every((a) => (reasons[a.key] ?? "").trim().length > 0);
+    const reasonsFilled = pendingActions.every(
+      (a) => (reasons[a.key] ?? "").trim().length > 0,
+    );
 
     return password.trim().length > 0 && reasonsFilled;
   }
@@ -59,15 +50,28 @@ export function useUserAdminForm(userId: string, original: UserFormData) {
     const changed = getUserFormDiff(original, current);
     const actions = buildUserActions(userId, current, changed, password);
 
-    const results = await Promise.allSettled(
-      actions.map((a) => a.run(reasons[a.key] ?? "")),
-    );
+    const results = await runActions(actions, (key) => reasons[key] ?? "");
+
+    const newReasonError: Record<string, string> = {};
+
+    results.forEach((r, i) => {
+      if (r.status !== "fulfilled" || r.value.success) return;
+
+      const reasonError = r.value.errors.find(
+        (error) => error.code === "INVALID_REASON",
+      );
+
+      if (reasonError) {
+        newReasonError[actions[i].key] = reasonError.message;
+      }
+    });
+
+    setReasonError(newReasonError);
 
     const passwordFailed = results.some(
       (r) =>
-        r.status === "fulfilled" &&
-        !r.value.success &&
-        r.value.errors.includes("INVALID_PASSWORD"),
+        r.status === "fulfilled" && r.value.success &&
+        r.value.errors.some((error) => error.code === "INVALID_PASSWORD"),
     );
 
     if (passwordFailed) {
@@ -80,10 +84,12 @@ export function useUserAdminForm(userId: string, original: UserFormData) {
     setModalOpen(false);
   }
 
-  async function runActions(runners: (() => Promise<ActionResult>)[]) {
+  async function runActions(
+    actions: PendingAction[],
+    getReason: (key: string) => string,
+  ): Promise<SettledResult[]> {
     setSubmitting(true);
-    const results = await Promise.allSettled(runners.map((run) => run()));
-    finishRun(results);
+    return Promise.allSettled(actions.map((a) => a.run(getReason(a.key))));
   }
 
   function finishRun(results: SettledResult[]) {
@@ -91,8 +97,15 @@ export function useUserAdminForm(userId: string, original: UserFormData) {
       (r) => r.status === "fulfilled" && r.value.success,
     );
 
-    const errors = results.flatMap((r) =>
-      r.status === "fulfilled" ? r.value.errors : ["Erro de rede inesperado"],
+    const errors: FieldError[] = results.flatMap((r) =>
+      r.status === "fulfilled"
+        ? r.value.errors
+        : [
+            {
+              code: "CONNECTION_ERROR",
+              message: "Erro de rede inesperado",
+            },
+          ],
     );
 
     setFieldErrors(errors);
@@ -120,6 +133,7 @@ export function useUserAdminForm(userId: string, original: UserFormData) {
     modalOpen,
     pendingActions,
     reasons,
+    reasonError,
     setReason,
     canConfirm,
     passwordError,

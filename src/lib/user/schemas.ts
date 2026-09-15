@@ -2,8 +2,11 @@ import { z } from "zod";
 import { Roles } from "./roles";
 import {
   AdminReasonSchema,
+  ConfirmActionAdmin,
   ConfirmPassworSchema,
 } from "../sharedSchemas/schemas";
+
+export const RoleSchema = z.enum(Roles);
 
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
@@ -44,17 +47,17 @@ export const UpdatePasswordSchema = z
       .string()
       .trim()
       .min(6, "Nova senha precisa ter um mínimo de 6 caracteres"),
-    newPassword2: z
+    confirmNewPassword: z
       .string()
       .trim()
       .min(6, "Confirmação de senha precisa ter um mínimo de 6 caracteres"),
   })
   .refine(
     (data) => {
-      return data.newPassword === data.newPassword2;
+      return data.newPassword === data.confirmNewPassword;
     },
     {
-      path: ["newPassword2"],
+      path: ["confirmNewPassword"],
       message: "As senhas não conferem",
     },
   )
@@ -68,21 +71,16 @@ export const UpdatePasswordSchema = z
 export const UpdateUserSchema = CreateUserBase.omit({
   password: true,
   confirmPassword: true,
-}).extend({});
-
-export const UserFormStateSchema = CreateUserBase.pick({
-  name: true,
-  email: true,
 });
 
-export const AdminUpdateUserSchema = UpdateUserSchema.extend({
-  reason: AdminReasonSchema,
-});
+export const AdminUpdateUserSchema = ConfirmActionAdmin.extend(
+  UpdateUserSchema.shape,
+);
 
 export const AdminUpdateUserRoleSchema = z.object({
-  reason: AdminReasonSchema,
-  password: ConfirmPassworSchema,
-  role: z.enum(Roles),
+  reason: ConfirmActionAdmin.shape.reason,
+  password: ConfirmActionAdmin.shape.password,
+  role: RoleSchema,
 });
 
 export const UserResponseSchema = z.object({
@@ -91,21 +89,32 @@ export const UserResponseSchema = z.object({
   email: z.email(),
   forceLogout: z.boolean(),
   isBlocked: z.boolean(),
-  role: z.enum(Roles),
+  role: RoleSchema,
   createdAt: z.string(),
   updatedAt: z.string(),
   deletedAt: z.string().nullable(),
 });
 
-export const UserSummarySchema = z.object({
-  id: z.string().default(""),
-  name: z.string().default(""),
-  email: z.string().default(""),
+export const AdminUpdateUserPayloadSchema = UserResponseSchema.pick({
+  name: true,
+  email: true,
+  role: true,
+  isBlocked: true,
+  forceLogout: true,
+  deletedAt: true,
+});
+
+export const UserSummarySchema = UserResponseSchema.pick({
+  id: true,
+  name: true,
+  email: true,
 });
 
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
 export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
-export type UserFormStateDto = z.infer<typeof UserFormStateSchema>;
 export type UpdatePasswordDto = z.infer<typeof UpdatePasswordSchema>;
 export type UserResponseDto = z.infer<typeof UserResponseSchema>;
+export type AdminUpdateUserDto = z.infer<typeof AdminUpdateUserSchema>;
+export type AdminUpdateUserRoleDto = z.infer<typeof AdminUpdateUserRoleSchema>;
+export type AdminUpdateUserPayloadDto = z.infer<typeof AdminUpdateUserPayloadSchema>;

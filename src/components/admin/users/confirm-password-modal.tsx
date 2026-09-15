@@ -1,4 +1,3 @@
-// components/admin/users/confirm-password-modal.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,8 @@ import { PendingAction } from "@/lib/user/build-user-actions";
 type ConfirmPasswordModalProps = {
   open: boolean;
   submitting: boolean;
-  error: string | null;
+  passwordError: string | null;
+  reasonErrors: Record<string, string>;
   pendingActions: PendingAction[];
   reasons: Record<string, string>;
   onReasonChange: (key: string, value: string) => void;
@@ -19,9 +19,10 @@ type ConfirmPasswordModalProps = {
 export function ConfirmPasswordModal({
   open,
   submitting,
-  error,
+  passwordError,
   pendingActions,
   reasons,
+  reasonErrors,
   onReasonChange,
   canConfirm,
   onConfirm,
@@ -30,8 +31,6 @@ export function ConfirmPasswordModal({
   const [password, setPassword] = useState("");
 
   if (!open) return null;
-
-  const actionsNeedingReason = pendingActions.filter((a) => a.requiresReason);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50">
@@ -42,18 +41,25 @@ export function ConfirmPasswordModal({
         </p>
 
         <div className="mt-4 space-y-3">
-          {actionsNeedingReason.map((action) => (
-            <div key={action.key}>
-              <label className="text-sm font-medium">{action.label}</label>
-              <textarea
-                value={reasons[action.key] ?? ""}
-                onChange={(e) => onReasonChange(action.key, e.target.value)}
-                disabled={submitting}
-                rows={2}
-                className="mt-1 w-full rounded border px-3 py-2 text-sm"
-                placeholder="Motivo desta ação"
-              />
-            </div>
+          {pendingActions.map((action) => (
+            <>
+              <div key={action.key}>
+                <label className="text-sm font-medium">{action.label}</label>
+                <textarea
+                  value={reasons[action.key] ?? ""}
+                  onChange={(e) => onReasonChange(action.key, e.target.value)}
+                  disabled={submitting}
+                  rows={2}
+                  className="mt-1 w-full rounded border px-3 py-2 text-sm"
+                  placeholder="Motivo desta ação"
+                />
+              </div>
+              {reasonErrors[action.key] && (
+                <p className="mt-2 text-xs text-red-600">
+                  {reasonErrors[action.key]}
+                </p>
+              )}
+            </>
           ))}
         </div>
 
@@ -66,7 +72,9 @@ export function ConfirmPasswordModal({
           placeholder="Sua senha"
         />
 
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {passwordError && (
+          <p className="mt-2 text-sm text-red-600">{passwordError}</p>
+        )}
 
         <div className="mt-4 flex justify-end gap-2">
           <button

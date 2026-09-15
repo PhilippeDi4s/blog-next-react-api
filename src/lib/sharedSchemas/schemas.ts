@@ -14,12 +14,12 @@ export const AdminReasonFormStateSchema = z.object({
 });
 
 export const ConfirmPassworSchema = z.object({
-  reason: z.string().trim(),
+  password: z.string().trim(),
 });
 
 export const ConfirmActionAdmin = z.object({
-  reason: AdminReasonSchema,
-  password: ConfirmPassworSchema,
+  reason: AdminReasonSchema.shape.reason,
+  password: ConfirmPassworSchema.shape.password,
 })
 
 export type AdminReasonFormStateDto = z.infer<

@@ -9,7 +9,10 @@ export async function authenticatedApiRequest<T>(
   if (!jwtToken) {
     return {
       success: false,
-      errors: ["Usuário não autenticado"],
+      errors: [{
+        code: "401",
+        message: "Usuário não autenticado",
+      }],
       status: 401,
     };
   }
