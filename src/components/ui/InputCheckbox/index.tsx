@@ -4,17 +4,24 @@ import { useId } from "react";
 type InputCheckboxProps = {
   labelText?: string;
   type?: "checkbox";
+  error?: string;
 } & React.ComponentProps<"input">;
 
 export function InputCheckbox({
   labelText = "",
   type = "checkbox",
+  error,
   ...props
 }: InputCheckboxProps) {
   const id = useId();
 
   return (
     <div className="flex items-center gap-3">
+      {labelText && (
+        <label className="text-sm" htmlFor={id}>
+          {labelText}
+        </label>
+      )}
       <input
         {...props}
         className={clsx(
@@ -24,12 +31,7 @@ export function InputCheckbox({
         id={id}
         type={type}
       />
-
-      {labelText && (
-        <label className="text-sm" htmlFor={id}>
-          {labelText}
-        </label>
-      )}
+      {error && <span className="mt-2 text-xs text-red-700">{error}</span>}
     </div>
   );
 }

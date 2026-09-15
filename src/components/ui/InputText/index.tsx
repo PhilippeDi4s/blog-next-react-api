@@ -3,9 +3,14 @@ import { useId } from "react";
 
 type InputTextProps = {
   labelText?: string;
+  error?: string;
 } & React.ComponentProps<"input">;
 
-export function InputText({ labelText: labelTetx, ...props }: InputTextProps) {
+export function InputText({
+  labelText: labelTetx,
+  error,
+  ...props
+}: InputTextProps) {
   const id = useId();
   return (
     <div className="flex flex-col gap-2">
@@ -34,6 +39,7 @@ export function InputText({ labelText: labelTetx, ...props }: InputTextProps) {
         id={id}
         {...props}
       />
+      {error && <span className="mt-2 text-xs text-red-700">{error}</span>}
     </div>
   );
 }

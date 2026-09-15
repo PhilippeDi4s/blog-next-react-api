@@ -1,5 +1,7 @@
+import { FieldError } from "@/lib/shared/action-result";
+
 type ApiRequestError = {
-  errors: string[];
+  errors: FieldError[];
   success: false;
   status: number;
 };
@@ -45,7 +47,12 @@ export async function apiRequest<T>(
     console.log(err);
 
     return {
-      errors: ["Falha ao conectar-se ao servidor"],
+      errors: [
+        {
+          code: "500",
+          message: "Não foi possível conectar-se ao servidor",
+        },
+      ],
       success: false,
       status: 500,
     };
