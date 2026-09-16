@@ -8,7 +8,6 @@ export const AdminReasonSchema = z.object({
     .trim(),
 });
 
-
 export const AdminReasonFormStateSchema = z.object({
   reason: z.string().default(""),
 });
@@ -20,8 +19,10 @@ export const ConfirmPassworSchema = z.object({
 export const ConfirmActionAdmin = z.object({
   reason: AdminReasonSchema.shape.reason,
   password: ConfirmPassworSchema.shape.password,
-})
+});
 
 export type AdminReasonFormStateDto = z.infer<
   typeof AdminReasonFormStateSchema
 >;
+
+export type ConfirmActionAdminDto = z.infer<typeof ConfirmActionAdmin>;

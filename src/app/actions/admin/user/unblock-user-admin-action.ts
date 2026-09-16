@@ -2,14 +2,14 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/action-result";
-import { ConfirmActionAdmin } from "@/lib/sharedSchemas/schemas";
+import { ConfirmActionAdmin, ConfirmActionAdminDto } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
 
 export async function unblockUserAdminAction(
   userId: string,
-  data: unknown,
+  data: ConfirmActionAdminDto,
 ): Promise<ActionResult> {
   const validation = await validateActionRequest();
   if (!validation.success) return { success: false, errors: validation.errors };
