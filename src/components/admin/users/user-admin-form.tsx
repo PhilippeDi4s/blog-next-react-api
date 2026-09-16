@@ -10,6 +10,7 @@ import { roleOptions, Roles } from "@/lib/user/roles";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
+import { getUserFieldErrors } from "@/lib/user/getUserFieldErrors";
 
 type UserAdminFormProps = {
   userId: string;
@@ -44,29 +45,7 @@ export function UserAdminForm({
     current.deletedAt !== null,
   );
 
-  const nameError = fieldErrors.find(
-    (error) => error.code === "INVALID_NAME",
-  )?.message;
-
-  const emailError = fieldErrors.find(
-    (error) => error.code === "INVALID_EMAIL",
-  )?.message;
-
-  const roleError = fieldErrors.find(
-    (error) => error.code === "INVALID_ROLE",
-  )?.message;
-
-  const deletedAtError = fieldErrors.find(
-    (error) => error.code === "INVALID_DELETEDAT",
-  )?.message;
-
-  const isBlockedError = fieldErrors.find(
-    (error) => error.code === "INVALID_ISBLOCKED",
-  )?.message;
-
-  const forceLogoutError = fieldErrors.find(
-    (error) => error.code === "INVALID_FORCELOGOUT",
-  )?.message;
+  const errorsByField = getUserFieldErrors(fieldErrors);
 
   if (!modalOpen) return null;
 
@@ -85,7 +64,7 @@ export function UserAdminForm({
             placeholder="Digite o nome do usuário"
             type="text"
             name="name"
-            error={nameError}
+            error={errorsByField.name}
             value={current.name}
             onChange={(e) => {
               setCurrent((prev) => ({
@@ -100,7 +79,7 @@ export function UserAdminForm({
             placeholder="Digite o e-mail do usuário"
             type="email"
             name="email"
-            error={emailError}
+            error={errorsByField.email}
             value={current.email}
             onChange={(e) => {
               setCurrent((prev) => ({
@@ -113,7 +92,7 @@ export function UserAdminForm({
           <InputSelect
             labelText="Papel do usuário"
             name="role"
-            error={roleError}
+            error={errorsByField.role}
             value={current.role}
             onChange={(value) =>
               setCurrent({ ...current, role: value as Roles })
@@ -124,7 +103,7 @@ export function UserAdminForm({
           <InputSelect
             labelText="Situação do usuário"
             name="deletedAt"
-            error={deletedAtError}
+            error={errorsByField.deletedAt}
             value={archivedIntent ? "archived" : "active"}
             onChange={(value) => setArchivedIntent(value === "archived")}
           >
@@ -135,7 +114,7 @@ export function UserAdminForm({
           <InputCheckbox
             labelText="Está bloqueado?"
             name="isBlocked"
-            error={isBlockedError}
+            error={errorsByField.isBlocked}
             checked={current.isBlocked}
             onChange={(e) => {
               setCurrent((prev) => ({
@@ -148,7 +127,7 @@ export function UserAdminForm({
           <InputCheckbox
             labelText="Está deslogado?"
             name="forceLogout"
-            error={forceLogoutError}
+            error={errorsByField.forceLogout}
             checked={current.forceLogout}
             onChange={(e) => {
               setCurrent((prev) => ({
