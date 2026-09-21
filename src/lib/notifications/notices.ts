@@ -13,6 +13,10 @@ export const Notice = {
   ADMIN_BLOCKED: "admin-blocked",
   ADMIN_UNBLOCKED: "admin-unblocked",
 
+  ADMIN_POST_UPDATE: "admin-post-updated",
+  ADMIN_POST_ARCHIVE: "admin-post-archived",
+  ADMIN_POST_RESTORE: "admin-post-restored",
+
   POST_CREATED: "post-created",
   POST_UPDATED: "post-updated",
   POST_PUBLISHED: "post-published",
@@ -82,6 +86,21 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
 
   [Notice.ADMIN_UNBLOCKED]: {
     message: "Usuário desbloqueado com sucesso",
+    type: "success",
+  },
+
+  [Notice.ADMIN_POST_UPDATE]: {
+    message: "Post atualizado com sucesso",
+    type: "success",
+  },
+
+  [Notice.ADMIN_POST_ARCHIVE]: {
+    message: "Post arquivado com sucesso",
+    type: "success",
+  },
+
+  [Notice.ADMIN_POST_RESTORE]: {
+    message: "Post restaurado com sucesso",
     type: "success",
   },
 

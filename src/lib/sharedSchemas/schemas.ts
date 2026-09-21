@@ -21,6 +21,8 @@ export const ConfirmActionAdmin = z.object({
   password: ConfirmPassworSchema.shape.password,
 });
 
+export const idSchema = z.uuid("ID inválido");
+
 export type AdminReasonFormStateDto = z.infer<
   typeof AdminReasonFormStateSchema
 >;

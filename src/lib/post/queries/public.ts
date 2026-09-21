@@ -1,13 +1,13 @@
 import { apiRequest } from "@/utils/api-request";
 import { cacheTag } from "next/cache";
-import { PostModel } from "@/models/post/post-models";
+import { PostResponseDto } from "../schemas";
 
 export const findAllPublicPostsCached = async () => {
   "use cache";
 
   cacheTag("posts");
 
-  const postResponse = await apiRequest<PostModel[]>("/post", {
+  const postResponse = await apiRequest<PostResponseDto[]>("/post", {
     headers: {
       "Content-Type": "application/json",
     },
@@ -23,7 +23,7 @@ export const findPublicPostBySlugCached = async (slug: string) => {
   cacheTag("posts");
   cacheTag(`post-${slug}`);
 
-  const postResponse = await apiRequest<PostModel>(`/post/${slug}`, {
+  const postResponse = await apiRequest<PostResponseDto>(`/post/${slug}`, {
     headers: {
       "Content-Type": "application/json",
     },

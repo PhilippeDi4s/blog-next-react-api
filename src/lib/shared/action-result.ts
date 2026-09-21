@@ -4,7 +4,8 @@ export type FieldError = {
   message: string;
 };
 
-export type ActionResult = {
+export type ActionResult<TFormState = unknown> = {
   success: boolean;
   errors: FieldError[];
+  formState?: TFormState;
 };

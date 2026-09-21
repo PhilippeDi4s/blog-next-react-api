@@ -3,6 +3,7 @@ import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import { UserSummarySchema } from "../user/schemas";
 import { ImageSummarySchema } from "../image/schema";
+import { AdminReasonSchema } from "../sharedSchemas/schemas";
 
 const ALLOWED_IMAGE_HOST = "res.cloudinary.com";
 
@@ -86,7 +87,12 @@ export const PostResponseSchema = z.object({
   deletedAt: z.string().nullable(),
 });
 
+export const AdminUpdatePostSchema = AdminReasonSchema.extend(
+  UpdatePostSchema.shape,
+);
+
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
 export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;
 export type FormStatePostDto = z.infer<typeof FormStatePostSchema>;
 export type PostResponseDto = z.infer<typeof PostResponseSchema>;
+export type AdminUpdatePostDto = z.infer<typeof AdminUpdatePostSchema>;

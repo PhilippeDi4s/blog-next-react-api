@@ -33,4 +33,4 @@ export async function getAuthorPosts() {
 export async function getAuthorPostById(id: string) {
   const jwtToken = await getLoginSessionOrRedirect();
   return findPostByIdAuthor(id, jwtToken || null);
-}
+} 

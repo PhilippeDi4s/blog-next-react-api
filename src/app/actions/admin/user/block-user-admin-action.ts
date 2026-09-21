@@ -2,7 +2,10 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/action-result";
-import { ConfirmActionAdmin, ConfirmActionAdminDto } from "@/lib/sharedSchemas/schemas";
+import {
+  ConfirmActionAdmin,
+  ConfirmActionAdminDto,
+} from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
@@ -19,7 +22,6 @@ export async function blockUserAdminAction(
     return {
       success: false,
       errors: getZodErrorMessages(parsed.error),
-
     };
   }
 

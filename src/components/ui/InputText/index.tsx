@@ -1,14 +1,24 @@
+import {
+  inputError,
+  inputLeftIcon,
+  inputStyle,
+  inputWrapper,
+} from "@/lib/input-styles";
 import clsx from "clsx";
+import { LucideIcon } from "lucide-react";
 import { useId } from "react";
 
 type InputTextProps = {
   labelText?: string;
   error?: string;
+  icon?: LucideIcon;
 } & React.ComponentProps<"input">;
 
 export function InputText({
   labelText: labelTetx,
   error,
+  className,
+  icon: Icon,
   ...props
 }: InputTextProps) {
   const id = useId();
@@ -17,29 +27,11 @@ export function InputText({
       <label className="text-sm" htmlFor={id}>
         {labelTetx}
       </label>
-      <input
-        className={clsx(
-          "bg-white",
-          "outline-0",
-          "ring-2",
-          "ring-slate-400",
-          "rounded",
-          "p-2",
-          "text-base/tight",
-          "transition",
-          "focus:ring-blue-600",
-          "placeholder:text-slate-300",
-          "disabled:opacity-50",
-          "dark:bg-slate-700",
-          "dark:ring-slate-500",
-          "dark:placeholder:text-slate-400",
-          "read-only:bg-transparent",
-          props.className,
-        )}
-        id={id}
-        {...props}
-      />
-      {error && <span className="mt-2 text-xs text-red-700">{error}</span>}
+      <div className={inputWrapper}>
+        <input id={id} {...props} className={clsx(inputStyle, className)} />
+        {Icon ? <Icon className={inputLeftIcon} /> : null}
+      </div>
+      {error && <span className={inputError}>{error}</span>}
     </div>
   );
 }

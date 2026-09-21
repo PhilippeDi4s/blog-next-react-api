@@ -1,9 +1,10 @@
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { z } from "zod";
+import { FieldError } from "../shared/action-result";
 
 type ParseFormDataResult<TSchema extends z.ZodType, TFormState> =
   | { success: true; data: z.output<TSchema>; formState: TFormState }
-  | { success: false; errors: string[]; formState: TFormState };
+  | { success: false; errors: FieldError[]; formState: TFormState };
 
 export function parseFormData<
   TSchema extends z.ZodType,
