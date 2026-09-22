@@ -6,9 +6,9 @@ import { updateRoleAdminAction } from "@/app/actions/admin/user/update-role-user
 import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logout-user-admin-action";
 import { archiveUserAdminAction } from "@/app/actions/admin/user/archive-user-admin-action";
 import { ActionResult } from "../shared/action-result";
-import { Roles } from "../user/roles";
-import { AdminUpdateUserPayloadDto } from "../user/schemas";
-import { FieldDiff } from "./user-form-diff";
+import { Roles } from "./roles";
+import { AdminUpdateUserPayloadDto } from "./schemas";
+import { FieldDiff } from "../shared/getFormDiff";
 
 export type PendingAction = {
   key: string;

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ActionResult, FieldError } from "./action-result";
-import { FieldDiff, getFormDiff } from "./user-form-diff";
+import { FieldDiff, getFormDiff } from "./getFormDiff";
+import { NoticeKey, redirectWithNotice } from "../notifications";
 
 export type PendingAction = {
   key: string;
@@ -19,15 +20,14 @@ type UseAdminFormOptions<T> = {
     password: string,
   ) => PendingAction[];
   redirectPath: string;
+  notice: NoticeKey;
 };
 
 export function useAdminForm<T extends Record<string, unknown>>(
   entityId: string,
   original: T,
-  { buildActions, redirectPath }: UseAdminFormOptions<T>,
+  { buildActions, redirectPath, notice }: UseAdminFormOptions<T>,
 ) {
-  const router = useRouter();
-
   const [current, setCurrent] = useState<T>(original);
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingActions, setPendingActions] = useState<PendingAction[]>([]);
@@ -44,6 +44,10 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setPendingActions(buildActions(entityId, current, changed, ""));
     setReasons({});
     setModalOpen(true);
+  }
+
+  function setReason(key: string, value: string) {
+    setReasons((prev) => ({ ...prev, [key]: value }));
   }
 
   function canConfirm(password: string): boolean {
@@ -69,6 +73,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
       const err = r.value.errors.find((e) => e.code === "INVALID_REASON");
       if (err) newReasonError[actions[i].key] = err.message;
     });
+
     setReasonError(newReasonError);
 
     const passwordFailed = results.some(
@@ -77,6 +82,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
         !r.value.success &&
         r.value.errors.some((e) => e.code === "INVALID_PASSWORD"),
     );
+
     if (passwordFailed) {
       setPasswordError("Senha incorreta. Tente novamente.");
       setSubmitting(false);
@@ -95,7 +101,9 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setSubmitting(false);
     setModalOpen(false);
 
-    if (allSucceeded) router.push(redirectPath);
+    if (allSucceeded) {
+      redirectWithNotice(redirectPath, notice);
+    }
   }
 
   function handleModalCancel() {
@@ -103,10 +111,6 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setPasswordError(null);
     setPendingActions([]);
     setReasons({});
-  }
-
-  function setReason(key: string, value: string) {
-    setReasons((prev) => ({ ...prev, [key]: value }));
   }
 
   return {
