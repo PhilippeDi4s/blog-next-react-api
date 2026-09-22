@@ -1,4 +1,4 @@
-import { FieldError } from "@/lib/shared/action-result";
+import { FieldError } from "@/lib/shared/adminAction";
 
 type ApiRequestError = {
   errors: FieldError[];

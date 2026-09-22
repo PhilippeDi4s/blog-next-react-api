@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { Roles } from "./roles";
 import {
-  AdminReasonSchema,
   ConfirmActionAdmin,
-  ConfirmPassworSchema,
 } from "../sharedSchemas/schemas";
 
 export const RoleSchema = z.enum(Roles);
@@ -73,16 +71,6 @@ export const UpdateUserSchema = CreateUserBase.omit({
   confirmPassword: true,
 });
 
-export const AdminUpdateUserSchema = ConfirmActionAdmin.extend(
-  UpdateUserSchema.shape,
-);
-
-export const AdminUpdateUserRoleSchema = z.object({
-  reason: ConfirmActionAdmin.shape.reason,
-  password: ConfirmActionAdmin.shape.password,
-  role: RoleSchema,
-});
-
 export const UserResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -95,7 +83,17 @@ export const UserResponseSchema = z.object({
   deletedAt: z.string().nullable(),
 });
 
-export const AdminUpdateUserPayloadSchema = UserResponseSchema.pick({
+export const AdminUpdateUserSchema = ConfirmActionAdmin.extend(
+  UpdateUserSchema.shape,
+);
+
+export const AdminUpdateUserRoleSchema = z.object({
+  reason: ConfirmActionAdmin.shape.reason,
+  password: ConfirmActionAdmin.shape.password,
+  role: RoleSchema,
+});
+
+export const AdminUserFormValuesSchema = UserResponseSchema.pick({
   name: true,
   email: true,
   role: true,
@@ -112,9 +110,12 @@ export const UserSummarySchema = UserResponseSchema.pick({
 
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
-export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
 export type UpdatePasswordDto = z.infer<typeof UpdatePasswordSchema>;
+
+export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
+
 export type UserResponseDto = z.infer<typeof UserResponseSchema>;
+
 export type AdminUpdateUserDto = z.infer<typeof AdminUpdateUserSchema>;
 export type AdminUpdateUserRoleDto = z.infer<typeof AdminUpdateUserRoleSchema>;
-export type AdminUpdateUserPayloadDto = z.infer<typeof AdminUpdateUserPayloadSchema>;
+export type AdminUserFormValuesDto = z.infer<typeof AdminUserFormValuesSchema>;

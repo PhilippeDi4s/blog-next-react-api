@@ -1,16 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ActionResult, FieldError } from "./action-result";
+import { FieldError, PendingAction } from "./adminAction";
 import { FieldDiff, getFormDiff } from "./getFormDiff";
 import { NoticeKey, redirectWithNotice } from "../notifications";
-
-export type PendingAction = {
-  key: string;
-  label: string;
-  run: (reason: string) => Promise<ActionResult>;
-};
 
 type UseAdminFormOptions<T> = {
   buildActions: (
@@ -46,15 +39,23 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setModalOpen(true);
   }
 
+  function needsPassword(): boolean {
+    return pendingActions.some((action) => action.needsPassword);
+  }
+
   function setReason(key: string, value: string) {
     setReasons((prev) => ({ ...prev, [key]: value }));
   }
 
-  function canConfirm(password: string): boolean {
+  function canConfirm(password?: string): boolean {
     const reasonsFilled = pendingActions.every(
       (a) => (reasons[a.key] ?? "").trim().length > 0,
     );
-    return password.trim().length > 0 && reasonsFilled;
+    const needsPasswordFilled = needsPassword();
+
+    return needsPasswordFilled
+      ? (password ?? "").trim().length > 0 && reasonsFilled
+      : reasonsFilled;
   }
 
   async function handlePasswordConfirm(password: string) {
@@ -89,15 +90,18 @@ export function useAdminForm<T extends Record<string, unknown>>(
       return;
     }
 
-    const allSucceeded = results.every(
-      (r) => r.status === "fulfilled" && r.value.success,
-    );
     const errors: FieldError[] = results.flatMap((r) =>
       r.status === "fulfilled"
         ? r.value.errors
         : [{ code: "CONNECTION_ERROR", message: "Erro de rede inesperado" }],
     );
+
     setFieldErrors(errors);
+
+    const allSucceeded = results.every(
+      (r) => r.status === "fulfilled" && r.value.success,
+    );
+
     setSubmitting(false);
     setModalOpen(false);
 
@@ -118,6 +122,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setCurrent,
     modalOpen,
     pendingActions,
+    needsPassword,
     reasons,
     reasonError,
     setReason,

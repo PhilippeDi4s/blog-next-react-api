@@ -1,4 +1,4 @@
-import { FieldError } from "./action-result";
+import { FieldError } from "./adminAction";
 
 export function getFieldErrors(
   fieldErrors: FieldError[],

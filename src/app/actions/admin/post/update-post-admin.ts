@@ -2,15 +2,20 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { parseFormData } from "@/lib/forms/parse-form-data";
-import { AdminUpdatePostSchema, FormStatePostSchema } from "@/lib/post/schemas";
-import { ActionResult } from "@/lib/shared/action-result";
+import {
+  AdminUpdatePostDto,
+  AdminUpdatePostSchema,
+  FormStatePostSchema,
+} from "@/lib/post/schemas";
+import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
 
 export async function updatePostAdminAction(
   postId: string,
-  formData: FormData,
+  formData: AdminUpdatePostDto,
 ): Promise<ActionResult> {
   const idErrors = validateId(postId);
   if (idErrors) return { success: false, errors: idErrors };
@@ -18,16 +23,12 @@ export async function updatePostAdminAction(
   const validation = await validateActionRequest();
   if (!validation.success) return { success: false, errors: validation.errors };
 
-  const parsed = parseFormData(
-    formData,
-    AdminUpdatePostSchema,
-    FormStatePostSchema,
-  );
+  const parsed = AdminUpdatePostSchema.safeParse(formData);
 
   if (!parsed.success) {
     return {
-      success: parsed.success,
-      errors: parsed.errors,
+      success: false,
+      errors: getZodErrorMessages(parsed.error),
     };
   }
 

@@ -5,21 +5,15 @@ import { updateUserAdminAction } from "@/app/actions/admin/user/update-user-admi
 import { updateRoleAdminAction } from "@/app/actions/admin/user/update-role-user-admin-action";
 import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logout-user-admin-action";
 import { archiveUserAdminAction } from "@/app/actions/admin/user/archive-user-admin-action";
-import { ActionResult } from "../shared/action-result";
 import { Roles } from "./roles";
-import { AdminUpdateUserPayloadDto } from "./schemas";
+import { AdminUserFormValuesDto } from "./schemas";
 import { FieldDiff } from "../shared/getFormDiff";
-
-export type PendingAction = {
-  key: string;
-  label: string;
-  run: (reason: string) => Promise<ActionResult>;
-};
+import { PendingAction } from "../shared/adminAction";
 
 export function buildUserActions(
   userId: string,
-  formPayload: AdminUpdateUserPayloadDto,
-  changed: FieldDiff<AdminUpdateUserPayloadDto>,
+  formPayload: AdminUserFormValuesDto,
+  changed: FieldDiff<AdminUserFormValuesDto>,
   password: string,
 ): PendingAction[] {
   const actions: PendingAction[] = [];
@@ -28,6 +22,7 @@ export function buildUserActions(
     actions.push({
       key: "updateUser",
       label: "Atualizar nome/email",
+      needsPassword: true,
       run: (reason) =>
         updateUserAdminAction(userId, {
           name: formPayload.name,
@@ -45,6 +40,7 @@ export function buildUserActions(
         formPayload.role === Roles.ADMIN
           ? "Promover a admin"
           : "Rebaixar a usuário",
+      needsPassword: true,
       run: (reason) =>
         updateRoleAdminAction(userId, {
           role: formPayload.role,
@@ -58,6 +54,7 @@ export function buildUserActions(
     actions.push({
       key: formPayload.isBlocked ? "blockUser" : "unblockUser",
       label: formPayload.isBlocked ? "Bloquear usuário" : "Desbloquear usuário",
+      needsPassword: true,
       run: (reason) =>
         formPayload.isBlocked
           ? blockUserAdminAction(userId, { password: password, reason })
@@ -69,6 +66,7 @@ export function buildUserActions(
     actions.push({
       key: "forceLogout",
       label: "Forçar logout",
+      needsPassword: true,
       run: (reason) =>
         forceLogoutUserAdminAction(userId, { password: password, reason }),
     });
@@ -77,11 +75,12 @@ export function buildUserActions(
   if (changed.deletedAt) {
     actions.push({
       key: formPayload.deletedAt ? "softDeleteUser" : "restoreUser",
-      label: formPayload.deletedAt ? "Excluir usuário" : "Restaurar usuário",
+      label: formPayload.deletedAt ? "Arquivar usuário" : "Restaurar usuário",
+      needsPassword: true,
       run: (reason) =>
         formPayload.deletedAt
-          ? archiveUserAdminAction(userId, { password: password, reason })
-          : restoreUserAdminAction(userId, { password: password, reason }),
+          ? archiveUserAdminAction(userId, { password, reason })
+          : restoreUserAdminAction(userId, { password, reason }),
     });
   }
 

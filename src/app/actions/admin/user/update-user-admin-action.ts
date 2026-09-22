@@ -1,7 +1,7 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { ActionResult } from "@/lib/shared/action-result";
+import { ActionResult } from "@/lib/shared/adminAction";
 import { AdminUpdateUserDto, AdminUpdateUserSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";

@@ -6,7 +6,7 @@ import { Roles } from "@/lib/user/roles";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { ActionResult } from "@/lib/shared/action-result";
+import { ActionResult } from "@/lib/shared/adminAction";
 
 export async function updateRoleAdminAction(
   userId: string,

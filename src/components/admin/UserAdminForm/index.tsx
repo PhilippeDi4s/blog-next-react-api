@@ -1,7 +1,7 @@
 "use client";
 
-import { useUserAdminForm } from "@/lib/shared/use-admin-form";
-import { AdminUpdateUserPayloadDto } from "@/lib/user/schemas";
+import { useUserAdminForm } from "@/lib/shared/useAdminForm";
+import { AdminUserFormValuesDto } from "@/lib/user/schemas";
 import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { InputSelect } from "@/components/ui/InputSelect";
@@ -13,7 +13,7 @@ import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 
 type UserAdminFormProps = {
   userId: string;
-  initialData: AdminUpdateUserPayloadDto;
+  initialData: AdminUserFormValuesDto;
   isFormModalOpen: boolean;
   onClose: () => void;
 };

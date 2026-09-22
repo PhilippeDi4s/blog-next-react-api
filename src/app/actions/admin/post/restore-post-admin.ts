@@ -1,17 +1,19 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { ActionResult } from "@/lib/shared/action-result";
+import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
-import { ConfirmActionAdmin } from "@/lib/sharedSchemas/schemas";
+import {
+  ConfirmActionAdmin,
+  ConfirmActionAdminDto,
+} from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
 
 export async function restorePostAdminAction(
   postId: string,
-  formData: FormData,
+  formData: ConfirmActionAdminDto,
 ): Promise<ActionResult> {
   const idErrors = validateId(postId);
   if (idErrors) return { success: false, errors: idErrors };

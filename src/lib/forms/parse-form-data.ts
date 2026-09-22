@@ -1,6 +1,6 @@
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { z } from "zod";
-import { FieldError } from "../shared/action-result";
+import { FieldError } from "../shared/adminAction";
 
 type ParseFormDataResult<TSchema extends z.ZodType, TFormState> =
   | { success: true; data: z.output<TSchema>; formState: TFormState }

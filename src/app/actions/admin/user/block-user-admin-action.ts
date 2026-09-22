@@ -1,7 +1,7 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { ActionResult } from "@/lib/shared/action-result";
+import { ActionResult } from "@/lib/shared/adminAction";
 import {
   ConfirmActionAdmin,
   ConfirmActionAdminDto,

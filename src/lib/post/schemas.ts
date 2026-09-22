@@ -91,8 +91,22 @@ export const AdminUpdatePostSchema = AdminReasonSchema.extend(
   UpdatePostSchema.shape,
 );
 
+export const AdminPostFormValuesSchema = PostResponseSchema.pick({
+  title: true,
+  content: true,
+  excerpt: true,
+  published: true,
+  deletedAt: true,
+}).extend({
+  coverImageUrl: z.string(),
+});
+
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
 export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;
+
 export type FormStatePostDto = z.infer<typeof FormStatePostSchema>;
+
 export type PostResponseDto = z.infer<typeof PostResponseSchema>;
+
 export type AdminUpdatePostDto = z.infer<typeof AdminUpdatePostSchema>;
+export type AdminPostFormValuesDto = z.infer<typeof AdminPostFormValuesSchema>;
