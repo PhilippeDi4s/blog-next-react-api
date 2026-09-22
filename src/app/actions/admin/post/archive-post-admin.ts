@@ -47,5 +47,5 @@ export async function archivePostAdminAction(
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${postId}`, "max");
-  redirectWithNotice(`admin/posts`, Notice.ADMIN_POST_ARCHIVE);
+  return { success: true, errors: [] };
 }

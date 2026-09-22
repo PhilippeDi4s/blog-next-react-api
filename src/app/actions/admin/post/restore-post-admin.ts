@@ -47,5 +47,5 @@ export async function restorePostAdminAction(
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${postId}`, "max");
-  redirectWithNotice(`admin/posts/${postId}`, Notice.ADMIN_POST_RESTORE);
+  return { success: true, errors: [] };
 }
