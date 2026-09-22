@@ -2,21 +2,33 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getUserFormDiff } from "@/lib/user/user-form-diff";
-import { AdminUpdateUserPayloadDto } from "@/lib/user/schemas";
+import { ActionResult, FieldError } from "./action-result";
+import { FieldDiff, getFormDiff } from "./user-form-diff";
 
-import { buildUserActions, PendingAction } from "@/lib/user/build-user-actions";
-import { ActionResult, FieldError } from "../shared/action-result";
+export type PendingAction = {
+  key: string;
+  label: string;
+  run: (reason: string) => Promise<ActionResult>;
+};
 
-type SettledResult = PromiseSettledResult<ActionResult>;
+type UseAdminFormOptions<T> = {
+  buildActions: (
+    id: string,
+    current: T,
+    changed: FieldDiff<T>,
+    password: string,
+  ) => PendingAction[];
+  redirectPath: string;
+};
 
-export function useUserAdminForm(
-  userId: string,
-  original: AdminUpdateUserPayloadDto,
+export function useAdminForm<T extends Record<string, unknown>>(
+  entityId: string,
+  original: T,
+  { buildActions, redirectPath }: UseAdminFormOptions<T>,
 ) {
   const router = useRouter();
 
-  const [current, setCurrent] = useState<AdminUpdateUserPayloadDto>(original);
+  const [current, setCurrent] = useState<T>(original);
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingActions, setPendingActions] = useState<PendingAction[]>([]);
   const [reasons, setReasons] = useState<Record<string, string>>({});
@@ -26,11 +38,10 @@ export function useUserAdminForm(
   const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
 
   function handleSubmit() {
-    const changed = getUserFormDiff(original, current);
+    const changed = getFormDiff(original, current);
     if (Object.keys(changed).length === 0) return;
 
-    const actions = buildUserActions(userId, current, changed, "");
-    setPendingActions(actions);
+    setPendingActions(buildActions(entityId, current, changed, ""));
     setReasons({});
     setModalOpen(true);
   }
@@ -39,7 +50,6 @@ export function useUserAdminForm(
     const reasonsFilled = pendingActions.every(
       (a) => (reasons[a.key] ?? "").trim().length > 0,
     );
-
     return password.trim().length > 0 && reasonsFilled;
   }
 
@@ -47,73 +57,45 @@ export function useUserAdminForm(
     setSubmitting(true);
     setPasswordError(null);
 
-    const changed = getUserFormDiff(original, current);
-    const actions = buildUserActions(userId, current, changed, password);
-
-    const results = await runActions(actions, (key) => reasons[key] ?? "");
+    const changed = getFormDiff(original, current);
+    const actions = buildActions(entityId, current, changed, password);
+    const results = await Promise.allSettled(
+      actions.map((a) => a.run(reasons[a.key] ?? "")),
+    );
 
     const newReasonError: Record<string, string> = {};
-
     results.forEach((r, i) => {
       if (r.status !== "fulfilled" || r.value.success) return;
-
-      const reasonError = r.value.errors.find(
-        (error) => error.code === "INVALID_REASON",
-      );
-
-      if (reasonError) {
-        newReasonError[actions[i].key] = reasonError.message;
-      }
+      const err = r.value.errors.find((e) => e.code === "INVALID_REASON");
+      if (err) newReasonError[actions[i].key] = err.message;
     });
-
     setReasonError(newReasonError);
 
     const passwordFailed = results.some(
       (r) =>
-        r.status === "fulfilled" && r.value.success &&
-        r.value.errors.some((error) => error.code === "INVALID_PASSWORD"),
+        r.status === "fulfilled" &&
+        !r.value.success &&
+        r.value.errors.some((e) => e.code === "INVALID_PASSWORD"),
     );
-
     if (passwordFailed) {
       setPasswordError("Senha incorreta. Tente novamente.");
       setSubmitting(false);
       return;
     }
 
-    finishRun(results);
-    setModalOpen(false);
-  }
-
-  async function runActions(
-    actions: PendingAction[],
-    getReason: (key: string) => string,
-  ): Promise<SettledResult[]> {
-    setSubmitting(true);
-    return Promise.allSettled(actions.map((a) => a.run(getReason(a.key))));
-  }
-
-  function finishRun(results: SettledResult[]) {
     const allSucceeded = results.every(
       (r) => r.status === "fulfilled" && r.value.success,
     );
-
     const errors: FieldError[] = results.flatMap((r) =>
       r.status === "fulfilled"
         ? r.value.errors
-        : [
-            {
-              code: "CONNECTION_ERROR",
-              message: "Erro de rede inesperado",
-            },
-          ],
+        : [{ code: "CONNECTION_ERROR", message: "Erro de rede inesperado" }],
     );
-
     setFieldErrors(errors);
     setSubmitting(false);
+    setModalOpen(false);
 
-    if (allSucceeded) {
-      router.push(`/admin/users/${userId}`);
-    }
+    if (allSucceeded) router.push(redirectPath);
   }
 
   function handleModalCancel() {

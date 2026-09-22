@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserAdminForm } from "@/lib/hooks/use-user-admin-form";
+import { useUserAdminForm } from "@/lib/shared/use-admin-form";
 import { AdminUpdateUserPayloadDto } from "@/lib/user/schemas";
 import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";

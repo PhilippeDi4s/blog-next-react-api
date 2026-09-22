@@ -4,11 +4,11 @@ import { unblockUserAdminAction } from "@/app/actions/admin/user/unblock-user-ad
 import { updateUserAdminAction } from "@/app/actions/admin/user/update-user-admin-action";
 import { updateRoleAdminAction } from "@/app/actions/admin/user/update-role-user-admin-action";
 import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logout-user-admin-action";
-import { Roles } from "./roles";
-import { UserFieldDiff } from "./user-form-diff";
 import { archiveUserAdminAction } from "@/app/actions/admin/user/archive-user-admin-action";
-import { AdminUpdateUserPayloadDto } from "./schemas";
 import { ActionResult } from "../shared/action-result";
+import { Roles } from "../user/roles";
+import { AdminUpdateUserPayloadDto } from "../user/schemas";
+import { FieldDiff } from "./user-form-diff";
 
 export type PendingAction = {
   key: string;
@@ -19,7 +19,7 @@ export type PendingAction = {
 export function buildUserActions(
   userId: string,
   formPayload: AdminUpdateUserPayloadDto,
-  changed: UserFieldDiff,
+  changed: FieldDiff<AdminUpdateUserPayloadDto>,
   password: string,
 ): PendingAction[] {
   const actions: PendingAction[] = [];
