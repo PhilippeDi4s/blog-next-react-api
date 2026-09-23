@@ -1,3 +1,4 @@
+import { FieldError } from "../shared/adminAction";
 import { getLoginSession } from "./session";
 
 type ActionValidationResult =
@@ -8,10 +9,16 @@ export async function validateActionRequest(): Promise<ActionValidationResult> {
   const token = await getLoginSession();
 
   if (!token) {
-    return { success: false, errors: ["Login expirado", "Faça login novamente"] };
+    return {
+      success: false,
+      errors: [
+        {
+          code: "SESSION_EXPIRED",
+          message: "Sua sessão expirou. Faça login novamente.",
+        },
+      ],
+    };
   }
 
   return { success: true, token };
 }
-
-// TODO: CORRIGIR ARQUIVOS QUE POSSUEM FieldError
