@@ -59,8 +59,6 @@ export const CreatePostSchema = PostBaseSchema;
 export const UpdatePostSchema = PostBaseSchema;
 
 export const FormStatePostSchema = PostBaseSchema.extend({
-  id: z.string().default(""),
-  slug: z.string().default(""),
   title: z.string().default(""),
   excerpt: z.string().default(""),
   author: UserSummarySchema.optional().default({
@@ -100,6 +98,8 @@ export const AdminPostFormValuesSchema = PostResponseSchema.pick({
 }).extend({
   coverImageUrl: z.string(),
 });
+
+export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;
 
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
 export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;

@@ -1,11 +1,11 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { parseFormData } from "@/lib/forms/parse-form-data";
 import {
   AdminUpdatePostDto,
   AdminUpdatePostSchema,
-  FormStatePostSchema,
+  PostResponseDto,
+  PostResponseSchema,
 } from "@/lib/post/schemas";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
@@ -16,7 +16,7 @@ import { revalidateTag } from "next/cache";
 export async function updatePostAdminAction(
   postId: string,
   formData: AdminUpdatePostDto,
-): Promise<ActionResult> {
+): Promise<ActionResult<PostResponseDto>> {
   const idErrors = validateId(postId);
   if (idErrors) return { success: false, errors: idErrors };
 
@@ -49,7 +49,20 @@ export async function updatePostAdminAction(
     };
   }
 
+  const parsedResponse = PostResponseSchema.safeParse(res.data);
+
+  if (!parsedResponse.success) {
+    return {
+      success: false,
+      errors: [
+        {
+          code: "INVALID_RESPONSE",
+          message: "Resposta inesperada do servidor",
+        },
+      ],
+    };
+  }
   revalidateTag("posts", "max");
   revalidateTag(`post-${postId}`, "max");
-  return { success: true, errors: [] };
+  return { success: true, errors: [], data: parsedResponse.data };
 }

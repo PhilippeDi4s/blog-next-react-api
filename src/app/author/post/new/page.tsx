@@ -1,4 +1,4 @@
-import { ManagePostForm } from "@/components/user/ManagePostForm";
+import { ManagePostForm } from "@/components/post/ManagePostForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";

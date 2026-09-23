@@ -12,7 +12,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 type MarkdownEditorProps = {
   labelText?: string;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (value: string) => void;
   textAreaName: string;
   disabled?: boolean;
 };

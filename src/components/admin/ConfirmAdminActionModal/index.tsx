@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { PendingAction } from "@/lib/user/build-user-actions";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import clsx from "clsx";
 import { InputTextArea } from "@/components/ui/InputTextArea";
@@ -9,6 +8,8 @@ import { InputPassword } from "@/components/ui/InputPassword";
 import { Button } from "@/components/ui/Button";
 import { PostHeading } from "@/components/post/PostHeading";
 import { AlertCircleIcon } from "lucide-react";
+import { PendingAction } from "@/lib/shared/adminAction";
+import { InfoMessage } from "@/components/ui/InfoMessage";
 
 type ConfirmAdminActionsModalBaseProps = {
   open: boolean;
@@ -24,7 +25,6 @@ type ConfirmAdminActionsModalBaseProps = {
 
 type ConfirmAdminActionsWithPasswordProps = {
   needAdminPassword: true;
-
   passwordError: string | null;
   canConfirm: (password: string) => boolean;
   onConfirm: (password: string) => void;
@@ -32,7 +32,6 @@ type ConfirmAdminActionsWithPasswordProps = {
 
 type ConfirmAdminActionsWithoutPasswordProps = {
   needAdminPassword: false;
-
   onConfirm: () => void;
 };
 
@@ -72,23 +71,11 @@ export function ConfirmAdminActionModal(props: ConfirmAdminActionsModalProps) {
           Ação sensível detectada
         </PostHeading>
 
-        <span
-          className={clsx(
-            "mt-1",
-            "text-sm",
-            "text-gray-400",
-            "flex",
-            "items-center",
-            "gap-2",
-            "leading-4",
-            "md:leading-6",
-          )}
-        >
-          <AlertCircleIcon size={15} />
+        <InfoMessage>
           {props.needAdminPassword
             ? "Informe sua senha e o motivo de cada alteração para continuar."
             : "Informe o motivo de cada alteração para continuar."}
-        </span>
+        </InfoMessage>
 
         {props.pendingActions.map((action) => (
           <InputTextArea

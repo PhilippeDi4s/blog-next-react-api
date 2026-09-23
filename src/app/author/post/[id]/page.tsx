@@ -1,4 +1,4 @@
-import { ManagePostForm } from "@/components/user/ManagePostForm";
+import { ManagePostForm } from "@/components/post/ManagePostForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { getAuthorPostById } from "@/lib/post/queries/author";
 import { Metadata } from "next";

@@ -4,9 +4,10 @@ export type FieldError = {
   message: string;
 };
 
-export type ActionResult = {
+export type ActionResult<TData = undefined> = {
   success: boolean;
   errors: FieldError[];
+  data?: TData;
 };
 
 export type PendingAction = {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useUserAdminForm } from "@/lib/shared/useAdminForm";
 import { AdminUserFormValuesDto } from "@/lib/user/schemas";
 import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
@@ -8,8 +7,11 @@ import { InputSelect } from "@/components/ui/InputSelect";
 import { roleOptions, Roles } from "@/lib/user/roles";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { getUserFieldErrors } from "@/lib/user/getUserFieldErrors";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
+import { useAdminForm } from "@/lib/shared/useAdminForm";
+import { getFieldErrors } from "@/lib/shared/getFielErrors";
+import { buildUserActions } from "@/lib/user/build-user-actions";
+import { Notice } from "@/lib/notifications";
 
 type UserAdminFormProps = {
   userId: string;
@@ -38,13 +40,44 @@ export function UserAdminForm({
     handleSubmit,
     handlePasswordConfirm,
     handleModalCancel,
-  } = useUserAdminForm(userId, initialData);
+    needsPassword,
+  } = useAdminForm(userId, initialData, {
+    buildActions: buildUserActions,
+    redirectPath: `admin/user/${userId}`,
+    notice: Notice.USER_UPDATED,
+  });
 
   const [archivedIntent, setArchivedIntent] = useState(
     current.deletedAt !== null,
   );
 
-  const errorsByField = getUserFieldErrors(fieldErrors);
+  const errorsByField = getFieldErrors(fieldErrors);
+
+  const modalProps = needsPassword()
+    ? {
+        open: modalOpen,
+        submitting,
+        passwordError,
+        reasonErrors: reasonError,
+        pendingActions,
+        reasons,
+        onReasonChange: setReason,
+        canConfirm,
+        onConfirm: handlePasswordConfirm,
+        onCancel: handleModalCancel,
+        needAdminPassword: true as const,
+      }
+    : {
+        open: modalOpen,
+        submitting,
+        reasonErrors: reasonError,
+        pendingActions,
+        reasons,
+        onReasonChange: setReason,
+        onConfirm: () => handlePasswordConfirm(""),
+        onCancel: handleModalCancel,
+        needAdminPassword: false as const,
+      };
 
   if (!modalOpen) return null;
 
@@ -143,19 +176,7 @@ export function UserAdminForm({
           </Button>
         </div>
       </form>
-      <ConfirmAdminActionModal
-        open={modalOpen}
-        submitting={submitting}
-        passwordError={passwordError}
-        reasonErrors={reasonError}
-        pendingActions={pendingActions}
-        reasons={reasons}
-        onReasonChange={setReason}
-        canConfirm={canConfirm}
-        onConfirm={handlePasswordConfirm}
-        onCancel={handleModalCancel}
-        needAdminPassword={true}
-      />
+      <ConfirmAdminActionModal {...modalProps} />
     </>
   );
 }
