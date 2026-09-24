@@ -5,6 +5,7 @@ import { LinkButton } from "@/components/ui/Link";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
 import { PostFormValuesDto } from "@/lib/post/schemas";
+import { FieldError } from "@/lib/shared/adminAction";
 import { GalleryVerticalEndIcon } from "lucide-react";
 
 type PostFormFieldsProps = {
@@ -15,6 +16,11 @@ type PostFormFieldsProps = {
   setContentValue: (v: string) => void;
   id?: string;
   slug?: string;
+  onFieldChange?: (
+    field: keyof PostFormValuesDto,
+    value: string | boolean,
+  ) => void;
+  errors: FieldError[];
 };
 
 export function PostFormFields({
@@ -25,6 +31,8 @@ export function PostFormFields({
   setContentValue,
   id,
   slug,
+  onFieldChange,
+  errors,
 }: PostFormFieldsProps) {
   return (
     <>
@@ -45,6 +53,7 @@ export function PostFormFields({
           </InfoMessage>
           <InputText
             labelText="Slug"
+            name="slug"
             readOnly
             disabled
             defaultValue={slug}
@@ -66,6 +75,8 @@ export function PostFormFields({
         defaultValue={formState.title}
         disabled={isPending}
         type="text"
+        onChange={(e) => onFieldChange?.("title", e.target.value)}
+        error={errors.find((error) => error.field === "title")?.message}
       />
       <InputText
         labelText="Exerto"
@@ -73,6 +84,8 @@ export function PostFormFields({
         defaultValue={formState.excerpt}
         disabled={isPending}
         type="text"
+        onChange={(e) => onFieldChange?.("excerpt", e.target.value)}
+        error={errors.find((error) => error.field === "excerpt")?.message}
       />
       <ImageUploader
         disabled={isPending}
@@ -84,10 +97,12 @@ export function PostFormFields({
       />
       <InputText
         labelText="URL da imagem de capa"
-        name="coverImageUrl"
-        defaultValue={formState.coverImageUrl}
+        name="coverImage"
+        defaultValue={formState.coverImage}
         disabled={isPending}
         type="text"
+        onChange={(e) => onFieldChange?.("coverImage", e.target.value)}
+        error={errors.find((error) => error.field === "coverImage")?.message}
       />
       <MarkdownEditor
         labelText="Conteúdo"
@@ -95,6 +110,7 @@ export function PostFormFields({
         setValue={setContentValue}
         textAreaName="content"
         disabled={isPending}
+        error={errors.find((error) => error.field === "content")?.message}
       />
       <InputCheckbox
         labelText="Publicar?"
@@ -102,6 +118,8 @@ export function PostFormFields({
         defaultChecked={formState.published}
         disabled={isPending}
         type="checkbox"
+        onChange={(e) => onFieldChange?.("published", e.target.checked)}
+        error={errors.find((error) => error.field === "published")?.message}
       />
     </>
   );

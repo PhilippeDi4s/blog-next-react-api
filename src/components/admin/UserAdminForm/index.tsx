@@ -8,10 +8,8 @@ import { roleOptions, Roles } from "@/lib/user/roles";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
-import { useAdminForm } from "@/lib/shared/useAdminForm";
-import { getFieldErrors } from "@/lib/shared/getFielErrors";
-import { buildUserActions } from "@/lib/user/build-user-actions";
-import { Notice } from "@/lib/notifications";
+import { getFieldErrors } from "@/lib/shared/getFieldErrors";
+import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 
 type UserAdminFormProps = {
   userId: string;
@@ -41,12 +39,7 @@ export function UserAdminForm({
     handlePasswordConfirm,
     handleModalCancel,
     needsPassword,
-  } = useAdminForm(userId, initialData, {
-    buildActions: buildUserActions,
-    redirectPath: `admin/user/${userId}`,
-    notice: Notice.USER_UPDATED,
-  });
-
+  } = useUserAdminForm(userId, initialData);
   const [archivedIntent, setArchivedIntent] = useState(
     current.deletedAt !== null,
   );

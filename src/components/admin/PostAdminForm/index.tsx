@@ -1,19 +1,22 @@
-import { AdminPostFormValuesDto, AdminUpdatePostDto } from "@/lib/post/schemas";
+import { AdminPostFormValuesDto } from "@/lib/post/schemas";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { PostFormFields } from "@/components/post/PostFormFields";
-import { useAdminForm } from "@/lib/shared/useAdminForm";
 import { useState } from "react";
-import { getFieldErrors } from "@/lib/shared/getFielErrors";
-import { buildPostAction } from "@/lib/post/build-post-action";
-import { Notice } from "@/lib/notifications";
+import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
 
-type PostAdminForm = {
+type PostAdminFormProps = {
   postId: string;
+  slug: string;
   authorName: string;
   initialData: AdminPostFormValuesDto;
 };
 
-export function PostAdminForm({ postId, initialData }: PostAdminForm) {
+export function PostAdminForm({
+  postId,
+  slug,
+  authorName,
+  initialData,
+}: PostAdminFormProps) {
   const {
     current,
     setCurrent,
@@ -30,17 +33,21 @@ export function PostAdminForm({ postId, initialData }: PostAdminForm) {
     handlePasswordConfirm,
     handleModalCancel,
     needsPassword,
-  } = useAdminForm(postId, initialData, {
-    buildActions: buildPostAction,
-    redirectPath: `admin/post/${postId}`,
-    notice: Notice.POST_UPDATED,
-  });
+  } = usePostAdminForm(postId, initialData, slug);
 
-  const [archivedIntent, setArchivedIntent] = useState(
-    current.deletedAt !== null,
-  );
+  const [contentValue, setContentValue] = useState(initialData.content);
 
-  const errorsByField = getFieldErrors(fieldErrors);
+  function handleFieldChange(
+    field: keyof AdminPostFormValuesDto,
+    value: string | boolean,
+  ) {
+    setCurrent((prev) => ({ ...prev, [field]: value }));
+  }
+
+  function handleContentChange(value: string) {
+    setContentValue(value);
+    setCurrent((prev) => ({ ...prev, content: value }));
+  }
 
   const modalProps = needsPassword()
     ? {
@@ -76,28 +83,18 @@ export function PostAdminForm({ postId, initialData }: PostAdminForm) {
         }}
       >
         <PostFormFields
-          id={}
-          slug={}
-          authorName={}
-          contentValue={}
-          formState={initialData}
-          isPending={}
-          setContentValue={}
+          id={postId}
+          slug={slug}
+          authorName={authorName}
+          formState={current}
+          isPending={submitting}
+          contentValue={contentValue}
+          setContentValue={handleContentChange}
+          onFieldChange={handleFieldChange}
+          errors={fieldErrors}
         />
       </form>
-      <ConfirmAdminActionModal
-        canConfirm={}
-        needAdminPassword={}
-        onCancel={}
-        onConfirm={}
-        onReasonChange={}
-        open={}
-        passwordError={}
-        pendingActions={}
-        reasonErrors={}
-        reasons={}
-        submitting={}
-      />
+      <ConfirmAdminActionModal {...modalProps} />
     </>
   );
 }

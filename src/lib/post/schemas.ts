@@ -23,7 +23,7 @@ const PostBaseSchema = z.object({
     .trim()
     .min(3, "Excerto precisa de um mínimo de 3 caracteres")
     .max(200, "Excerto não deve ter mais que 200 caracteres"),
-  coverImageUrl: z
+  coverImage: z
     .string()
     .trim()
     .refine(isUrlOrRelativePath, {
@@ -67,7 +67,7 @@ export const FormStatePostSchema = PostBaseSchema.extend({
     name: "",
   }),
   content: z.string().default(""),
-  coverImageUrl: z.string().default(""),
+  coverImage: z.string().default(""),
   createdAt: z.string().default(""),
 });
 
@@ -96,7 +96,7 @@ export const AdminPostFormValuesSchema = PostResponseSchema.pick({
   published: true,
   deletedAt: true,
 }).extend({
-  coverImageUrl: z.string(),
+  coverImage: z.string(),
 });
 
 export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;

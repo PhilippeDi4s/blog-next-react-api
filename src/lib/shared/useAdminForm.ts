@@ -94,21 +94,20 @@ export function useAdminForm<T extends Record<string, unknown>>(
     const newReasonError: Record<string, string> = {};
     results.forEach((r, i) => {
       if (r.status !== "fulfilled" || r.value.success) return;
-      const err = r.value.errors.find((e) => e.code === "INVALID_REASON");
+      const err = r.value.errors.find((e) => e.field === "reason");
       if (err) newReasonError[actions[i].key] = err.message;
     });
     setReasonError(newReasonError);
 
-    const passwordFailed = errors.some((e) => e.code === "INVALID_PASSWORD");
+    const passwordFailed = errors.some((e) => e.field === "password");
     if (passwordFailed) setPasswordError("Senha incorreta. Tente novamente.");
 
     const hasConfirmError =
       Object.keys(newReasonError).length > 0 || passwordFailed;
-    const hasNetworkError = errors.some((e) => e.code === "CONNECTION_ERROR");
+    const hasNetworkError = errors.some((e) => e.field === "CONNECTION_ERROR");
     const hasFormError = errors.some(
       (e) =>
-        e.code !== "INVALID_REASON" &&
-        e.code !== "INVALID_PASSWORD" &&
+        e.code !== "INVALID_VALIDATION" &&
         e.code !== "CONNECTION_ERROR",
     );
 

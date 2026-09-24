@@ -15,7 +15,7 @@ export function getZodErrorMessages<T>(error: z.ZodError<T>): FieldError[] {
     const validMessages = Array.isArray(messages) ? messages : [];
 
     return validMessages.map((message) => ({
-      code: `INVALID_${field.toUpperCase()}`,
+      code: `INVALID_VALIDATION`,
       field,
       message,
     }));

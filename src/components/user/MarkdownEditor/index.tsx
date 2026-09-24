@@ -1,5 +1,6 @@
 "use client";
 
+import { inputError } from "@/lib/input-styles";
 import dynamic from "next/dynamic";
 import { useId } from "react";
 import rehypeSanitize from "rehype-sanitize";
@@ -15,6 +16,7 @@ type MarkdownEditorProps = {
   setValue: (value: string) => void;
   textAreaName: string;
   disabled?: boolean;
+  error?: string;
 };
 
 export function MarkdownEditor({
@@ -23,6 +25,7 @@ export function MarkdownEditor({
   setValue,
   textAreaName,
   disabled = false,
+  error,
 }: MarkdownEditorProps) {
   const id = useId();
 
@@ -42,7 +45,6 @@ export function MarkdownEditor({
           setValue(value);
         }}
         height={400}
-        // extraCommands={[]}
         preview="edit"
         hideToolbar={disabled}
         textareaProps={{
@@ -55,7 +57,7 @@ export function MarkdownEditor({
           remarkPlugins: [[remarkGfm]],
         }}
       />
-
+      <span className={inputError}>{error}</span>
     </div>
   );
 }
