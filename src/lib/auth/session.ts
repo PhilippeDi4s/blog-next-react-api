@@ -28,9 +28,9 @@ export async function getLoginSession() {
   return jwt;
 }
 
-export async function getLoginSessionOrRedirect(){
-  const token = await getLoginSession()
-  if(!token){
+export async function getLoginSessionOrRedirect() {
+  const token = await getLoginSession();
+  if (!token) {
     redirect("/login");
   }
   return token;

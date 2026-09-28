@@ -1,27 +1,23 @@
 "use server";
 
-import { getLoginSession } from "@/lib/auth/session";
+import { getLoginSessionOrRedirect } from "@/lib/auth/session";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { ActionResult } from "@/lib/shared/adminAction";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { redirect } from "next/navigation";
 
-export async function logoutAction() {
-  const jwtToken = await getLoginSession();
+export async function logoutAction(): Promise<ActionResult> {
+  const token = await getLoginSessionOrRedirect();
 
-  if (!jwtToken) {
-    return {
-      error: "Faça login novamente em outra aba",
-    };
-  }
-
-  const res = await authenticatedApiRequest("auth/logout", jwtToken, {
+  const res = await authenticatedApiRequest("auth/logout", token, {
     method: "POST",
   });
 
   if (!res.success) {
     return {
-      error: res.errors,
+      success: false,
+      errors: res.errors,
     };
   }
 
-  redirect("login?force-logout=1");
+  redirectWithNotice("login", Notice.USER_LOGOUT);
 }

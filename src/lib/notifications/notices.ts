@@ -9,7 +9,7 @@ export const Notice = {
   USER_PROMOTE: "user-promote",
   USER_DEMOTE: "user-demote",
 
-  FORCE_LOGOUT: "force-logout",
+  USER_LOGOUT: "user-logout",
 
   ADMIN_FORCE_LOGOUT: "admin-force-logout",
   ADMIN_BLOCKED: "admin-blocked",
@@ -82,9 +82,9 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
     type: "success",
   },
 
-  [Notice.FORCE_LOGOUT]: {
-    message: "Faça login novamente.",
-    type: "info",
+  [Notice.USER_LOGOUT]: {
+    message: "Logout feito com sucesso",
+    type: "success",
   },
 
   [Notice.ADMIN_FORCE_LOGOUT]: {

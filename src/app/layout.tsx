@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+// @ts-expect-error Next.js handles global CSS imports at build time.
 import "./globals.css";
 import { Container } from "@/components/ui/Container";
 import { Header } from "@/components/layout/Header";
@@ -8,7 +9,7 @@ import { ToastifyContainer } from "@/components/feedBack/ToastifyContainer";
 export const metadata: Metadata = {
   title: {
     template: "%s | The Blog",
-    default: "The Blog", // a default is required when creating a template
+    default: "The Blog", 
   },
 };
 
