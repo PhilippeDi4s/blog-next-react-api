@@ -25,6 +25,7 @@ export const Notice = {
   POST_PUBLISHED: "post-published",
 
   IMAGE_UPLOADED: "image-uploaded",
+  IMAGE_DELETED: "image-deleted",
 } as const;
 
 export type NoticeKey = (typeof Notice)[keyof typeof Notice];
@@ -139,6 +140,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
 
   [Notice.IMAGE_UPLOADED]: {
     message: "Imagem enviada com sucesso.",
+    type: "success",
+  },
+
+  [Notice.IMAGE_DELETED]: {
+    message: "Imagem deletada com sucesso.",
     type: "success",
   },
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { showMessage } from "@/lib/show-message";
-import { uploadImageAction } from "@/app/actions/upload/upoad-image-action";
+import { uploadImageAction } from "@/app/actions/image/upoad-image-action";
 import { Button } from "@/components/ui/Button";
 import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
