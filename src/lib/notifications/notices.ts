@@ -1,5 +1,7 @@
 export const Notice = {
+  USER_CREATED: "user-created",
   USER_UPDATED: "user-updated",
+  USER_UPDATED_PASSWORD: "user-updated-password",
   USER_DELETED: "user-deleted",
   USER_ARCHIVED: "user-archived",
   USER_RESTORED: "user-stored",
@@ -34,8 +36,18 @@ type NoticeConfig = {
 };
 
 export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
+  [Notice.USER_CREATED]: {
+    message: "Usuário criado com sucesso.",
+    type: "success",
+  },
+
   [Notice.USER_UPDATED]: {
     message: "Usuário atualizado com sucesso.",
+    type: "success",
+  },
+
+  [Notice.USER_UPDATED_PASSWORD]: {
+    message: "Senha atualizada com sucesso.",
     type: "success",
   },
 

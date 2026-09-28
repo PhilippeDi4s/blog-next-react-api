@@ -1,33 +1,28 @@
-import { getLoginSession } from "@/lib/auth/session";
+import { validateActionRequest } from "@/lib/auth/validate-action-request";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { ActionResult } from "@/lib/shared/adminAction";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { redirect } from "next/navigation";
 
-type UpdateUserActionState = {
-  errors: string[];
-  success?: string;
-};
+export async function DeleteUserAction(): Promise<ActionResult> {
+  const validation = await validateActionRequest();
 
-export async function DeleteUserAction(
-): Promise<UpdateUserActionState> {
-  const jwt = await getLoginSession();
-
-  if (!jwt) {
+  if (!validation.success) {
     return {
-      errors: ["Login expirado", "Faça login em outra aba antes de salvar."],
+      success: false,
+      errors: validation.errors,
     };
-
-
   }
 
-  const res = await authenticatedApiRequest("user/me", jwt, {
+  const res = await authenticatedApiRequest("user/me", validation.token, {
     method: "DELETE",
   });
 
   if (!res.success) {
     return {
+      success: false,
       errors: res.errors,
     };
   }
 
-  redirect("login?user-deleted=1");
+  redirectWithNotice("login", Notice.USER_DELETED);
 }

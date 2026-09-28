@@ -1,44 +1,32 @@
 "use server";
-
+import { parseFormData } from "@/lib/forms/parse-form-data";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { FormActionResult } from "@/lib/shared/adminAction";
 import {
   CreateUserSchema,
   UserFormStateDto,
   UserFormStateSchema,
-  UserSummarySchema,
 } from "@/lib/user/schemas";
 import { apiRequest } from "@/utils/api-request";
 import { simulateDelay } from "@/utils/async-delay";
-import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { redirect } from "next/navigation";
-
-type CreateUserActionState = {
-  formState: UserFormStateDto;
-  errors: string[];
-  success: boolean;
-};
 
 export async function createUserAction(
-  state: CreateUserActionState,
+  prevState: FormActionResult<UserFormStateDto>,
   formData: FormData,
-): Promise<CreateUserActionState> {
+): Promise<FormActionResult<UserFormStateDto>> {
   await simulateDelay(3000);
 
-  if (!(formData instanceof FormData)) {
-    return {
-      formState: state.formState,
-      errors: ["Dados inválidos"],
-      success: false,
-    };
-  }
+  const parsed = parseFormData(
+    formData,
+    CreateUserSchema,
+    UserFormStateSchema,
+  );
 
-  const formObj = Object.fromEntries(formData.entries());
-  const parsedFormData = CreateUserSchema.safeParse(formObj);
-
-  if (!parsedFormData.success) {
+  if (!parsed.success) {
     return {
-      formState: UserSummarySchema.parse(formObj),
-      errors: getZodErrorMessages(parsedFormData.error),
       success: false,
+      errors: parsed.errors,
+      formState: parsed.formState,
     };
   }
 
@@ -47,16 +35,16 @@ export async function createUserAction(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(parsedFormData.data),
+    body: JSON.stringify(parsed.data),
   });
 
   if (!res.success) {
     return {
-      formState: UserFormStateSchema.parse(formObj),
+      success: false,
+      formState: parsed.data,
       errors: res.errors,
-      success: res.success,
     };
   }
 
-  redirect("/login?created=1");
+  redirectWithNotice("login", Notice.USER_CREATED);
 }

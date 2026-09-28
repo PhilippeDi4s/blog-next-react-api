@@ -16,3 +16,9 @@ export type PendingAction = {
   run: (reason: string) => Promise<ActionResult>;
   needsPassword: boolean;
 };
+
+export type FormActionResult<TFormState> = {
+  success: boolean;
+  errors: FieldError[];
+  formState?: TFormState;
+};

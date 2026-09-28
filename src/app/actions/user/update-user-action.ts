@@ -1,55 +1,41 @@
-import { getLoginSession } from "@/lib/auth/session";
+import { validateActionRequest } from "@/lib/auth/validate-action-request";
+import { parseFormData } from "@/lib/forms/parse-form-data";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { FormActionResult } from "@/lib/shared/adminAction";
 import {
   UpdateUserSchema,
   UserFormStateDto,
   UserFormStateSchema,
 } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { redirect } from "next/navigation";
-
-type UpdateUserActionState = {
-  formState: UserFormStateDto;
-  errors: string[];
-  success?: string;
-};
 
 export async function UpdateUserAction(
-  prevState: UpdateUserActionState,
+  prevState: FormActionResult<UserFormStateDto>,
   formData: FormData,
-): Promise<UpdateUserActionState> {
-  const jwt = await getLoginSession();
+): Promise<FormActionResult<UserFormStateDto>> {
+  const validation = await validateActionRequest();
 
-  if (!(formData instanceof FormData)) {
+  if (!validation.success) {
     return {
-      formState: prevState.formState,
-      errors: ["Dados inválidos"],
+      success: false,
+      errors: validation.errors,
+      formState: UserFormStateSchema.parse(formData),
     };
   }
 
-  const formDataToObj = Object.fromEntries(formData.entries());
-  const zodParsedObj = UpdateUserSchema.safeParse(formDataToObj);
+  const parsed = parseFormData(formData, UpdateUserSchema, UserFormStateSchema);
 
-  if (!jwt) {
+  if (!parsed.success) {
     return {
-      formState: UserFormStateSchema.parse(formDataToObj),
-      errors: ["Login expirado", "Faça login em outra aba antes de salvar."],
+      success: false,
+      errors: parsed.errors,
+      formState: parsed.formState,
     };
   }
 
-  if (!zodParsedObj.success) {
-    const errors = getZodErrorMessages(zodParsedObj.error);
-    return {
-      errors,
-      formState: UserFormStateSchema.parse(formDataToObj),
-    };
-  }
-
-  const updatedUserData = zodParsedObj.data;
-
-  const res = await authenticatedApiRequest("user/me", jwt, {
+  const res = await authenticatedApiRequest("user/me", validation.token, {
     method: "PATCH",
-    body: JSON.stringify(updatedUserData),
+    body: JSON.stringify(parsed.data),
     headers: {
       "Content-Type": "application/json",
     },
@@ -57,11 +43,11 @@ export async function UpdateUserAction(
 
   if (!res.success) {
     return {
-      formState: UserFormStateSchema.parse(updatedUserData),
+      success: false,
       errors: res.errors,
+      formState: parsed.data,
     };
   }
 
-  redirect("login?user-changed=1")
-
+  redirectWithNotice("login", Notice.USER_UPDATED);
 }

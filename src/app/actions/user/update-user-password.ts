@@ -1,57 +1,51 @@
-import { getLoginSession } from "@/lib/auth/session";
-import { UpdatePasswordSchema } from "@/lib/user/schemas";
+import { validateActionRequest } from "@/lib/auth/validate-action-request";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { FormActionResult } from "@/lib/shared/adminAction";
+import { UpdatePasswordDto, UpdatePasswordSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { redirect } from "next/navigation";
-
-type UpdateUserActionState = {
-  errors: string[];
-  success?: string;
-};
 
 export async function UpdateUserPasswordAction(
-  prevState: UpdateUserActionState,
+  prevState: FormActionResult<UpdatePasswordDto>,
   formData: FormData,
-): Promise<UpdateUserActionState> {
-  const jwt = await getLoginSession();
+): Promise<FormActionResult<UpdatePasswordDto>> {
+  const validation = await validateActionRequest();
 
-  if (!(formData instanceof FormData)) {
+  if (!validation.success) {
     return {
-      errors: ["Dados inválidos"],
+      success: false,
+      errors: validation.errors,
     };
   }
 
-  const formDataToObj = Object.fromEntries(formData.entries());
-  const zodParsedObj = UpdatePasswordSchema.safeParse(formDataToObj);
+  const formObj = Object.fromEntries(formData);
+  const parsed = UpdatePasswordSchema.safeParse(formObj);
 
-  if (!jwt) {
+  if (!parsed.success) {
     return {
-      errors: ["Login expirado", "Faça login em outra aba antes de salvar."],
+      success: false,
+      errors: getZodErrorMessages(parsed.error),
     };
   }
 
-  if (!zodParsedObj.success) {
-    const errors = getZodErrorMessages(zodParsedObj.error);
-    return {
-      errors,
-    };
-  }
-
-  const updatedUserPasswordData = zodParsedObj.data;
-
-  const res = await authenticatedApiRequest("user/me/password", jwt, {
-    method: "PATCH",
-    body: JSON.stringify(updatedUserPasswordData),
-    headers: {
-      "Content-Type": "application/json",
+  const res = await authenticatedApiRequest(
+    "user/me/password",
+    validation.token,
+    {
+      method: "PATCH",
+      body: JSON.stringify(parsed.data),
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
 
   if (!res.success) {
     return {
+      success: false,
       errors: res.errors,
     };
   }
 
-  redirect("login?user-changed=1");
+  redirectWithNotice("login", Notice.USER_UPDATED_PASSWORD);
 }

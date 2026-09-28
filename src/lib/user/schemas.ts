@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { Roles } from "./roles";
-import {
-  ConfirmActionAdmin,
-} from "../sharedSchemas/schemas";
+import { ConfirmActionAdmin } from "../sharedSchemas/schemas";
 
 export const RoleSchema = z.enum(Roles);
 
@@ -34,6 +32,13 @@ export const CreateUserSchema = CreateUserBase.refine(
     password,
   };
 });
+
+export const UserFormStateSchema = z.object({
+  name: z.string().default(""),
+  email: z.string().default(""),
+});
+
+export const LoginFormStateSchema = UserFormStateSchema.pick({ email: true });
 
 export const UpdatePasswordSchema = z
   .object({
@@ -113,6 +118,8 @@ export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
 export type UpdatePasswordDto = z.infer<typeof UpdatePasswordSchema>;
 
 export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
+export type UserFormStateDto = z.infer<typeof UserFormStateSchema>;
+export type LoginFormStateDto = z.infer<typeof LoginFormStateSchema>;
 
 export type UserResponseDto = z.infer<typeof UserResponseSchema>;
 
