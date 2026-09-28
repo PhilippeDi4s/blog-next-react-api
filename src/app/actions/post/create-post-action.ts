@@ -7,7 +7,7 @@ import {
   CreatePostDto,
   CreatePostSchema,
   FormStatePostDto,
-  FormStatePostSchema,
+  PostFormStateSchema,
   PostResponseDto,
 } from "@/lib/post/schemas";
 import { FormActionResult } from "@/lib/shared/adminAction";
@@ -24,11 +24,11 @@ export async function createPostAction(
     return {
       success: false,
       errors: validation.errors,
-      formState: FormStatePostSchema.parse(formData),
+      formState: PostFormStateSchema.parse(formData),
     };
   }
 
-  const parsed = parseFormData(formData, CreatePostSchema, FormStatePostSchema);
+  const parsed = parseFormData(formData, CreatePostSchema, PostFormStateSchema);
 
   if (!parsed.success) {
     return {

@@ -58,7 +58,7 @@ const PostBaseSchema = z.object({
 export const CreatePostSchema = PostBaseSchema;
 export const UpdatePostSchema = PostBaseSchema;
 
-export const FormStatePostSchema = PostBaseSchema.extend({
+export const PostFormStateSchema = PostBaseSchema.extend({
   title: z.string().default(""),
   excerpt: z.string().default(""),
   author: UserSummarySchema.optional().default({
@@ -104,7 +104,7 @@ export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
 export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;
 
-export type FormStatePostDto = z.infer<typeof FormStatePostSchema>;
+export type FormStatePostDto = z.infer<typeof PostFormStateSchema>;
 
 export type PostResponseDto = z.infer<typeof PostResponseSchema>;
 

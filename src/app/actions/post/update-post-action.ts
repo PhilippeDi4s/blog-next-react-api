@@ -5,7 +5,7 @@ import { parseFormData } from "@/lib/forms/parse-form-data";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import {
   FormStatePostDto,
-  FormStatePostSchema,
+  PostFormStateSchema,
   PostResponseDto,
   UpdatePostSchema,
 } from "@/lib/post/schemas";
@@ -25,14 +25,14 @@ export async function updatePostAction(
     return {
       success: false,
       errors: validation.errors,
-      formState: FormStatePostSchema.parse(formData),
+      formState: PostFormStateSchema.parse(formData),
     };
   }
 
   const idErrors = validateId(postId);
   if (idErrors) return { success: false, errors: idErrors };
 
-  const parsed = parseFormData(formData, UpdatePostSchema, FormStatePostSchema);
+  const parsed = parseFormData(formData, UpdatePostSchema, PostFormStateSchema);
 
   if (!parsed.success) {
     return {
