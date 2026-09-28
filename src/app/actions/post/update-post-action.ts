@@ -4,7 +4,7 @@ import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { parseFormData } from "@/lib/forms/parse-form-data";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import {
-  FormStatePostDto,
+  PostFormStateDto,
   PostFormStateSchema,
   PostResponseDto,
   UpdatePostSchema,
@@ -15,10 +15,10 @@ import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 
 export async function updatePostAction(
-  prevState: FormActionResult<FormStatePostDto>,
+  prevState: FormActionResult<PostFormStateDto>,
   postId: string,
   formData: FormData,
-): Promise<FormActionResult<FormStatePostDto>> {
+): Promise<FormActionResult<PostFormStateDto>> {
   const validation = await validateActionRequest();
 
   if (!validation.success) {
@@ -42,7 +42,7 @@ export async function updatePostAction(
     };
   }
 
-  const res = await authenticatedApiRequest<FormStatePostDto>(
+  const res = await authenticatedApiRequest<PostFormStateDto>(
     `/post/me/${postId}`,
     validation.token,
     {

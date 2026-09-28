@@ -1,14 +1,14 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { FormActionResult } from "@/lib/shared/adminAction";
-import { UpdatePasswordDto, UpdatePasswordSchema } from "@/lib/user/schemas";
+import { ActionResult } from "@/lib/shared/adminAction";
+import { UpdatePasswordSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 
 export async function UpdateUserPasswordAction(
-  prevState: FormActionResult<UpdatePasswordDto>,
+  prevState: ActionResult,
   formData: FormData,
-): Promise<FormActionResult<UpdatePasswordDto>> {
+): Promise<ActionResult> {
   const validation = await validateActionRequest();
 
   if (!validation.success) {

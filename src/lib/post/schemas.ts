@@ -104,7 +104,7 @@ export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
 export type UpdatePostDto = z.infer<typeof UpdatePostSchema>;
 
-export type FormStatePostDto = z.infer<typeof PostFormStateSchema>;
+export type PostFormStateDto = z.infer<typeof PostFormStateSchema>;
 
 export type PostResponseDto = z.infer<typeof PostResponseSchema>;
 

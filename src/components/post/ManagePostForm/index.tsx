@@ -9,14 +9,14 @@ import { updatePostAction } from "@/app/actions/post/update-post-action";
 
 import { showMessage } from "@/lib/show-message";
 
-import { FormStatePostDto, PostFormStateSchema } from "@/lib/post/schemas";
+import { PostFormStateDto, PostFormStateSchema } from "@/lib/post/schemas";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { PostFormFields } from "../PostFormFields";
 
 type ManagePostFormUpdateProps = {
   mode: "update";
-  publicPost: FormStatePostDto;
+  publicPost: PostFormStateDto;
 };
 
 type ManagePostFormInsertProps = {

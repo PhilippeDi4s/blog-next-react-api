@@ -2,7 +2,7 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { FormStatePostDto, PostResponseDto } from "@/lib/post/schemas";
+import { PostFormStateDto, PostResponseDto } from "@/lib/post/schemas";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
@@ -21,7 +21,7 @@ export async function deletePostAction(id: string): Promise<ActionResult> {
   const idErrors = validateId(id);
   if (idErrors) return { success: false, errors: idErrors };
 
-  const res = await authenticatedApiRequest<FormStatePostDto>(
+  const res = await authenticatedApiRequest<PostFormStateDto>(
     `/post/me/${id}`,
     validation.token,
     {

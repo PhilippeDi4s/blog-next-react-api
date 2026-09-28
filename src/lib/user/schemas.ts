@@ -38,6 +38,10 @@ export const UserFormStateSchema = z.object({
   email: z.string().default(""),
 });
 
+export const LoginSchema = CreateUserBase.pick({
+  email: true,
+  password: true,
+});
 export const LoginFormStateSchema = UserFormStateSchema.pick({ email: true });
 
 export const UpdatePasswordSchema = z
@@ -119,6 +123,8 @@ export type UpdatePasswordDto = z.infer<typeof UpdatePasswordSchema>;
 
 export type UserSummaryDto = z.infer<typeof UserSummarySchema>;
 export type UserFormStateDto = z.infer<typeof UserFormStateSchema>;
+
+export type LoginDto = z.infer<typeof LoginSchema>;
 export type LoginFormStateDto = z.infer<typeof LoginFormStateSchema>;
 
 export type UserResponseDto = z.infer<typeof UserResponseSchema>;
