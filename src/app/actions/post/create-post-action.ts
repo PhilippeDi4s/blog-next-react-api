@@ -37,7 +37,7 @@ export async function createPostAction(
     };
   }
 
-  const res = await authenticatedApiRequest<PostFormStateDto>(
+  const res = await authenticatedApiRequest<PostResponseDto>(
     `/post/me`,
     validation.token,
     {
@@ -57,7 +57,7 @@ export async function createPostAction(
     };
   }
 
-  const createdPost = res.data as unknown as PostResponseDto;
+  const createdPost = res.data;
 
   revalidateTag("posts", "max");
   redirectWithNotice(`author/${createdPost.id}`, Notice.POST_CREATED);

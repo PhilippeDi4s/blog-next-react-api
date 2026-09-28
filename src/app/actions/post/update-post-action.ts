@@ -42,7 +42,7 @@ export async function updatePostAction(
     };
   }
 
-  const res = await authenticatedApiRequest<PostFormStateDto>(
+  const res = await authenticatedApiRequest<PostResponseDto>(
     `/post/me/${postId}`,
     validation.token,
     {
@@ -62,7 +62,7 @@ export async function updatePostAction(
     };
   }
 
-  const post = res.data as unknown as PostResponseDto;
+  const post = res.data;
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");

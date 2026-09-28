@@ -2,7 +2,7 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { PostFormStateDto, PostResponseDto } from "@/lib/post/schemas";
+import { PostResponseDto } from "@/lib/post/schemas";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
@@ -21,14 +21,9 @@ export async function deletePostAction(id: string): Promise<ActionResult> {
   const idErrors = validateId(id);
   if (idErrors) return { success: false, errors: idErrors };
 
-  const res = await authenticatedApiRequest<PostFormStateDto>(
+  const res = await authenticatedApiRequest<PostResponseDto>(
     `/post/me/${id}`,
     validation.token,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
   );
 
   if (!res.success) {
@@ -38,7 +33,7 @@ export async function deletePostAction(id: string): Promise<ActionResult> {
     };
   }
 
-  const post = res.data as unknown as PostResponseDto;
+  const post = res.data;
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");
