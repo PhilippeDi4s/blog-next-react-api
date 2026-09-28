@@ -9,7 +9,7 @@ import { updatePostAction } from "@/app/actions/post/update-post-action";
 
 import { showMessage } from "@/lib/show-message";
 
-import { FormStatePostDto, FormStatePostSchema } from "@/lib/post/schemas";
+import { FormStatePostDto, PostFormStateSchema } from "@/lib/post/schemas";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { PostFormFields } from "../PostFormFields";
@@ -45,7 +45,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   };
 
   const initialState = {
-    formState: FormStatePostSchema.parse(publicPost || {}),
+    formState: PostFormStateSchema.parse(publicPost || {}),
     errors: [],
   };
 

@@ -20,6 +20,7 @@ export const Notice = {
   ADMIN_POST_RESTORE: "admin-post-restored",
 
   POST_CREATED: "post-created",
+  POST_DELETED: "post-deleted",
   POST_UPDATED: "post-updated",
   POST_PUBLISHED: "post-published",
 
@@ -118,6 +119,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
 
   [Notice.POST_CREATED]: {
     message: "Post criado com sucesso.",
+    type: "success",
+  },
+
+  [Notice.POST_DELETED]: {
+    message: "Post deletado com sucesso.",
     type: "success",
   },
 

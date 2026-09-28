@@ -1,87 +1,71 @@
 "use server";
 
-import { getLoginSession } from "@/lib/auth/session";
+import { validateActionRequest } from "@/lib/auth/validate-action-request";
+import { parseFormData } from "@/lib/forms/parse-form-data";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
 import {
   FormStatePostDto,
   FormStatePostSchema,
+  PostResponseDto,
   UpdatePostSchema,
 } from "@/lib/post/schemas";
+import { FormActionResult } from "@/lib/shared/adminAction";
+import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
-
-type UpdatePostActionState = {
-  formState: FormStatePostDto;
-  errors: string[];
-  success?: string;
-};
 
 export async function updatePostAction(
-  prevState: UpdatePostActionState,
+  prevState: FormActionResult<FormStatePostDto>,
+  postId: string,
   formData: FormData,
-): Promise<UpdatePostActionState> {
-  const jwt = await getLoginSession();
+): Promise<FormActionResult<FormStatePostDto>> {
+  const validation = await validateActionRequest();
 
-  if (!(formData instanceof FormData)) {
+  if (!validation.success) {
     return {
-      formState: prevState.formState,
-      errors: ["Dados inválidos"],
+      success: false,
+      errors: validation.errors,
+      formState: FormStatePostSchema.parse(formData),
     };
   }
 
-  const id = formData.get("id")?.toString() || "";
+  const idErrors = validateId(postId);
+  if (idErrors) return { success: false, errors: idErrors };
 
-  if (!id || typeof id !== "string") {
+  const parsed = parseFormData(formData, UpdatePostSchema, FormStatePostSchema);
+
+  if (!parsed.success) {
     return {
-      formState: prevState.formState,
-      errors: ["ID inválido"],
+      success: false,
+      errors: parsed.errors,
+      formState: parsed.formState,
     };
   }
 
-  const formDataToObj = Object.fromEntries(formData.entries());
-  const zodParsedObj = UpdatePostSchema.safeParse(formDataToObj);
-
-  if (!jwt) {
-    return {
-      formState: FormStatePostSchema.parse(formDataToObj),
-      errors: ["login expirado", "Faça login em outra aba antes de salvar."],
-    };
-  }
-
-  if (!zodParsedObj.success) {
-    const errors = getZodErrorMessages(zodParsedObj.error);
-    return {
-      errors,
-      formState: FormStatePostSchema.parse(formDataToObj),
-    };
-  }
-
-  const newPost = zodParsedObj.data;
-
-  const updatePostResponse = await authenticatedApiRequest<FormStatePostDto>(
-    `/post/me/${id}`,
-    jwt,
+  const res = await authenticatedApiRequest<FormStatePostDto>(
+    `/post/me/${postId}`,
+    validation.token,
     {
       method: "PATCH",
-      body: JSON.stringify(newPost),
+      body: JSON.stringify(parsed.data),
       headers: {
         "Content-Type": "application/json",
       },
     },
   );
 
-  if (!updatePostResponse.success) {
+  if (!res.success) {
     return {
-      formState: FormStatePostSchema.parse(formDataToObj),
-      errors: updatePostResponse.errors,
+      success: false,
+      errors: res.errors,
+      formState: parsed.formState,
     };
   }
 
-  const post = updatePostResponse.data;
+  const post = res.data as unknown as PostResponseDto;
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");
 
-  redirect(`/author/post/${post.id}?updated=1`);
+  redirectWithNotice(`author/post/${post.id}`, Notice.POST_UPDATED);
 }
