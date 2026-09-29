@@ -38,5 +38,5 @@ export async function PostEditPageContent({ params }: AuthorPostsIdPageProps) {
   const post = postRes.data;
   const publicPost = PostFormStateSchema.parse(post);
 
-  return <ManagePostForm mode="update" publicPost={publicPost} />;
+  return <ManagePostForm mode="update" publicPost={publicPost} postId={id} />;
 }

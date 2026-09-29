@@ -17,7 +17,9 @@ export async function deleteImageAction(
   }
 
   const idErrors = validateId(imageId);
-  if (idErrors) return { success: false, errors: idErrors };
+  if (idErrors) {
+    redirectWithNotice("author/images", Notice.IMAGE_NOT_FOUND);
+  }
 
   const res = await authenticatedApiRequest(
     `/images/${imageId}`,

@@ -20,5 +20,5 @@ export type PendingAction = {
 export type FormActionResult<TFormState> = {
   success: boolean;
   errors: FieldError[];
-  formState?: TFormState;
+  formState: TFormState;
 };

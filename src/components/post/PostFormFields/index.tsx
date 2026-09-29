@@ -4,12 +4,12 @@ import { InputText } from "@/components/ui/InputText";
 import { LinkButton } from "@/components/ui/Link";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
-import { PostFormValuesDto } from "@/lib/post/schemas";
+import { PostFormStateDto, PostFormValuesDto } from "@/lib/post/schemas";
 import { FieldError } from "@/lib/shared/adminAction";
 import { GalleryVerticalEndIcon } from "lucide-react";
 
 type PostFormFieldsProps = {
-  formState: PostFormValuesDto;
+  formState: PostFormStateDto;
   isPending: boolean;
   authorName: string;
   contentValue: string;
@@ -20,7 +20,7 @@ type PostFormFieldsProps = {
     field: keyof PostFormValuesDto,
     value: string | boolean,
   ) => void;
-  errors: FieldError[];
+  errors?: FieldError[];
 };
 
 export function PostFormFields({
@@ -76,7 +76,9 @@ export function PostFormFields({
         disabled={isPending}
         type="text"
         onChange={(e) => onFieldChange?.("title", e.target.value)}
-        error={errors.find((error) => error.field === "title")?.message}
+        error={
+          errors ? errors.find((error) => error.field === "title")?.message : ""
+        }
       />
       <InputText
         labelText="Exerto"
@@ -85,7 +87,11 @@ export function PostFormFields({
         disabled={isPending}
         type="text"
         onChange={(e) => onFieldChange?.("excerpt", e.target.value)}
-        error={errors.find((error) => error.field === "excerpt")?.message}
+        error={
+          errors
+            ? errors.find((error) => error.field === "excerpt")?.message
+            : ""
+        }
       />
       <ImageUploader
         disabled={isPending}
@@ -102,7 +108,11 @@ export function PostFormFields({
         disabled={isPending}
         type="text"
         onChange={(e) => onFieldChange?.("coverImage", e.target.value)}
-        error={errors.find((error) => error.field === "coverImage")?.message}
+        error={
+          errors
+            ? errors.find((error) => error.field === "coverImage")?.message
+            : ""
+        }
       />
       <MarkdownEditor
         labelText="Conteúdo"
@@ -110,7 +120,11 @@ export function PostFormFields({
         setValue={setContentValue}
         textAreaName="content"
         disabled={isPending}
-        error={errors.find((error) => error.field === "content")?.message}
+        error={
+          errors
+            ? errors.find((error) => error.field === "content")?.message
+            : ""
+        }
       />
       <InputCheckbox
         labelText="Publicar?"
@@ -119,7 +133,11 @@ export function PostFormFields({
         disabled={isPending}
         type="checkbox"
         onChange={(e) => onFieldChange?.("published", e.target.checked)}
-        error={errors.find((error) => error.field === "published")?.message}
+        error={
+          errors
+            ? errors.find((error) => error.field === "published")?.message
+            : ""
+        }
       />
     </>
   );

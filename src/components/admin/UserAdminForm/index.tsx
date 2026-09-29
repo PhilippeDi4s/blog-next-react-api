@@ -21,6 +21,7 @@ type UserAdminFormProps = {
 export function UserAdminForm({
   userId,
   initialData,
+  isFormModalOpen,
   onClose,
 }: UserAdminFormProps) {
   const {
@@ -71,8 +72,6 @@ export function UserAdminForm({
         onCancel: handleModalCancel,
         needAdminPassword: false as const,
       };
-
-  if (!modalOpen) return null;
 
   return (
     <>
@@ -127,7 +126,14 @@ export function UserAdminForm({
           name="deletedAt"
           error={errorsByField.deletedAt}
           value={archivedIntent ? "archived" : "active"}
-          onChange={(value) => setArchivedIntent(value === "archived")}
+          onChange={(value) => {
+            const archived = value === "archived";
+            setArchivedIntent(archived);
+            setCurrent((prev) => ({
+              ...prev,
+              deletedAt: archived ? new Date().toISOString() : null,
+            }));
+          }}
         >
           <option value="active">Ativo</option>
           <option value="archived">Arquivado</option>

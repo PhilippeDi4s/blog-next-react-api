@@ -8,7 +8,7 @@ import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 
-export async function deletePostAction(id: string): Promise<ActionResult> {
+export async function deletePostAction(postId: string): Promise<ActionResult> {
   const validation = await validateActionRequest();
 
   if (!validation.success) {
@@ -18,11 +18,13 @@ export async function deletePostAction(id: string): Promise<ActionResult> {
     };
   }
 
-  const idErrors = validateId(id);
-  if (idErrors) return { success: false, errors: idErrors };
+  const idErrors = validateId(postId);
+  if (idErrors) {
+    redirectWithNotice("author/post", Notice.POST_NOT_FOUND);
+  }
 
   const res = await authenticatedApiRequest<PostResponseDto>(
-    `/post/me/${id}`,
+    `/post/me/${postId}`,
     validation.token,
   );
 

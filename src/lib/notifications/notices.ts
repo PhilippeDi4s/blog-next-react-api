@@ -8,6 +8,7 @@ export const Notice = {
   USER_BLOCKED: "user-blocked",
   USER_PROMOTE: "user-promote",
   USER_DEMOTE: "user-demote",
+  USER_NOT_FOUND: "user-not-found",
 
   USER_LOGOUT: "user-logout",
 
@@ -23,9 +24,11 @@ export const Notice = {
   POST_DELETED: "post-deleted",
   POST_UPDATED: "post-updated",
   POST_PUBLISHED: "post-published",
+  POST_NOT_FOUND: "post-not-found",
 
   IMAGE_UPLOADED: "image-uploaded",
   IMAGE_DELETED: "image-deleted",
+  IMAGE_NOT_FOUND: "image-not-found",
 } as const;
 
 export type NoticeKey = (typeof Notice)[keyof typeof Notice];
@@ -88,6 +91,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
     type: "success",
   },
 
+  [Notice.USER_NOT_FOUND]: {
+    message: "Usuário não encontrado",
+    type: "error",
+  },
+
   [Notice.ADMIN_FORCE_LOGOUT]: {
     message: "Usuário deslogado com sucesso",
     type: "success",
@@ -138,6 +146,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
     type: "success",
   },
 
+  [Notice.POST_NOT_FOUND]: {
+    message: "Post não encontrado.",
+    type: "error",
+  },
+
   [Notice.IMAGE_UPLOADED]: {
     message: "Imagem enviada com sucesso.",
     type: "success",
@@ -146,5 +159,10 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
   [Notice.IMAGE_DELETED]: {
     message: "Imagem deletada com sucesso.",
     type: "success",
+  },
+
+  [Notice.IMAGE_NOT_FOUND]: {
+    message: "Imagem não encontrada",
+    type: "error",
   },
 };

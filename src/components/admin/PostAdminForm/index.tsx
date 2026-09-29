@@ -1,8 +1,12 @@
+"use client";
+
 import { AdminPostFormValuesDto } from "@/lib/post/schemas";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { PostFormFields } from "@/components/post/PostFormFields";
 import { useState } from "react";
 import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
+import { Button } from "@/components/ui/Button";
+import { redirect } from "next/navigation";
 
 type PostAdminFormProps = {
   postId: string;
@@ -49,6 +53,10 @@ export function PostAdminForm({
     setCurrent((prev) => ({ ...prev, content: value }));
   }
 
+  function handleCancel() {
+    redirect("admin/posts");
+  }
+
   const modalProps = needsPassword()
     ? {
         open: modalOpen,
@@ -93,6 +101,19 @@ export function PostAdminForm({
           onFieldChange={handleFieldChange}
           errors={fieldErrors}
         />
+        <div className="flex gap-2 w-full">
+          <Button variant="danger" type="submit" disabled={submitting}>
+            Atualizar
+          </Button>
+          <Button
+            variant="default"
+            type="button"
+            disabled={submitting}
+            onClick={handleCancel}
+          >
+            Cancelar
+          </Button>
+        </div>
       </form>
       <ConfirmAdminActionModal {...modalProps} />
     </>

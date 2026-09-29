@@ -15,8 +15,8 @@ import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 
 export async function updatePostAction(
-  prevState: FormActionResult<PostFormStateDto>,
   postId: string,
+  prevState: FormActionResult<PostFormStateDto>,
   formData: FormData,
 ): Promise<FormActionResult<PostFormStateDto>> {
   const validation = await validateActionRequest();
@@ -30,7 +30,9 @@ export async function updatePostAction(
   }
 
   const idErrors = validateId(postId);
-  if (idErrors) return { success: false, errors: idErrors };
+  if (idErrors) {
+    redirectWithNotice("author/post", Notice.POST_NOT_FOUND);
+  }
 
   const parsed = parseFormData(formData, UpdatePostSchema, PostFormStateSchema);
 
