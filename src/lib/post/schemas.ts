@@ -99,6 +99,52 @@ export const AdminPostFormValuesSchema = PostResponseSchema.pick({
   coverImage: z.string(),
 });
 
+export const AdminPostSearchSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().optional(),
+  slug: z.string().optional(),
+  authorId: z.string().optional(),
+  authorName: z.string().optional(),
+  authorEmail: z.string().optional(),
+  published: z
+    .union(
+      [
+        z.literal("on"),
+        z.literal("true"),
+        z.literal("false"),
+        z.literal(true),
+        z.literal(false),
+        z.literal(null),
+        z.literal(undefined),
+      ],
+      {
+        error: "Valor inválido para o filtro de publicado.",
+      },
+    )
+    .default(false)
+    .transform((val) => val === "on" || val === "true" || val === true),
+  startDate: z
+    .date({
+      error: "Data inicial inválida.",
+    })
+    .optional(),
+  endDate: z
+    .date({
+      error: "Data final inválida.",
+    })
+    .optional(),
+  page: z
+    .int({
+      error: "A página deve ser um número inteiro.",
+    })
+    .optional(),
+  limit: z
+    .int({
+      error: "O limite deve ser um número inteiro.",
+    })
+    .optional(),
+});
+
 export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;
 
 export type CreatePostDto = z.infer<typeof CreatePostSchema>;
@@ -110,3 +156,4 @@ export type PostResponseDto = z.infer<typeof PostResponseSchema>;
 
 export type AdminUpdatePostDto = z.infer<typeof AdminUpdatePostSchema>;
 export type AdminPostFormValuesDto = z.infer<typeof AdminPostFormValuesSchema>;
+export type AdminPostSearchDto = z.infer<typeof AdminPostSearchSchema>;
