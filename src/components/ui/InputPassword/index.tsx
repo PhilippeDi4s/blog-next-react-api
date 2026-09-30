@@ -7,7 +7,7 @@ import { useId, useState } from "react";
 
 type InputPasswordProps = {
   labelText: string;
-  error: string | null;
+  error?: string | null;
   className?: string;
 } & Omit<React.ComponentProps<"input">, "type" | "id" | "className">;
 
@@ -28,7 +28,7 @@ export function InputPassword({
         <input
           type={showPassword ? "text" : "password"}
           id={id}
-          className={clsx(inputStyle, className)}
+          className={clsx(inputStyle, className, "pr-15")}
           {...props}
         />
         <LockKeyholeIcon className={inputLeftIcon} />

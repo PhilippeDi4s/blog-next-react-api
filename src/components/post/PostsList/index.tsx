@@ -48,7 +48,7 @@ export async function PostsList() {
             <Link href={postLink} className={clsx("flex flex-col gap-4 group")}>
               <PostImage
                 imageProps={{
-                  src: post.coverImageUrl,
+                  src: post.coverImage.url,
                   alt: `Imagem do Post ${post.title}`,
                 }}
                 imageHeight={12.5}

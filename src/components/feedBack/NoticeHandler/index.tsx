@@ -1,24 +1,28 @@
 "use client";
 
+import { isNoticeKey, showNotice } from "@/lib/notifications";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import {
-    isNoticeKey,
-  showNotice,
-  type NoticeKey,
-} from "@/lib/notifications";
 
-type NoticeHandlerProps = {
-  notice?: NoticeKey;
-};
+export function NoticeHandler() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
-export function NoticeHandler({
-  notice,
-}: NoticeHandlerProps) {
   useEffect(() => {
-    if (notice && isNoticeKey(notice)) {
-      showNotice(notice);
-    }
-  }, [notice]);
+    const notice = searchParams.get("notice");
+
+    if (!isNoticeKey(notice)) return;
+
+    showNotice(notice);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("notice");
+
+    const query = params.toString();
+
+    router.replace(query ? `${pathname}?${query}` : pathname);
+  }, [searchParams, pathname, router]);
 
   return null;
 }

@@ -1,7 +1,8 @@
 "use server";
 
+import { createLoginSession } from "@/lib/auth/session";
 import { parseFormData } from "@/lib/forms/parse-form-data";
-import { LoginSchema } from "@/lib/login/schema";
+import { LoginResponseDto, LoginSchema } from "@/lib/login/schema";
 import { FormActionResult } from "@/lib/shared/adminAction";
 import { LoginFormStateDto, LoginFormStateSchema } from "@/lib/user/schemas";
 import { apiRequest } from "@/utils/api-request";
@@ -22,9 +23,8 @@ export async function loginAction(
     };
   }
 
-  
-  await simulateDelay(5000);
-  
+  await simulateDelay(2000);
+
   const parsed = parseFormData(formData, LoginSchema, LoginFormStateSchema);
 
   if (!parsed.success) {
@@ -35,7 +35,7 @@ export async function loginAction(
     };
   }
 
-  const res = await apiRequest<{ accessToken: string }>("/auth/login", {
+  const res = await apiRequest<LoginResponseDto>("/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -50,6 +50,8 @@ export async function loginAction(
       formState: parsed.formState,
     };
   }
+
+  await createLoginSession(res.data.accessToken, res.data.expiresIn);
 
   redirect("/author/post");
 }

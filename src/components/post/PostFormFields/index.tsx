@@ -4,12 +4,12 @@ import { InputText } from "@/components/ui/InputText";
 import { LinkButton } from "@/components/ui/Link";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
-import { PostFormStateDto, PostFormValuesDto } from "@/lib/post/schemas";
+import { PostFormValuesDto } from "@/lib/post/schemas";
 import { FieldError } from "@/lib/shared/adminAction";
 import { GalleryVerticalEndIcon } from "lucide-react";
 
 type PostFormFieldsProps = {
-  formState: PostFormStateDto;
+  formState: PostFormValuesDto;
   isPending: boolean;
   authorName: string;
   contentValue: string;

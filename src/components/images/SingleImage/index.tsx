@@ -1,9 +1,9 @@
 import { CopyLinkButton } from "@/components/ui/CopyLinkButton";
-import { ImageModel } from "@/models/image/image-model";
+import { ImageResponseDto } from "@/lib/image/schema";
 import { XIcon, UserIcon, MailIcon, Calendar1Icon } from "lucide-react";
 import Image from "next/image";
 
-type ImageData = Partial<ImageModel>;
+type ImageData = Partial<ImageResponseDto>;
 
 type SingleImageProps = {
   isModalOpen: boolean;
@@ -50,21 +50,21 @@ export function SingleImage({
                   <span>Usuário</span>
                   <UserIcon className="size-[1em]" />
                 </div>
-                <span>{imageData.uploaded_by?.name}</span>
+                <span>{imageData.uploadedBy?.name}</span>
               </div>
               <div className="flex flex-col text-center">
                 <div className="flex justify-center items-center gap-2 font-bold">
                   <span>E-mail</span>
                   <MailIcon className="size-[1em]" />
                 </div>
-                <span>{imageData.uploaded_by?.email}</span>
+                <span>{imageData.uploadedBy?.email}</span>
               </div>
               <div className="flex flex-col text-center">
                 <div className="flex justify-center items-center gap-2 font-bold">
                   <span>Data de upload</span>
                   <Calendar1Icon className="size-[1em]" />
                 </div>
-                <span>{imageData.created_at}</span>
+                <span>{imageData.createdAt}</span>
               </div>
               <span className="text-sm font-bold lg:mt-10">
                 <CopyLinkButton

@@ -22,7 +22,7 @@ export function getButtonClasses({
 
   const btnSize: Record<BtnSize, string> = {
     sm: clsx("text-sm/tight py-1 px-2 gap-1"),
-    md: clsx("text-base/tight py-2 px-4 gap-2"),
+    md: clsx("text-base/tight py-3 px-4 gap-2"),
     lg: clsx("text-lg/tight py-4 px-6 gap-3"),
   };
 

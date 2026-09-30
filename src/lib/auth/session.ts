@@ -4,6 +4,21 @@ import { UserResponseDto } from "../user/schemas";
 
 const loginCookieName = process.env.LOGIN_COOKIE_NAME || "loginSession";
 
+export async function createLoginSession(
+  cookieValue: string,
+  expiresIn: number,
+) {
+  const cookieStore = await cookies();
+
+  cookieStore.set(loginCookieName, cookieValue, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: expiresIn,
+  });
+}
+
 export async function getLoginSession() {
   const cookieStore = await cookies();
 

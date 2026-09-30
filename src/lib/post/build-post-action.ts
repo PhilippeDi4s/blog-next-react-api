@@ -16,7 +16,7 @@ export function buildPostAction(
   if (
     changed.title ||
     changed.content ||
-    changed.coverImageUrl ||
+    changed.coverImage ||
     changed.published ||
     changed.excerpt
   ) {
@@ -29,7 +29,7 @@ export function buildPostAction(
           title: formPayload.title,
           excerpt: formPayload.excerpt,
           content: formPayload.content,
-          coverImageUrl: formPayload.coverImageUrl,
+          coverImage: formPayload.coverImage,
           published: formPayload.published,
           reason,
         }),

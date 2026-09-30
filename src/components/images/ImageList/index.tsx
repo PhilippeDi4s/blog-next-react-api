@@ -1,20 +1,20 @@
 "use client";
 
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
-import { getAllImages } from "@/lib/image/queries/images";
-import { ImageModel } from "@/models/image/image-model";
 import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SingleImage } from "../SingleImage";
+import { ImageResponseDto } from "@/lib/image/schema";
+import { getAllImagesOwned } from "@/lib/image/queries/images";
 
 export function ImageList() {
-  const [images, setImages] = useState<ImageModel[]>([]);
+  const [images, setImages] = useState<ImageResponseDto[]>([]);
   const [modal, setModal] = useState(false);
-  const [imageData, setImageData] = useState<Partial<ImageModel>>({});
+  const [imageData, setImageData] = useState<Partial<ImageResponseDto>>({});
 
-  function openModal(imageData: Partial<ImageModel>) {
-    setImageData(imageData)
+  function openModal(imageData: Partial<ImageResponseDto>) {
+    setImageData(imageData);
     setModal(true);
   }
   function closeModal() {
@@ -24,7 +24,7 @@ export function ImageList() {
 
   useEffect(() => {
     const fecthData = async () => {
-      const imagesRes = await getAllImages();
+      const imagesRes = await getAllImagesOwned();
 
       if (!imagesRes.success) {
         console.log(imagesRes.errors);
@@ -57,15 +57,17 @@ export function ImageList() {
         "w-full grid grid-cols-2 p-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5",
       )}
     >
-      <SingleImage imageData={imageData} isModalOpen={modal} setModalClose={closeModal}/>
+      <SingleImage
+        imageData={imageData}
+        isModalOpen={modal}
+        setModalClose={closeModal}
+      />
 
       {images.map((image) => {
         return (
           <button
-            onClick={() =>
-              openModal(image)
-            }
-            key={image.image_id}
+            onClick={() => openModal(image)}
+            key={image.id}
             className="relative aspect-square overflow-hidden rounded cursor-pointer lg:hover:scale-105 transition"
           >
             <Image

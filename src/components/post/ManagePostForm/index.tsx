@@ -56,14 +56,16 @@ export function ManagePostForm(props: ManagePostFormProps) {
     mode === "create" ? props.currentUserName : formState.author.name;
 
   useEffect(() => {
-    if (state.errors.length > 0) {
+    if (!state.success) {
       showMessage.dismiss();
-
-      state.errors.forEach((error) => {
-        showMessage.error(error.message);
+      state.errors.forEach((e) => {
+        const message = Array.isArray(e.message)
+          ? e.message.join(", ")
+          : e.message;
+        showMessage.error(message);
       });
     }
-  }, [state.errors]);
+  }, [state]);
 
   useEffect(() => {
     if (created === "1") {

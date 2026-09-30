@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-// @ts-expect-error Next.js handles global CSS imports at build time.
 import "./globals.css";
 import { Container } from "@/components/ui/Container";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ToastifyContainer } from "@/components/feedBack/ToastifyContainer";
+import { NoticeHandler } from "@/components/feedBack/NoticeHandler";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
     template: "%s | The Blog",
-    default: "The Blog", 
+    default: "The Blog",
   },
 };
 
@@ -26,6 +27,9 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
           {children}
           <Footer />
         </Container>
+        <Suspense fallback={null}>
+          <NoticeHandler />
+        </Suspense>
         <ToastifyContainer />
       </body>
     </html>

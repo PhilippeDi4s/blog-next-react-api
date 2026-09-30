@@ -2,59 +2,33 @@
 
 import { loginAction } from "@/app/actions/login/login-action";
 import { Button } from "@/components/ui/Button";
+import { InputPassword } from "@/components/ui/InputPassword";
 import { InputText } from "@/components/ui/InputText";
+import { showMessage } from "@/lib/show-message";
+import { UserFormStateSchema } from "@/lib/user/schemas";
 import clsx from "clsx";
-import { LogInIcon } from "lucide-react";
+import { LogInIcon, MailIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useActionState, useEffect, useMemo } from "react";
-import { toast } from "react-toastify";
+import { useActionState, useEffect } from "react";
 
 export function LoginUserForm() {
   const initialState = {
-    email: "",
+    formState: UserFormStateSchema.parse({}),
+    success: false,
     errors: [],
   };
   const [state, action, isPending] = useActionState(loginAction, initialState);
-  const PARAM_MESSAGES = useMemo(
-    () =>
-      ({
-        "user-changed": "Seu usuário foi modificado. Faça login novamente.",
-        created: "Seu usuário foi criado.",
-        blocked: "Usuário bloqueado",
-        "force-logout": "Faça login novamente",
-        "user-deleted": "Usuário deletado",
-      }) satisfies Record<string, string>,
-    [],
-  );
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (state.errors.length > 0) {
-      toast.dismiss();
-      state.errors.forEach((e) => toast.error(e));
-    }
+    if (state.errors.length === 0) return;
+    showMessage.dismiss();
+    state.errors.forEach((e) => {
+      const message = Array.isArray(e.message)
+        ? e.message.join(", ")
+        : e.message;
+      showMessage.error(message);
+    });
   }, [state]);
-
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    let changed = false;
-
-    for (const [param, message] of Object.entries(PARAM_MESSAGES)) {
-      if (searchParams.get(param) === "1") {
-        toast.dismiss();
-        toast.success(message);
-        url.searchParams.delete(param);
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      router.replace(url.toString());
-    }
-  }, [searchParams, router, PARAM_MESSAGES]);
 
   return (
     <div
@@ -70,12 +44,12 @@ export function LoginUserForm() {
           labelText="E-mail"
           placeholder="Seu e-mail"
           disabled={isPending}
-          defaultValue={state.email}
+          defaultValue={state.formState.email}
+          icon={MailIcon}
           required
         />
 
-        <InputText
-          type="password"
+        <InputPassword
           name="password"
           labelText="Senha"
           placeholder="Sua senha"
@@ -89,7 +63,9 @@ export function LoginUserForm() {
         </Button>
 
         <p className="text-sm/tight">
-          <Link href="/user/new">Criar minha conta</Link>
+          <Link href="/user/new" className="text-blue-500 underline">
+            Criar minha conta
+          </Link>
         </p>
       </form>
     </div>

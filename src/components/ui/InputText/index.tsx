@@ -24,7 +24,7 @@ export function InputText({
   const id = useId();
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm" htmlFor={id}>
+      <label className="" htmlFor={id}>
         {labelTetx}
       </label>
       <div className={inputWrapper}>

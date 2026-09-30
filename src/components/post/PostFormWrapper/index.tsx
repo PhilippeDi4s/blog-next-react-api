@@ -8,10 +8,7 @@ export async function PostFormWrapper({ id }: { id: string }) {
 
   if (!post) notFound();
 
-  const publicPost = PostFormStateSchema.parse(post)
+  const publicPost = PostFormStateSchema.parse(post);
 
-
-  return (
-    <ManagePostForm mode="update" publicPost={publicPost} />
-  );
+  return <ManagePostForm mode="update" publicPost={publicPost} postId={id} />;
 }

@@ -11,7 +11,7 @@ import {
 import { ActionResult, PendingAction, FieldError } from "./adminAction";
 import { FieldDiff, getFormDiff } from "./getFormDiff";
 
-type SettledResult = PromiseSettledResult<ActionResult>;
+type SettledResult = PromiseSettledResult<ActionResult<unknown>>;
 
 type UseAdminFormOptions<T> = {
   buildActions: (

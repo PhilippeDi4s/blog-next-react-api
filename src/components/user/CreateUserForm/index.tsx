@@ -1,27 +1,32 @@
 "use client";
 
 import clsx from "clsx";
-import { UserRoundIcon } from "lucide-react";
+import { MailIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import { UserSummarySchema  } from "@/lib/user/schemas";
+import { UserFormStateSchema } from "@/lib/user/schemas";
 import { useActionState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { createUserAction } from "@/app/actions/user/create-user-action";
 import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/ui/Button";
+import { showMessage } from "@/lib/show-message";
+import { InputPassword } from "@/components/ui/InputPassword";
 
 export function CreateUserForm() {
   const [state, action, isPending] = useActionState(createUserAction, {
-    user: UserSummarySchema .parse({}),
+    formState: UserFormStateSchema.parse({}),
     errors: [],
     success: false,
   });
 
   useEffect(() => {
-    toast.dismiss();
-    if (state.errors.length > 0) {
-      state.errors.forEach((error) => toast.error(error));
-    }
+    if (state.errors.length === 0) return;
+    showMessage.dismiss();
+    state.errors.forEach((e) => {
+      const message = Array.isArray(e.message)
+        ? e.message.join(", ")
+        : e.message;
+      showMessage.error(message);
+    });
   }, [state]);
 
   return (
@@ -38,28 +43,28 @@ export function CreateUserForm() {
           labelText="Nome"
           placeholder="Seu nome"
           disabled={isPending}
-          defaultValue={state.user.name}
+          defaultValue={state.formState.name}
+          icon={UserIcon}
           required
         />
         <InputText
           type="email"
           name="email"
           labelText="E-mail"
-          placeholder="Sua e-mail"
+          placeholder="Seu e-mail"
           disabled={isPending}
-          defaultValue={state.user.email}
+          defaultValue={state.formState.email}
+          icon={MailIcon}
           required
         />
-        <InputText
-          type="password"
-          name="passwordHash"
+        <InputPassword
+          name="password"
           labelText="Senha"
           placeholder="Sua senha"
           disabled={isPending}
           required
         />
-        <InputText
-          type="password"
+        <InputPassword
           name="confirmPassword"
           labelText="Repetir senha"
           placeholder="Sua senha novamente"
@@ -67,14 +72,15 @@ export function CreateUserForm() {
           required
         />
 
-        <Button disabled={isPending} type="submit" className="mt-4">
-          <UserRoundIcon />
+        <Button disabled={isPending} type="submit" size="md" className="mt-4">
           {!isPending && "Criar conta"}
           {isPending && "Criando..."}
         </Button>
 
         <p className="text-sm/tight">
-          <Link href="/login">Já tem conta? Entrar</Link>
+          <Link href="/login" className="text-blue-500 underline">
+            Já tem conta? Entrar
+          </Link>
         </p>
       </form>
     </div>

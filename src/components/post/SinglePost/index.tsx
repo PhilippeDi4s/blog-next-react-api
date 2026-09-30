@@ -29,7 +29,7 @@ export async function SinglePost({ slug }: SinglePostProps) {
       <div className="flex flex-col gap-4 mb-4">
         <Image
           className="rounded-xl"
-          src={post.coverImageUrl}
+          src={post.coverImage.url}
           width={1200}
           height={720}
           alt={post.title}

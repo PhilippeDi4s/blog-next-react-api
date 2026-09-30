@@ -14,14 +14,12 @@ import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 type UserAdminFormProps = {
   userId: string;
   initialData: AdminUserFormValuesDto;
-  isFormModalOpen: boolean;
   onClose: () => void;
 };
 
 export function UserAdminForm({
   userId,
   initialData,
-  isFormModalOpen,
   onClose,
 }: UserAdminFormProps) {
   const {

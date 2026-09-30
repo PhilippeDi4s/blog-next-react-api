@@ -13,7 +13,7 @@ export type ActionResult<TData = undefined> = {
 export type PendingAction = {
   key: string;
   label: string;
-  run: (reason: string) => Promise<ActionResult>;
+  run: (reason: string) => Promise<ActionResult<unknown>>;
   needsPassword: boolean;
 };
 

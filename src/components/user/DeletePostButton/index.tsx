@@ -52,10 +52,10 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
         onClose={closeModal}
       >
         <form
-          action={async (formData: FormData) => {
-            const result = await deletePostAction(formData);
+          action={async () => {
+            const result = await deletePostAction(id);
 
-            if (result.error) {
+            if (result.errors) {
               showMessage.dismiss();
               showMessage.error("Não foi possível deletar o Post");
               return;
@@ -83,7 +83,7 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
               </>
             )}
           </FormActions>
-          <PendingBridge setPending={setIsPending}/>
+          <PendingBridge setPending={setIsPending} />
         </form>
       </DefaultModal>
     </>
