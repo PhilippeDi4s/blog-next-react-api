@@ -25,17 +25,16 @@ export async function findManyImages(
     if (params?.userEmail) {
       searchParams.set("userEmail", params.userEmail);
     }
-
-    if (params?.startDate) {
-      searchParams.set("startDate", String(params.startDate));
-    }
-
     if (params?.startDate) {
       searchParams.set("startDate", params.startDate.toISOString());
     }
 
-    if (params?.endDate !== undefined) {
+    if (params?.endDate) {
       searchParams.set("endDate", params.endDate.toISOString());
+    }
+
+    if (params?.page !== undefined) {
+      searchParams.set("page", String(params.page));
     }
 
     if (params?.limit !== undefined) {

@@ -39,15 +39,15 @@ export async function findManyPosts(
     }
 
     if (params?.startDate) {
-      searchParams.set("startDate", String(params.startDate));
-    }
-
-    if (params?.startDate) {
       searchParams.set("startDate", params.startDate.toISOString());
     }
 
-    if (params?.endDate !== undefined) {
+    if (params?.endDate) {
       searchParams.set("endDate", params.endDate.toISOString());
+    }
+
+    if (params?.page !== undefined) {
+      searchParams.set("page", String(params.page));
     }
 
     if (params?.limit !== undefined) {
