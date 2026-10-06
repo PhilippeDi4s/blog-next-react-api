@@ -5,9 +5,7 @@ import clsx from "clsx";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { DefaultModal } from "@/components/ui/DefaultModal";
-import { PendingBridge } from "../../form/PendingBridge";
 import { showMessage } from "@/lib/show-message";
-import { FormActions } from "@/components/form/FormActions";
 import { Button } from "@/components/ui/Button";
 
 type DeletePostButtonProps = {
@@ -21,6 +19,21 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
 
   const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
+
+  async function handleDeletePost(id: string) {
+    showMessage.dismiss();
+    setIsPending(true);
+    const res = await deletePostAction(id);
+
+    if (!res.success) {
+      res.errors.forEach((e) => showMessage.error(e.message));
+      setIsPending(false);
+      return;
+    }
+
+    closeModal();
+    setIsPending(false);
+  }
 
   return (
     <>
@@ -48,43 +61,16 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
           </p>
         }
         isOpen={modal}
-        isPending={isPending}
         onClose={closeModal}
       >
-        <form
-          action={async () => {
-            const result = await deletePostAction(id);
-
-            if (result.errors) {
-              showMessage.dismiss();
-              showMessage.error("Não foi possível deletar o Post");
-              return;
-            }
-            showMessage.dismiss();
-            showMessage.success("Post deletado com sucesso!");
-            closeModal();
-          }}
-          className="flex items-center justify-center gap-6 text-slate-100 flex-wrap"
-        >
-          <input type="hidden" name="post_id" defaultValue={id} />
-          <FormActions>
-            {(pending) => (
-              <>
-                <Button
-                  variant="default"
-                  onClick={closeModal}
-                  disabled={pending}
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit" variant="ghost" disabled={pending}>
-                  {pending ? "Deletando..." : "Deletar"}
-                </Button>
-              </>
-            )}
-          </FormActions>
-          <PendingBridge setPending={setIsPending} />
-        </form>
+        <div className="flex flex-wrap items-center justify-center gap-5 w-full">
+          <Button variant="default" onClick={() => handleDeletePost(id)}>
+            {isPending ? "Deletando..." : "Deletar"}
+          </Button>
+          <Button variant="ghost" onClick={closeModal}>
+            Cancelar
+          </Button>
+        </div>
       </DefaultModal>
     </>
   );

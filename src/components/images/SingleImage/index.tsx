@@ -1,7 +1,13 @@
+"use client";
+
 import { CopyLinkButton } from "@/components/ui/CopyLinkButton";
+import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import { ImageResponseDto } from "@/lib/image/schema";
-import { XIcon, UserIcon, MailIcon, Calendar1Icon } from "lucide-react";
+import { formatDateTime } from "@/utils/format-datetime";
+import clsx from "clsx";
+import { UserIcon, MailIcon, Calendar1Icon } from "lucide-react";
 import Image from "next/image";
+import { DeleteImageButton } from "../DeleteImageButton";
 
 type ImageData = Partial<ImageResponseDto>;
 
@@ -19,22 +25,24 @@ export function SingleImage({
   return (
     <>
       {isModalOpen && (
-        <div
-          className="absolute top-0 left-0 z-99 w-screen min-h-screen backdrop-blur-sm bg-black/10 px-2 py-4"
-          onClick={setModalClose}
-        >
-          <button
-            type="button"
-            className="ml-0 bg-mauve-800 p-2 rounded-full cursor-pointer"
-            onClick={(event) => {
-              event.stopPropagation();
-              setModalClose();
-            }}
-          >
-            <XIcon />
-          </button>
+        <ModalOverlay onClose={setModalClose}>
           <div
-            className="bg-mauve-800 w-[70%] h-[80vh] text-[clamp(0.875rem,4vw,1.25rem)] mx-auto rounded-2xl mt-5 overflow-x-hidden overflow-y-auto flex flex-col gap-4 lg:w-[90%] lg:flex-row"
+            className={clsx(
+              "bg-mauve-800",
+              "w-[70%]",
+              "h-[80vh]",
+              "text-[clamp(0.875rem4vw1.25rem)]",
+              "mx-auto",
+              "rounded-2xl",
+              "mt-5",
+              "overflow-x-hidden",
+              "overflow-y-auto",
+              "flex",
+              "flex-col",
+              "gap-4",
+              "lg:w-[90%]",
+              "lg:flex-row",
+            )}
             onClick={(event) => event.stopPropagation()}
           >
             <Image
@@ -64,19 +72,27 @@ export function SingleImage({
                   <span>Data de upload</span>
                   <Calendar1Icon className="size-[1em]" />
                 </div>
-                <span>{imageData.createdAt}</span>
+                <span>
+                  {imageData.createdAt
+                    ? formatDateTime(imageData.createdAt)
+                    : "Data indisponível"}
+                </span>
               </div>
-              <span className="text-sm font-bold lg:mt-10">
+              <div className="flex flex-col gap-5 items-center justify-center w-full">
                 <CopyLinkButton
                   className="font-semibold"
                   variant="default"
                   text="Copiar link da imagem"
                   url={imageData.url || ""}
                 />
-              </span>
+                <DeleteImageButton
+                  id={imageData.id!}
+                  onDeleted={setModalClose}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </ModalOverlay>
       )}
     </>
   );

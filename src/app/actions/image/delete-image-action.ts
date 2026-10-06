@@ -1,8 +1,10 @@
+"use server";
+
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { updateTag } from "next/cache";
 
 export async function deleteImageAction(
   imageId: string,
@@ -10,30 +12,27 @@ export async function deleteImageAction(
   const validation = await validateActionRequest();
 
   if (!validation.success) {
-    return {
-      success: false,
-      errors: validation.errors,
-    };
+    return { success: false, errors: validation.errors };
   }
 
   const idErrors = validateId(imageId);
   if (idErrors) {
-    redirectWithNotice("author/images", Notice.IMAGE_NOT_FOUND);
+    return {
+      success: false,
+      errors: [{ code: "IMAGE_NOT_FOUND", message: "Imagem não encontrada" }],
+    };
   }
 
   const res = await authenticatedApiRequest(
     `/images/${imageId}`,
     validation.token,
-    {
-      method: "DELETE",
-    },
+    { method: "DELETE" },
   );
 
   if (!res.success) {
-    return {
-      success: false,
-      errors: res.errors,
-    };
+    return { success: false, errors: res.errors };
   }
-  redirectWithNotice("author/images", Notice.IMAGE_DELETED);
+
+  updateTag("images");
+  return { success: true, errors: [] };
 }

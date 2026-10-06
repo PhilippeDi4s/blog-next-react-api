@@ -5,13 +5,16 @@ import { uploadImageAction } from "@/app/actions/image/upoad-image-action";
 import { Button } from "@/components/ui/Button";
 import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
 
 type ImageUploaderProps = {
+  showPreview: boolean;
   disabled?: boolean;
   actions?: React.ReactNode;
+  className?: string;
 };
 
-export function ImageUploader({ disabled, actions }: ImageUploaderProps) {
+export function ImageUploader({ showPreview, disabled, actions, className }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState("");
@@ -66,14 +69,18 @@ export function ImageUploader({ disabled, actions }: ImageUploaderProps) {
       }
 
       setImgUrl(result.url);
+      if(!showPreview){
+        redirectWithNotice("author/imageGallery", Notice.IMAGE_UPLOADED)
+      }
     });
   }
   return (
-    <div className="py-4">
+    <div className="py-4 w-full">
       <div className="flex items-center gap-6">
         <Button
           type="button"
           onClick={handleChooseFile}
+          className={className}
           disabled={isUploading || disabled}
         >
           <ImageUpIcon /> Enviar uma imagem
@@ -82,7 +89,7 @@ export function ImageUploader({ disabled, actions }: ImageUploaderProps) {
         {actions}
       </div>
 
-      {!!imgUrl && (
+      {!!imgUrl && showPreview && (
         <div className="flex flex-col gap-8 mt-8">
           {/* eslint-disable-next-line */}
           <img

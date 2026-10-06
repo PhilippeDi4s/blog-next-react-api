@@ -27,11 +27,6 @@ type ManagePostFormProps =
 export function ManagePostForm(props: ManagePostFormProps) {
   const { mode } = props;
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const created = searchParams.get("created");
-  const updated = searchParams.get("updated");
-
   const publicPost = mode === "update" ? props.publicPost : undefined;
 
   const serverAction =
@@ -64,32 +59,6 @@ export function ManagePostForm(props: ManagePostFormProps) {
       });
     }
   }, [state.errors]);
-
-  useEffect(() => {
-    if (created === "1") {
-      showMessage.dismiss();
-      showMessage.success("Post criado com sucesso");
-
-      const url = new URL(window.location.href);
-
-      url.searchParams.delete("created");
-
-      router.replace(url.toString());
-    }
-  }, [created, router]);
-
-  useEffect(() => {
-    if (updated === "1") {
-      showMessage.dismiss();
-      showMessage.success("Post atualizado com sucesso!");
-
-      const url = new URL(window.location.href);
-
-      url.searchParams.delete("updated");
-
-      router.replace(url.toString());
-    }
-  }, [updated, router]);
 
   return (
     <form action={formAction} className="mb-16 flex flex-col gap-6">

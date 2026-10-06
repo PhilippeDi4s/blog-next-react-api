@@ -104,7 +104,7 @@ export function UserMenu() {
         <CirclePlusIcon />
         Criar Post
       </Link>
-      <Link className={linkClasses} href="/imageGallery">
+      <Link className={linkClasses} href="/author/imageGallery">
         <ImageIcon />
         Minhas imagens
       </Link>

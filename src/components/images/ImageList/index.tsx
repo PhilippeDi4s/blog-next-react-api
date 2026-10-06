@@ -1,15 +1,16 @@
 "use client";
 
-import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import clsx from "clsx";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { SingleImage } from "../SingleImage";
 import { ImageResponseDto } from "@/lib/image/schema";
-import { getAllImagesOwned } from "@/lib/image/queries/images";
 
-export function ImageList() {
-  const [images, setImages] = useState<ImageResponseDto[]>([]);
+type ImageListProps = {
+  images: ImageResponseDto[];
+};
+
+export function ImageList({images}: ImageListProps) {
   const [modal, setModal] = useState(false);
   const [imageData, setImageData] = useState<Partial<ImageResponseDto>>({});
 
@@ -22,35 +23,6 @@ export function ImageList() {
     setModal(false);
   }
 
-  useEffect(() => {
-    const fecthData = async () => {
-      const imagesRes = await getAllImagesOwned();
-
-      if (!imagesRes.success) {
-        console.log(imagesRes.errors);
-        return (
-          <ErrorMessage
-            contentTitle="Ei 😅"
-            content="Não foi possível carregar as imagens. Tente novamente em alguns instantes"
-          />
-        );
-      }
-
-      setImages(imagesRes.data);
-
-      if (images.length <= 0) {
-        return (
-          <ErrorMessage
-            contentTitle="Opa 😅"
-            content="Nenhuma imagem adicionada"
-          />
-        );
-      }
-    };
-    fecthData();
-  }, [images.length]);
-
-  console.log(images);
   return (
     <section
       className={clsx(
@@ -68,16 +40,12 @@ export function ImageList() {
           <button
             onClick={() => openModal(image)}
             key={image.id}
-            className="relative aspect-square overflow-hidden rounded cursor-pointer lg:hover:scale-105 transition"
+            className="relative aspect-square overflow-hidden rounded cursor-pointer lg:hover:scale-105 transition bg-slate-800"
           >
             <Image
               src={image.url}
               alt="Imagem"
               fill
-              sizes="(max-width: 768px) 50vw,
-              (max-width: 1024px) 33vw,
-              (max-width: 1280px) 25vw,
-              20vw"
               className="object-cover"
             />
           </button>
