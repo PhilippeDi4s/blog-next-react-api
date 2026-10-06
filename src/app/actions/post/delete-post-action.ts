@@ -26,6 +26,9 @@ export async function deletePostAction(postId: string): Promise<ActionResult> {
   const res = await authenticatedApiRequest<PostResponseDto>(
     `/post/me/${postId}`,
     validation.token,
+    {
+      method: "DELETE"
+    }
   );
 
   if (!res.success) {
