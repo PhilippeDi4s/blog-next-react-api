@@ -5,15 +5,15 @@ import { ImageResponseDto } from "@/lib/image/schema";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 
-type ImageActionResult = ActionResult & {
+type ImageActionResult = {
   url: string;
-};
+} & ActionResult;
 
 export async function uploadImageAction(
   formData: FormData,
 ): Promise<ImageActionResult> {
   const validation = await validateActionRequest();
-
+  
   if (!validation.success) {
     return {
       success: false,
@@ -97,11 +97,11 @@ export async function uploadImageAction(
     };
   }
 
-  const savedImage = res.data;
+  const savediImageUrl = res.data.url
 
   return {
     success: true,
-    errors: [{ code: "", message: "" }],
-    url: `${savedImage.url}`,
+    errors: [],
+    url: `${savediImageUrl}`,
   };
 }

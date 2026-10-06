@@ -13,7 +13,6 @@ export async function authenticatedApiRequest<T>(
         code: "401",
         message: "Usuário não autenticado",
       }],
-      status: 401,
     };
   }
 

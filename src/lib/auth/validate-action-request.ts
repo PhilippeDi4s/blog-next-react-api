@@ -20,5 +20,5 @@ export async function validateActionRequest(): Promise<ActionValidationResult> {
     };
   }
 
-  return { success: true, token };
+  return { success: true, token: token.jwt };
 }

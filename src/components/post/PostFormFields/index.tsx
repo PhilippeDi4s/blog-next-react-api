@@ -6,7 +6,15 @@ import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
 import { PostFormValuesDto } from "@/lib/post/schemas";
 import { FieldError } from "@/lib/shared/adminAction";
-import { GalleryVerticalEndIcon } from "lucide-react";
+import {
+  GalleryVerticalEndIcon,
+  Heading1Icon,
+  ImageIcon,
+  LinkIcon,
+  TagIcon,
+  TextQuoteIcon,
+  User2Icon,
+} from "lucide-react";
 
 type PostFormFieldsProps = {
   formState: PostFormValuesDto;
@@ -44,33 +52,36 @@ export function PostFormFields({
           disabled
           defaultValue={id}
           type="text"
+          icon={TagIcon}
         />
       )}
       {slug !== undefined && (
         <>
-          <InfoMessage size="md">
-            Slug atualizada automaticamente ao salvar, a partir do título
-          </InfoMessage>
           <InputText
             labelText="Slug"
-            name="slug"
             readOnly
             disabled
             defaultValue={slug}
             type="text"
+            icon={LinkIcon}
           />
+          <InfoMessage size="md">
+            Slug é atualizada automaticamente ao salvar, a partir do título
+          </InfoMessage>
         </>
       )}
       <InputText
-        labelText="Autor"
+        labelText="Autor(a)"
         name="author"
         readOnly
         disabled
         defaultValue={authorName}
         type="text"
+        icon={User2Icon}
       />
       <InputText
         labelText="Título"
+        placeholder="Digite o Título do post"
         name="title"
         defaultValue={formState.title}
         disabled={isPending}
@@ -79,9 +90,11 @@ export function PostFormFields({
         error={
           errors ? errors.find((error) => error.field === "title")?.message : ""
         }
+        icon={Heading1Icon}
       />
       <InputText
         labelText="Exerto"
+        placeholder="Digite o exerto do post"
         name="excerpt"
         defaultValue={formState.excerpt}
         disabled={isPending}
@@ -92,6 +105,7 @@ export function PostFormFields({
             ? errors.find((error) => error.field === "excerpt")?.message
             : ""
         }
+        icon={TextQuoteIcon}
       />
       <ImageUploader
         disabled={isPending}
@@ -102,6 +116,7 @@ export function PostFormFields({
         }
       />
       <InputText
+        placeholder="Adicione a url da capa do post"
         labelText="URL da imagem de capa"
         name="coverImage"
         defaultValue={formState.coverImage}
@@ -113,6 +128,7 @@ export function PostFormFields({
             ? errors.find((error) => error.field === "coverImage")?.message
             : ""
         }
+        icon={ImageIcon}
       />
       <MarkdownEditor
         labelText="Conteúdo"

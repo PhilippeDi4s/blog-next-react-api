@@ -5,7 +5,6 @@ import { uploadImageAction } from "@/app/actions/image/upoad-image-action";
 import { Button } from "@/components/ui/Button";
 import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
-import { error } from "console";
 
 type ImageUploaderProps = {
   disabled?: boolean;
@@ -58,19 +57,13 @@ export function ImageUploader({ disabled, actions }: ImageUploaderProps) {
     formData.append("file", file);
 
     fileInput.value = "";
-
-    // TODO: RESOLVER ESSA MERDA
-
     startTransition(async () => {
       const result = await uploadImageAction(formData);
-      if (result.errors.length === 0) return;
-      result.errors.forEach((e) => {
-        const message = Array.isArray(e.message)
-          ? e.message.join(", ")
-          : e.message;
-        showMessage.error(message);
-      });
-      fileInput.value = "";
+
+      if (!result.success) {
+        result.errors.forEach((e) => showMessage.error(e.message));
+        return;
+      }
 
       setImgUrl(result.url);
     });

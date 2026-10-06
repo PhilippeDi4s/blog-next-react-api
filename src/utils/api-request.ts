@@ -1,3 +1,4 @@
+import "server-only";
 import { FieldError } from "@/lib/shared/adminAction";
 
 type ApiRequestError = {
@@ -8,7 +9,6 @@ type ApiRequestError = {
 type ApiRequestSuccess<T> = {
   data: T;
   success: true;
-  setCookie?: string;
 };
 
 export type ApiRequest<T> = ApiRequestError | ApiRequestSuccess<T>;
@@ -23,8 +23,7 @@ export async function apiRequest<T>(
 
   try {
     const res = await fetch(url, options);
-
-    const body = await res.json();
+    const body = await res.json().catch(() => null);
 
     if (!res.ok) {
       const errors: FieldError[] = Array.isArray(body?.errors)
@@ -32,21 +31,14 @@ export async function apiRequest<T>(
         : [
             {
               code: "REQUEST_ERROR",
-              message: body.message ?? "Erro inesperado",
+              message: body?.message ?? "Erro inesperado",
             },
           ];
 
-      return {
-        errors,
-        success: false,
-      };
+      return { errors, success: false };
     }
 
-    return {
-      success: true,
-      data: body,
-      setCookie: res.headers.get("set-cookie") ?? undefined,
-    };
+    return { success: true, data: body as T };
   } catch (err) {
     console.log(err);
 
@@ -61,5 +53,3 @@ export async function apiRequest<T>(
     };
   }
 }
-
-// TODO: Fazer com que o cookie criaod pelo nest seja enviado diretamente parqa o browser. é necessário criar um novo arequivo que ça um outro fecth, porem de formato diferente desse

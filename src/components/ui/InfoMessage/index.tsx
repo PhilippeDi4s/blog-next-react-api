@@ -22,6 +22,7 @@ export function InfoMessage({ children, size = "sm" }: InfoMessageProps) {
         "flex",
         "items-center",
         "gap-2",
+        "mt-[-1rem]",
         "leading-4",
         "md:leading-6",
       )}

@@ -36,7 +36,10 @@ export async function PostEditPageContent({ params }: AuthorPostsIdPageProps) {
   }
 
   const post = postRes.data;
-  const publicPost = PostFormStateSchema.parse(post);
+  const publicPost = PostFormStateSchema.parse({
+    ...post,
+    coverImage: post.coverImage.url,
+  });
 
   return <ManagePostForm mode="update" publicPost={publicPost} postId={id} />;
 }

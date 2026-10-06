@@ -60,5 +60,5 @@ export async function createPostAction(
   const createdPost = res.data;
 
   revalidateTag("posts", "max");
-  redirectWithNotice(`author/${createdPost.id}`, Notice.POST_CREATED);
+  redirectWithNotice(`author/post/${createdPost.id}`, Notice.POST_CREATED);
 }

@@ -40,5 +40,5 @@ export async function deletePostAction(postId: string): Promise<ActionResult> {
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");
 
-  redirectWithNotice(`author`, Notice.POST_DELETED);
+  redirectWithNotice(`author/post`, Notice.POST_DELETED);
 }
