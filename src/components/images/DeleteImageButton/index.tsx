@@ -9,7 +9,7 @@ import { useState } from "react";
 
 type DeleteImageProps = {
   id: string;
-  onDeleted?: () => void
+  onDeleted?: () => void;
 };
 
 export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
@@ -20,24 +20,30 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
   const closeModal = () => setModal(false);
 
   async function handleDeleteImage(id: string) {
-  showMessage.dismiss();
-  setIsPending(true);
+    showMessage.dismiss();
+    setIsPending(true);
 
-  try {
-    const res = await deleteImageAction(id);
+    try {
+      const res = await deleteImageAction(id);
+      if (res.errors.length > 0) {
+        showMessage.dismiss();
 
-    if (!res.success) {
-      res.errors.forEach((e) => showMessage.error(e.message));
-      return;
+        res.errors.forEach((error) => {
+          const messages = Array.isArray(error.message)
+            ? error.message
+            : [error.message];
+
+          messages.forEach((msg) => showMessage.error(msg));
+        });
+      }
+
+      showMessage.success("Imagem deletada!");
+      closeModal();
+      onDeleted?.();
+    } finally {
+      setIsPending(false);
     }
-
-    showMessage.success("Imagem deletada!");
-    closeModal();
-    onDeleted?.();
-  } finally {
-    setIsPending(false);
   }
-}
 
   return (
     <>

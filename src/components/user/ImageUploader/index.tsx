@@ -70,15 +70,24 @@ export function ImageUploader({
     startTransition(async () => {
       const result = await uploadImageAction(formData);
 
-      if (!result.success) {
-        result.errors.forEach((e) => showMessage.error(e.message));
-        return;
-      }
+      if (result.errors.length > 0) {
+        showMessage.dismiss();
 
-      setImgUrl(result.url);
+        result.errors.forEach((error) => {
+          const messages = Array.isArray(error.message)
+            ? error.message
+            : [error.message];
 
-      if (!showPreview) {
-        router.refresh();
+          messages.forEach((msg) => showMessage.error(msg));
+        });
+
+        setImgUrl(result.url);
+
+        if (!showPreview) {
+          router.refresh();
+        }
+
+        showMessage.success("Imagem adicionada à sua galeria!");
       }
     });
   }
@@ -105,7 +114,12 @@ export function ImageUploader({
             alt="Imagem do post"
             src={imgUrl}
           />
-          <CopyLinkButton text="Copiar URL da imagem" url={imgUrl} variant="default" className="w-96"/>
+          <CopyLinkButton
+            text="Copiar URL da imagem"
+            url={imgUrl}
+            variant="default"
+            className="w-96"
+          />
         </div>
       )}
 

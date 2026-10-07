@@ -25,10 +25,17 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
     setIsPending(true);
     const res = await deletePostAction(id);
 
-    if (!res.success) {
-      res.errors.forEach((e) => showMessage.error(e.message));
+    if (res.errors.length > 0) {
       setIsPending(false);
-      return;
+      showMessage.dismiss();
+
+      res.errors.forEach((error) => {
+        const messages = Array.isArray(error.message)
+          ? error.message
+          : [error.message];
+
+        messages.forEach((msg) => showMessage.error(msg));
+      });
     }
 
     closeModal();

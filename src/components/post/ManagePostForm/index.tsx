@@ -6,7 +6,6 @@ import { createPostAction } from "@/app/actions/post/create-post-action";
 import { updatePostAction } from "@/app/actions/post/update-post-action";
 import { showMessage } from "@/lib/show-message";
 import { PostFormStateDto, PostFormStateSchema } from "@/lib/post/schemas";
-import { useRouter, useSearchParams } from "next/navigation";
 import { PostFormFields } from "../PostFormFields";
 
 type ManagePostFormUpdateProps = {
@@ -55,7 +54,11 @@ export function ManagePostForm(props: ManagePostFormProps) {
       showMessage.dismiss();
 
       state.errors.forEach((error) => {
-        showMessage.error(error.message);
+        const messages = Array.isArray(error.message)
+          ? error.message
+          : [error.message];
+
+        messages.forEach((msg) => showMessage.error(msg));
       });
     }
   }, [state.errors]);
