@@ -6,18 +6,27 @@ import { Button } from "@/components/ui/Button";
 import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { useRouter } from "next/navigation";
 
 type ImageUploaderProps = {
   showPreview: boolean;
   disabled?: boolean;
   actions?: React.ReactNode;
   className?: string;
+  onUpload?: (url: string) => void;
 };
 
-export function ImageUploader({ showPreview, disabled, actions, className }: ImageUploaderProps) {
+export function ImageUploader({
+  showPreview,
+  disabled,
+  actions,
+  className,
+  onUpload,
+}: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState("");
+  const router = useRouter();
 
   function handleChooseFile() {
     if (!fileInputRef.current) return;
@@ -69,8 +78,9 @@ export function ImageUploader({ showPreview, disabled, actions, className }: Ima
       }
 
       setImgUrl(result.url);
-      if(!showPreview){
-        redirectWithNotice("author/imageGallery", Notice.IMAGE_UPLOADED)
+
+      if (!showPreview) {
+        router.refresh();
       }
     });
   }

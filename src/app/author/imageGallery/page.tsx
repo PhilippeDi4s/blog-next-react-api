@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function ImageGalleryPage() {
   return (
     <>
-        <ImageUploader showPreview={false}/>
+      <ImageUploader showPreview={false} />
       <Suspense fallback={<SpinLoader />}>
         <ImageListRes />
       </Suspense>

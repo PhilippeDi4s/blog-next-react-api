@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import {  useState } from "react";
+import { useState } from "react";
 import { SingleImage } from "../SingleImage";
 import { ImageResponseDto } from "@/lib/image/schema";
 
@@ -10,7 +10,7 @@ type ImageListProps = {
   images: ImageResponseDto[];
 };
 
-export function ImageList({images}: ImageListProps) {
+export function ImageList({ images }: ImageListProps) {
   const [modal, setModal] = useState(false);
   const [imageData, setImageData] = useState<Partial<ImageResponseDto>>({});
 
@@ -26,7 +26,15 @@ export function ImageList({images}: ImageListProps) {
   return (
     <section
       className={clsx(
-        "w-full grid grid-cols-2 p-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5",
+        "w-full",
+        "grid",
+        "grid-cols-1",
+        "p-2",
+        "gap-8",
+        "min-[30rem]:grid-cols-2",
+        "md:gap-10",
+        "min-[56rem]:grid-cols-3",
+        "2xl:grid-cols-4",
       )}
     >
       <SingleImage
@@ -40,14 +48,17 @@ export function ImageList({images}: ImageListProps) {
           <button
             onClick={() => openModal(image)}
             key={image.id}
-            className="relative aspect-square overflow-hidden rounded cursor-pointer lg:hover:scale-105 transition bg-slate-800"
+            className="
+            relative 
+            aspect-square 
+            overflow-hidden 
+            rounded 
+            cursor-pointer 
+            transition
+            lg:hover:scale-105
+            "
           >
-            <Image
-              src={image.url}
-              alt="Imagem"
-              fill
-              className="object-cover"
-            />
+            <Image src={image.url} alt="Imagem" fill className="object-cover" />
           </button>
         );
       })}

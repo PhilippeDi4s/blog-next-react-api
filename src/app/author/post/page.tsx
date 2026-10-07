@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function AuthorPostsPage() {
   return (
-    <Suspense fallback={<SpinLoader />}>
+    <Suspense fallback={<SpinLoader />} >
       <PostsListAuthor />
     </Suspense>
   );

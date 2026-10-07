@@ -16,7 +16,7 @@ export function ModalOverlay({ children, onClose }: ModalOverlayProps) {
       >
         <XIcon />
       </button>
-      <div onClick={(event) => event.stopPropagation()}>{children}</div>
+      <div className="contents" onClick={(event) => event.stopPropagation()}>{children}</div>
     </div>
   );
 }
