@@ -5,15 +5,14 @@ import { uploadImageAction } from "@/app/actions/image/upoad-image-action";
 import { Button } from "@/components/ui/Button";
 import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { useRouter } from "next/navigation";
+import { CopyLinkButton } from "@/components/ui/CopyLinkButton";
 
 type ImageUploaderProps = {
   showPreview: boolean;
   disabled?: boolean;
   actions?: React.ReactNode;
   className?: string;
-  onUpload?: (url: string) => void;
 };
 
 export function ImageUploader({
@@ -21,7 +20,6 @@ export function ImageUploader({
   disabled,
   actions,
   className,
-  onUpload,
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, startTransition] = useTransition();
@@ -86,7 +84,7 @@ export function ImageUploader({
   }
   return (
     <div className="py-4 w-full">
-      <div className="flex items-center gap-6">
+      <div className="flex flex-wrap items-center  gap-6">
         <Button
           type="button"
           onClick={handleChooseFile}
@@ -107,9 +105,7 @@ export function ImageUploader({
             alt="Imagem do post"
             src={imgUrl}
           />
-          <span>
-            <b className="uppercase">url:</b> {imgUrl}
-          </span>
+          <CopyLinkButton text="Copiar URL da imagem" url={imgUrl} variant="default" className="w-96"/>
         </div>
       )}
 

@@ -108,7 +108,7 @@ export function PostFormFields({
         icon={TextQuoteIcon}
       />
       <ImageUploader
-        showPreview={false}
+        showPreview={true}
         disabled={isPending}
         actions={
           <LinkButton href="/author/imageGallery" variant="ghost">
