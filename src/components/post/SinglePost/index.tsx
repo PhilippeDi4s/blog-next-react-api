@@ -13,7 +13,6 @@ export async function SinglePost({ slug }: SinglePostProps) {
   const postRes = await findPublicPostBySlugCached(slug);
 
   if (!postRes.success) {
-    console.log(postRes.errors);
     return (
       <ErrorMessage
         contentTitle="Ops 😅"

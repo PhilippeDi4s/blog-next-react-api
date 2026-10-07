@@ -31,7 +31,6 @@ export async function PostEditPageContent({ params }: AuthorPostsIdPageProps) {
   const postRes = await getAuthorPostById(id);
 
   if (!postRes.success) {
-    console.log(postRes.errors);
     notFound();
   }
 

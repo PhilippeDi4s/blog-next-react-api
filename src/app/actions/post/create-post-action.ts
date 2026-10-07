@@ -50,8 +50,6 @@ export async function createPostAction(
   );
 
   if (!res.success) {
-    console.log("------------------ LOG DA ACTION ------------------");
-    console.log(res.errors);
     return {
       success: false,
       errors: res.errors,

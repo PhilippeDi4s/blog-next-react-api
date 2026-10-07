@@ -9,7 +9,6 @@ export async function PostsList() {
   const postsRes = await findAllPublicPostsCached();
 
   if (!postsRes.success) {
-    console.log(postsRes.errors);
     return (
       <ErrorMessage
         contentTitle="Ei 😅"

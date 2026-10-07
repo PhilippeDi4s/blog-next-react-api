@@ -8,7 +8,6 @@ export async function PostsListAuthor() {
   const postsRes = await getAuthorPosts();
 
   if (!postsRes.success) {
-    console.log(postsRes.errors);
     return (
       <ErrorMessage
         contentTitle="Ei 😅"
