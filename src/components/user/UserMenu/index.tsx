@@ -13,19 +13,26 @@ import {
   MenuIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
 
 export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   function handleLogout(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-    e.preventDefault()
+    e.preventDefault();
 
     startTransition(async () => {
       await logoutAction();
-    })
+    });
   }
+
+  const isPostsPage =
+    pathname.startsWith("/author/post") && pathname !== "/author/post/new";
+  const isNewPostPage = pathname === "/author/post/new";
+  const isGalleryPage = pathname.startsWith("/author/imageGallery");
 
   const navClasses = clsx(
     "flex",
@@ -41,6 +48,7 @@ export function UserMenu() {
     "sm:flex-wrap",
     "sm:overflow-visible",
   );
+
   const linkClasses = clsx(
     "[&>svg]:w-[16px]",
     "[&>svg]:h-[16px]",
@@ -56,6 +64,9 @@ export function UserMenu() {
     "shrink-0",
     "cursor-pointer",
   );
+
+  // Mesmo efeito do hover, fixo, mais um destaque no texto
+  const isSelected = clsx("backdrop-brightness-50", "font-semibold");
 
   const openCloseBtnClasses = clsx(
     linkClasses,
@@ -84,6 +95,7 @@ export function UserMenu() {
           </>
         )}
       </button>
+
       <a
         className={linkClasses}
         href="/"
@@ -92,33 +104,48 @@ export function UserMenu() {
       >
         <HomeIcon /> Home
       </a>
+
       <Link
-        className={linkClasses}
+        className={clsx(linkClasses, isPostsPage && isSelected)}
         href="/author/post"
+        aria-current={isPostsPage ? "page" : undefined}
         onClick={() => setIsOpen(false)}
       >
         <FileTextIcon />
         Posts
       </Link>
-      <Link className={linkClasses} href="/author/post/new">
+
+      <Link
+        className={clsx(linkClasses, isNewPostPage && isSelected)}
+        href="/author/post/new"
+        aria-current={isNewPostPage ? "page" : undefined}
+        onClick={() => setIsOpen(false)}
+      >
         <CirclePlusIcon />
         Criar Post
       </Link>
-      <Link className={linkClasses} href="/author/imageGallery">
+
+      <Link
+        className={clsx(linkClasses, isGalleryPage && isSelected)}
+        href="/author/imageGallery"
+        aria-current={isGalleryPage ? "page" : undefined}
+        onClick={() => setIsOpen(false)}
+      >
         <ImageIcon />
         Minhas imagens
       </Link>
+
       <a href="#" className={linkClasses} onClick={handleLogout}>
-        {isPending &&(
+        {isPending && (
           <>
-            <HourglassIcon/>
+            <HourglassIcon />
             Aguarde...
           </>
         )}
         {!isPending && (
           <>
-          <LogOutIcon />
-          Sair
+            <LogOutIcon />
+            Sair
           </>
         )}
       </a>
