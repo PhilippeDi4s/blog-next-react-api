@@ -9,8 +9,9 @@ export const Notice = {
   USER_PROMOTE: "user-promote",
   USER_DEMOTE: "user-demote",
   USER_NOT_FOUND: "user-not-found",
-
   USER_LOGOUT: "user-logout",
+
+  AUTH_LOGIN_REQUIRED: "auth-login-required",
 
   ADMIN_FORCE_LOGOUT: "admin-force-logout",
   ADMIN_BLOCKED: "admin-blocked",
@@ -93,6 +94,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
 
   [Notice.USER_NOT_FOUND]: {
     message: "Usuário não encontrado",
+    type: "error",
+  },
+
+  [Notice.AUTH_LOGIN_REQUIRED]: {
+    message: "Você precisa estar logado para acessar esta página.",
     type: "error",
   },
 

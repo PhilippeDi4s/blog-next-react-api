@@ -1,24 +1,11 @@
-"use client";
-
 import clsx from "clsx";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-export function Header() {
-  const pathName = usePathname();
+type HeaderProps = {
+  section?: string;
+};
 
-  let headerContent: string | null = null;
-
-  if (pathName.includes("author")) {
-    headerContent = "Author";
-  }
-  if (pathName.includes("admin")) {
-    headerContent = "Admin";
-  }
-  if (pathName === "/") {
-    headerContent = null;
-  }
-
+export function Header({ section }: HeaderProps) {
   return (
     <header
       className={clsx(
@@ -28,9 +15,7 @@ export function Header() {
       )}
     >
       <h1>
-        <Link href="/">
-          The Blog {!headerContent ? "" : `- ${headerContent}`}
-        </Link>
+        <Link href="/">The Blog{section ? ` - ${section}` : ""}</Link>
       </h1>
     </header>
   );

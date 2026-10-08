@@ -4,6 +4,7 @@ import { UserResponseDto } from "../user/schemas";
 import { Notice, redirectWithNotice } from "../notifications";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ActionResult } from "../shared/adminAction";
+import { cache } from "react";
 
 type LoginSessionResult = { jwt: string } & ActionResult;
 
@@ -41,11 +42,9 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
       jwt: "",
     };
 
-  const res = await authenticatedApiRequest<UserResponseDto>(
-    `/auth/me`,
-    jwt,
-    { cache: "no-cache" },
-  );
+  const res = await authenticatedApiRequest<UserResponseDto>(`/auth/me`, jwt, {
+    cache: "no-cache",
+  });
 
   if (!res.success) {
     return {
@@ -70,18 +69,18 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
 export async function getLoginSessionOrRedirect() {
   const token = await getLoginSession();
   if (!token.jwt) {
-    redirect("/login");
+    redirectWithNotice("login", Notice.AUTH_LOGIN_REQUIRED);
   }
   return token.jwt;
 }
 
-export async function getAuthenticatedUserOrRedirect() {
+export const getAuthenticatedUserOrRedirect = cache(async () => {
   const cookieStore = await cookies();
 
   const token = cookieStore.get(loginCookieName)?.value;
 
   if (!token) {
-    redirect("/login");
+    redirectWithNotice("login", Notice.AUTH_LOGIN_REQUIRED);
   }
 
   const res = await fetch(`${process.env.API_URL}/auth/me`, {
@@ -95,8 +94,8 @@ export async function getAuthenticatedUserOrRedirect() {
 
   const user: UserResponseDto = await res.json();
 
-  if (user.isBlocked) redirect("/login?reason=blocked");
-  if (user.forceLogout) redirect("/login?reason=force-logout");
+  if (user.isBlocked) redirectWithNotice("login", Notice.USER_BLOCKED);
+  if (user.forceLogout) redirectWithNotice("login", Notice.AUTH_LOGIN_REQUIRED);
 
   return user;
-}
+});

@@ -1,5 +1,6 @@
 import { AuthCheck } from "@/components/auth/AuthCheck";
-import { UserMenu } from "@/components/user/UserMenu";
+import { Header } from "@/components/layout/Header";
+import { AuthorMenu } from "@/components/user/AuthorMenu";
 import { Suspense } from "react";
 
 type AuthorLayoutProps = {
@@ -10,10 +11,12 @@ export default async function AuthorLayout({ children }: AuthorLayoutProps) {
   return (
     <>
       <Suspense fallback={null}>
-        <AuthCheck />
+        <AuthCheck>
+          <Header section="Autor" />
+          <AuthorMenu />
+          {children}
+        </AuthCheck>
       </Suspense>
-      <UserMenu />
-      {children}
     </>
   );
 }

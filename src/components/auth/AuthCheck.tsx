@@ -1,6 +1,10 @@
 import { getAuthenticatedUserOrRedirect } from "@/lib/auth/session";
 
-export async function AuthCheck() {
+type AuthCheckProps = {
+  children: React.ReactNode;
+};
+
+export async function AuthCheck({ children }: AuthCheckProps) {
   await getAuthenticatedUserOrRedirect();
-  return null;
+  return <>{children}</>;
 }

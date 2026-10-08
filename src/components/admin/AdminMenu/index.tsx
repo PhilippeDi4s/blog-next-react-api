@@ -1,6 +1,8 @@
+"use client";
+
 import { Menu } from "@/components/Menu";
 import type { MenuItem } from "@/components/Menu/types";
-import { FileTextIcon, HomeIcon, ImageIcon, UserIcon } from "lucide-react";
+import { FileTextIcon, HomeIcon, ImageIcon, PenLineIcon, UserIcon } from "lucide-react";
 
 const items: MenuItem[] = [
   { label: "Home", href: "/", icon: HomeIcon, external: true },
@@ -28,8 +30,14 @@ const items: MenuItem[] = [
     icon: UserIcon,
     isActive: (p) => p.startsWith("/admin/logs"),
   },
+  {
+    label: "Página autor",
+    href: "/author/post",
+    icon: PenLineIcon,
+    external: true,
+  },
 ];
 
-export function UserMenu() {
+export function AdminMenu() {
   return <Menu items={items} />;
 }

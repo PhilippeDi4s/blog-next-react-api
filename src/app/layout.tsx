@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Container } from "@/components/ui/Container";
-import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ToastifyContainer } from "@/components/feedBack/ToastifyContainer";
 import { NoticeHandler } from "@/components/feedBack/NoticeHandler";
@@ -23,7 +22,6 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     <html lang="pt-br" className="dark">
       <body>
         <Container>
-          <Header />
           {children}
           <Footer />
         </Container>
