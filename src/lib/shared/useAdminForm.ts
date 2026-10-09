@@ -10,6 +10,7 @@ import {
 } from "../notifications/adminFormMessages";
 import { ActionResult, PendingAction, FieldError } from "./adminAction";
 import { FieldDiff, getFormDiff } from "./getFormDiff";
+import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
 
 type SettledResult = PromiseSettledResult<ActionResult<unknown>>;
 
@@ -58,21 +59,23 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setModalOpen(true);
   }
 
-  function needsPassword(): boolean {
-    return pendingActions.some((action) => action.needsPassword);
-  }
-
   function setReason(key: string, value: string) {
     setReasons((prev) => ({ ...prev, [key]: value }));
   }
 
-  function canConfirm(password?: string): boolean {
-    const reasonsFilled = pendingActions.every(
-      (a) => (reasons[a.key] ?? "").trim().length > 0,
+  function canConfirm(password: string = ""): boolean {
+    const reasonsValid = pendingActions.every(
+      (a) =>
+        ConfirmActionAdminSchema.shape.reason.safeParse(reasons[a.key] ?? "")
+          .success,
     );
-    return needsPassword()
-      ? (password ?? "").trim().length > 0 && reasonsFilled
-      : reasonsFilled;
+
+    if (!needAdminPassword) return reasonsValid;
+
+    return (
+      reasonsValid &&
+      ConfirmActionAdminSchema.shape.password.safeParse(password).success
+    );
   }
 
   async function handlePasswordConfirm(password: string) {
@@ -106,9 +109,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
       Object.keys(newReasonError).length > 0 || passwordFailed;
     const hasNetworkError = errors.some((e) => e.field === "CONNECTION_ERROR");
     const hasFormError = errors.some(
-      (e) =>
-        e.code !== "INVALID_VALIDATION" &&
-        e.code !== "CONNECTION_ERROR",
+      (e) => e.code !== "INVALID_VALIDATION" && e.code !== "CONNECTION_ERROR",
     );
 
     if (hasFormError) showMessage.error(formErrorMessage);
@@ -140,21 +141,27 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setReasons({});
   }
 
+  const needAdminPassword = pendingActions.some((a) => a.needsPassword);
+
+  const modalProps = {
+    open: modalOpen,
+    submitting,
+    pendingActions,
+    reasons,
+    reasonErrors: reasonError,
+    passwordError,
+    needAdminPassword,
+    onReasonChange: setReason,
+    canConfirm,
+    onConfirm: handlePasswordConfirm,
+    onCancel: handleModalCancel,
+  };
+
   return {
     current,
     setCurrent,
-    modalOpen,
-    pendingActions,
-    needsPassword,
-    reasons,
-    reasonError,
-    setReason,
-    canConfirm,
-    passwordError,
-    submitting,
     fieldErrors,
     handleSubmit,
-    handlePasswordConfirm,
-    handleModalCancel,
+    modalProps,
   };
 }

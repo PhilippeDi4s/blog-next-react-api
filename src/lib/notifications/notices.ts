@@ -11,6 +11,8 @@ export const Notice = {
   USER_NOT_FOUND: "user-not-found",
   USER_LOGOUT: "user-logout",
 
+  ACTION_CANCELLED: "action-cancelled",
+
   AUTH_LOGIN_REQUIRED: "auth-login-required",
 
   ADMIN_FORCE_LOGOUT: "admin-force-logout",
@@ -95,6 +97,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
   [Notice.USER_NOT_FOUND]: {
     message: "Usuário não encontrado",
     type: "error",
+  },
+
+  [Notice.ACTION_CANCELLED]: {
+    message: "Operação cancelada",
+    type: "info",
   },
 
   [Notice.AUTH_LOGIN_REQUIRED]: {

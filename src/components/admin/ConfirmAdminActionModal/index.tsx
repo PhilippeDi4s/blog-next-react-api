@@ -10,7 +10,7 @@ import { PostHeading } from "@/components/post/PostHeading";
 import { PendingAction } from "@/lib/shared/adminAction";
 import { InfoMessage } from "@/components/ui/InfoMessage";
 
-type ConfirmAdminActionsModalBaseProps = {
+type ConfirmAdminActionsModalProps = {
   open: boolean;
   submitting: boolean;
 
@@ -18,35 +18,32 @@ type ConfirmAdminActionsModalBaseProps = {
   pendingActions: PendingAction[];
   reasons: Record<string, string>;
 
+  needAdminPassword: boolean;
+  passwordError: string | null;
+
   onReasonChange: (key: string, value: string) => void;
+  canConfirm: (password: string) => boolean;
+  onConfirm: (password: string) => void | Promise<void>;
   onCancel: () => void;
 };
-
-type ConfirmAdminActionsWithPasswordProps = {
-  needAdminPassword: true;
-  passwordError: string | null;
-  canConfirm: (password: string) => boolean;
-  onConfirm: (password: string) => void;
-};
-
-type ConfirmAdminActionsWithoutPasswordProps = {
-  needAdminPassword: false;
-  onConfirm: () => void;
-};
-
-type ConfirmAdminActionsModalProps = ConfirmAdminActionsModalBaseProps &
-  (
-    | ConfirmAdminActionsWithPasswordProps
-    | ConfirmAdminActionsWithoutPasswordProps
-  );
 
 export function ConfirmAdminActionModal(props: ConfirmAdminActionsModalProps) {
   const [password, setPassword] = useState("");
 
   if (!props.open) return null;
 
+  function handleCancel() {
+    setPassword("");
+    props.onCancel();
+  }
+
+  async function handleConfirm() {
+    await props.onConfirm(password);
+    setPassword("");
+  }
+
   return (
-    <ModalOverlay onClose={props.onCancel}>
+    <ModalOverlay onClose={handleCancel}>
       <div
         className={clsx(
           "fixed",
@@ -80,7 +77,7 @@ export function ConfirmAdminActionModal(props: ConfirmAdminActionsModalProps) {
           <InputTextArea
             key={action.key}
             labelText={action.label}
-            value={props.reasons[action.key]}
+            value={props.reasons[action.key] ?? ""}
             onChange={(e) => props.onReasonChange(action.key, e.target.value)}
             disabled={props.submitting}
             error={props.reasonErrors[action.key] ?? ""}
@@ -102,17 +99,8 @@ export function ConfirmAdminActionModal(props: ConfirmAdminActionsModalProps) {
           <Button
             variant="danger"
             type="button"
-            onClick={() => {
-              if (props.needAdminPassword) {
-                props.onConfirm(password);
-              } else {
-                props.onConfirm();
-              }
-            }}
-            disabled={
-              props.submitting ||
-              (props.needAdminPassword && !props.canConfirm(password))
-            }
+            onClick={handleConfirm}
+            disabled={props.submitting || !props.canConfirm(password)}
           >
             {props.submitting ? "Verificando..." : "Confirmar"}
           </Button>
@@ -120,7 +108,7 @@ export function ConfirmAdminActionModal(props: ConfirmAdminActionsModalProps) {
           <Button
             variant="default"
             type="button"
-            onClick={props.onCancel}
+            onClick={handleCancel}
             disabled={props.submitting}
           >
             Cancelar

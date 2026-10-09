@@ -6,7 +6,7 @@ import { PostFormFields } from "@/components/post/PostFormFields";
 import { useState } from "react";
 import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
 import { Button } from "@/components/ui/Button";
-import { redirect } from "next/navigation";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
 
 type PostAdminFormProps = {
   postId: string;
@@ -21,23 +21,8 @@ export function PostAdminForm({
   authorName,
   initialData,
 }: PostAdminFormProps) {
-  const {
-    current,
-    setCurrent,
-    modalOpen,
-    pendingActions,
-    reasons,
-    reasonError,
-    setReason,
-    canConfirm,
-    passwordError,
-    submitting,
-    fieldErrors,
-    handleSubmit,
-    handlePasswordConfirm,
-    handleModalCancel,
-    needsPassword,
-  } = usePostAdminForm(postId, initialData, slug);
+  const { current, setCurrent, fieldErrors, handleSubmit, modalProps } =
+    usePostAdminForm(postId, initialData, slug);
 
   const [contentValue, setContentValue] = useState(initialData.content);
 
@@ -54,34 +39,9 @@ export function PostAdminForm({
   }
 
   function handleCancel() {
-    redirect("admin/posts");
+    redirectWithNotice("admin/posts", Notice.ACTION_CANCELLED);
   }
 
-  const modalProps = needsPassword()
-    ? {
-        open: modalOpen,
-        submitting,
-        passwordError,
-        reasonErrors: reasonError,
-        pendingActions,
-        reasons,
-        onReasonChange: setReason,
-        canConfirm,
-        onConfirm: handlePasswordConfirm,
-        onCancel: handleModalCancel,
-        needAdminPassword: true as const,
-      }
-    : {
-        open: modalOpen,
-        submitting,
-        reasonErrors: reasonError,
-        pendingActions,
-        reasons,
-        onReasonChange: setReason,
-        onConfirm: () => handlePasswordConfirm(""),
-        onCancel: handleModalCancel,
-        needAdminPassword: false as const,
-      };
   return (
     <>
       <form
@@ -95,20 +55,24 @@ export function PostAdminForm({
           slug={slug}
           authorName={authorName}
           formState={current}
-          isPending={submitting}
+          isPending={modalProps.submitting}
           contentValue={contentValue}
           setContentValue={handleContentChange}
           onFieldChange={handleFieldChange}
           errors={fieldErrors}
         />
         <div className="flex gap-2 w-full">
-          <Button variant="danger" type="submit" disabled={submitting}>
+          <Button
+            variant="danger"
+            type="submit"
+            disabled={modalProps.submitting}
+          >
             Atualizar
           </Button>
           <Button
             variant="default"
             type="button"
-            disabled={submitting}
+            disabled={modalProps.submitting}
             onClick={handleCancel}
           >
             Cancelar

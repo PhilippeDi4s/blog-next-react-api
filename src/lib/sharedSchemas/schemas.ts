@@ -16,7 +16,7 @@ export const ConfirmPassworSchema = z.object({
   password: z.string().trim(),
 });
 
-export const ConfirmActionAdmin = z.object({
+export const ConfirmActionAdminSchema = z.object({
   reason: AdminReasonSchema.shape.reason,
   password: ConfirmPassworSchema.shape.password,
 });
@@ -27,4 +27,4 @@ export type AdminReasonFormStateDto = z.infer<
   typeof AdminReasonFormStateSchema
 >;
 
-export type ConfirmActionAdminDto = z.infer<typeof ConfirmActionAdmin>;
+export type ConfirmActionAdminDto = z.infer<typeof ConfirmActionAdminSchema>;

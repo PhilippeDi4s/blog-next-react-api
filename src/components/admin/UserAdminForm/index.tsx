@@ -10,66 +10,26 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { getFieldErrors } from "@/lib/shared/getFieldErrors";
 import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
+import { Notice, redirectWithNotice } from "@/lib/notifications";
 
 type UserAdminFormProps = {
   userId: string;
   initialData: AdminUserFormValuesDto;
-  onClose: () => void;
 };
 
-export function UserAdminForm({
-  userId,
-  initialData,
-  onClose,
-}: UserAdminFormProps) {
-  const {
-    current,
-    setCurrent,
-    modalOpen,
-    pendingActions,
-    reasons,
-    reasonError,
-    setReason,
-    canConfirm,
-    passwordError,
-    submitting,
-    fieldErrors,
-    handleSubmit,
-    handlePasswordConfirm,
-    handleModalCancel,
-    needsPassword,
-  } = useUserAdminForm(userId, initialData);
+export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
+  const { current, setCurrent, fieldErrors, handleSubmit, modalProps } =
+    useUserAdminForm(userId, initialData);
+  
   const [archivedIntent, setArchivedIntent] = useState(
     current.deletedAt !== null,
   );
 
   const errorsByField = getFieldErrors(fieldErrors);
 
-  const modalProps = needsPassword()
-    ? {
-        open: modalOpen,
-        submitting,
-        passwordError,
-        reasonErrors: reasonError,
-        pendingActions,
-        reasons,
-        onReasonChange: setReason,
-        canConfirm,
-        onConfirm: handlePasswordConfirm,
-        onCancel: handleModalCancel,
-        needAdminPassword: true as const,
-      }
-    : {
-        open: modalOpen,
-        submitting,
-        reasonErrors: reasonError,
-        pendingActions,
-        reasons,
-        onReasonChange: setReason,
-        onConfirm: () => handlePasswordConfirm(""),
-        onCancel: handleModalCancel,
-        needAdminPassword: false as const,
-      };
+  function handleCancelForm() {
+    redirectWithNotice("admin/users", Notice.ACTION_CANCELLED);
+  }
 
   return (
     <>
@@ -168,7 +128,7 @@ export function UserAdminForm({
             Atualizar
           </Button>
 
-          <Button variant="default" type="button" onClick={onClose}>
+          <Button variant="default" type="button" onClick={handleCancelForm}>
             Cancelar
           </Button>
         </div>
