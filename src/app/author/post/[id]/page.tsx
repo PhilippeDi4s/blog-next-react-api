@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { PostFormStateSchema } from "@/lib/post/schemas";
+import { Heading } from "@/components/ui/Heading";
 
 export const metadata: Metadata = {
   title: "Editar post",
@@ -17,7 +18,9 @@ type AuthorPostsIdPageProps = {
 export default function AuthorPostsIdPage({ params }: AuthorPostsIdPageProps) {
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-extrabold">Editar Post</h1>
+      <Heading as="h2" className="text-xl font-extrabold">
+        Editar Post
+      </Heading>
       <Suspense fallback={<SpinLoader />}>
         <PostEditPageContent params={params} />
       </Suspense>

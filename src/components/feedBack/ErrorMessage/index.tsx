@@ -5,12 +5,14 @@ import clsx from "clsx";
 type ErrorMessageProps = {
   pageTitle?: string;
   contentTitle: string;
+  contentTitleClassName?: string;
   content: React.ReactNode;
 };
 
 export function ErrorMessage({
   pageTitle,
   contentTitle,
+  contentTitleClassName,
   content,
 }: ErrorMessageProps) {
   return (
@@ -30,7 +32,9 @@ export function ErrorMessage({
         )}
       >
         <div>
-          <h1 className="text-7xl/tight mb-4 font-bold">{contentTitle}</h1>
+          <h1 className={clsx("mb-4 font-bold text-7xl/tight", contentTitleClassName)}>
+            {contentTitle}
+          </h1>
           <div className="mt-16">{content}</div>
         </div>
       </section>

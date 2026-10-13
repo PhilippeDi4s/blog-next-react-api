@@ -3,7 +3,7 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
-import { ConfirmActionAdmin, ConfirmActionAdminDto } from "@/lib/sharedSchemas/schemas";
+import { ConfirmActionAdminSchema, ConfirmActionAdminDto } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
@@ -18,7 +18,7 @@ export async function archivePostAdminAction(
   const validation = await validateActionRequest();
   if (!validation.success) return { success: false, errors: validation.errors };
 
-  const parsed = ConfirmActionAdmin.safeParse(formData);
+  const parsed = ConfirmActionAdminSchema.safeParse(formData);
 
   if (!parsed.success) {
     return {

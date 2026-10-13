@@ -2,7 +2,7 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/adminAction";
-import { ConfirmActionAdmin } from "@/lib/sharedSchemas/schemas";
+import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
@@ -14,7 +14,7 @@ export async function forceLogoutUserAdminAction(
   const validation = await validateActionRequest();
   if (!validation.success) return { success: false, errors: validation.errors };
 
-  const parsed = ConfirmActionAdmin.safeParse(data);
+  const parsed = ConfirmActionAdminSchema.safeParse(data);
   if (!parsed.success) {
     return { success: false, errors: getZodErrorMessages(parsed.error) };
   }

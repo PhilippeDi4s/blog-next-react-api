@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Roles } from "./roles";
-import { ConfirmActionAdmin } from "../sharedSchemas/schemas";
+import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
 
 export const RoleSchema = z.enum(Roles);
 
@@ -92,13 +92,13 @@ export const UserResponseSchema = z.object({
   deletedAt: z.string().nullable(),
 });
 
-export const AdminUpdateUserSchema = ConfirmActionAdmin.extend(
+export const AdminUpdateUserSchema = ConfirmActionAdminSchema.extend(
   UpdateUserSchema.shape,
 );
 
 export const AdminUpdateUserRoleSchema = z.object({
-  reason: ConfirmActionAdmin.shape.reason,
-  password: ConfirmActionAdmin.shape.password,
+  reason: ConfirmActionAdminSchema.shape.reason,
+  password: ConfirmActionAdminSchema.shape.password,
   role: RoleSchema,
 });
 
@@ -136,7 +136,8 @@ export const AdminUserSearchSchema = z.object({
       },
     )
     .default(false)
-    .transform((val) => val === "on" || val === "true" || val === true),
+    .transform((val) => val === "on" || val === "true" || val === true)
+    .optional(),
   isBlocked: z
     .union([
       z.literal("on"),
@@ -148,7 +149,8 @@ export const AdminUserSearchSchema = z.object({
       z.literal(undefined),
     ])
     .default(false)
-    .transform((val) => val === "on" || val === "true" || val === true),
+    .transform((val) => val === "on" || val === "true" || val === true)
+    .optional(),
   startDate: z
     .date({
       error: "Data inicial inválida.",

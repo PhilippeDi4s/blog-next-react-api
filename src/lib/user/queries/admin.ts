@@ -1,5 +1,7 @@
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { AdminUserSearchDto, UserResponseDto } from "../schemas";
+import { getLoginSessionOrRedirect } from "@/lib/auth/session";
+import { PaginatedResponse } from "@/lib/shared/adminAction";
 
 export async function findManyUsers(
   token: string,
@@ -49,11 +51,39 @@ export async function findManyUsers(
 
   const query = searchParams.toString();
 
-  const res = await authenticatedApiRequest<UserResponseDto[]>(
-    `admin/users${query ? `?${query}` : ""}`,
+  const res = await authenticatedApiRequest<PaginatedResponse<UserResponseDto>>(
+    `/admin/users${query ? `?${query}` : ""}`,
     token,
     {},
   );
 
   return res;
+}
+
+export async function findUserById(token: string, id: string) {
+  const res = await findManyUsers(token, { id });
+
+  if (!res.success) return res;
+
+  const user = res.data.data[0];
+
+  if (!user) {
+    return {
+      success: false as const,
+      status: 404,
+      errors: [{ code: "404", message: "Usuário não encontrado" }],
+    };
+  }
+
+  return { success: true as const, data: user };
+}
+
+export async function getUsers(params?: AdminUserSearchDto) {
+  const jwtToken = await getLoginSessionOrRedirect();
+  return findManyUsers(jwtToken, params);
+}
+
+export async function getUserById(id: string) {
+  const jwtToken = await getLoginSessionOrRedirect();
+  return findUserById(jwtToken, id);
 }

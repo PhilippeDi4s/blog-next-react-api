@@ -3,7 +3,7 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/adminAction";
 import {
-  ConfirmActionAdmin,
+  ConfirmActionAdminSchema,
   ConfirmActionAdminDto,
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
@@ -17,7 +17,7 @@ export async function blockUserAdminAction(
   const validation = await validateActionRequest();
   if (!validation.success) return { success: false, errors: validation.errors };
 
-  const parsed = ConfirmActionAdmin.safeParse(data);
+  const parsed = ConfirmActionAdminSchema.safeParse(data);
   if (!parsed.success) {
     return {
       success: false,

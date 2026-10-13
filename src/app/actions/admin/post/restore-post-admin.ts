@@ -4,7 +4,7 @@ import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
 import {
-  ConfirmActionAdmin,
+  ConfirmActionAdminSchema,
   ConfirmActionAdminDto,
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
@@ -21,7 +21,7 @@ export async function restorePostAdminAction(
   const validation = await validateActionRequest();
   if (!validation.success) return { success: false, errors: validation.errors };
 
-  const parsed = ConfirmActionAdmin.safeParse(formData);
+  const parsed = ConfirmActionAdminSchema.safeParse(formData);
 
   if (!parsed.success) {
     return {

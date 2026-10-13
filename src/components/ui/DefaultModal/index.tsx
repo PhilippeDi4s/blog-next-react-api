@@ -1,7 +1,6 @@
 "use client";
 
 import clsx from "clsx";
-import { FocusTrap } from "focus-trap-react";
 import { ModalOverlay } from "../ModalOverlay";
 
 type DefaultModalProps = {
