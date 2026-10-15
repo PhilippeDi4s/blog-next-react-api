@@ -1,5 +1,5 @@
 import { getAuthenticatedUserOrRedirect } from "@/lib/auth/session";
-import { Roles } from "@/lib/user/roles";
+import { Roles } from "@/lib/user/enums/roles";
 import { notFound } from "next/navigation";
 
 type AuthCheckAdminProps = {

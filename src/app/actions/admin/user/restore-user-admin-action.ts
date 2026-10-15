@@ -25,7 +25,7 @@ export async function restoreUserAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/users/${userId}/restore`,
+    `/admin/users/${userId}/restore`,
     validation.token,
     {
       method: "PATCH",

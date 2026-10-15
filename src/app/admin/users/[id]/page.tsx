@@ -35,5 +35,7 @@ export async function UserEditPageContent({ params }: UserIdPageProps) {
 
   const parsedData = AdminUserFormValuesSchema.parse(res.data);
 
+  console.log(parsedData);
+
   return <UserAdminForm initialData={parsedData} userId={id} />;
 }

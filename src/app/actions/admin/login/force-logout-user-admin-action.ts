@@ -20,7 +20,7 @@ export async function forceLogoutUserAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `auth/admin/${userId}/logout`,
+    `/auth/admin/${userId}/logout`,
     validation.token,
     {
       method: "POST",

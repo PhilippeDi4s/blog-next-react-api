@@ -5,7 +5,7 @@ import { updateUserAdminAction } from "@/app/actions/admin/user/update-user-admi
 import { updateRoleAdminAction } from "@/app/actions/admin/user/update-role-user-admin-action";
 import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logout-user-admin-action";
 import { archiveUserAdminAction } from "@/app/actions/admin/user/archive-user-admin-action";
-import { Roles } from "./roles";
+import { Roles } from "./enums/roles";
 import { AdminUserFormValuesDto } from "./schemas";
 import { FieldDiff } from "../shared/getFormDiff";
 import { PendingAction } from "../shared/adminAction";
@@ -62,7 +62,7 @@ export function buildUserActions(
     });
   }
 
-  if (changed.forceLogout && formPayload.forceLogout) {
+  if (changed.isLogged) {
     actions.push({
       key: "forceLogout",
       label: "Forçar logout",

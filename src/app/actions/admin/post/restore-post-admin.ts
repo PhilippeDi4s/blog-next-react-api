@@ -31,7 +31,7 @@ export async function restorePostAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/posts/${postId}/restoure`,
+    `/admin/posts/${postId}/restoure`,
     validation.token,
     {
       method: "PATCH",

@@ -23,7 +23,7 @@ export async function updateUserAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/users/update/${userId}`,
+    `/admin/users/update/${userId}`,
     validation.token,
     {
       method: "PATCH",

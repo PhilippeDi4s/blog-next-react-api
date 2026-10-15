@@ -28,7 +28,7 @@ export async function archivePostAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/posts/${postId}`,
+    `/admin/posts/${postId}`,
     validation.token,
     {
       method: "DELETE",

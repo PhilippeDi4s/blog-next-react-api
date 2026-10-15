@@ -15,6 +15,9 @@ export const Notice = {
 
   AUTH_LOGIN_REQUIRED: "auth-login-required",
 
+  SESSION_EXPIRED: "session-expired",
+  SESSION_REVOKED: "session-revoked",
+
   ADMIN_FORCE_LOGOUT: "admin-force-logout",
   ADMIN_BLOCKED: "admin-blocked",
   ADMIN_UNBLOCKED: "admin-unblocked",
@@ -106,6 +109,16 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
 
   [Notice.AUTH_LOGIN_REQUIRED]: {
     message: "Você precisa estar logado para acessar esta página.",
+    type: "error",
+  },
+
+  [Notice.SESSION_EXPIRED]: {
+    message: "Sua sessão expirou. Faça login novamente.",
+    type: "info",
+  },
+
+  [Notice.SESSION_REVOKED]: {
+    message: "Sua sessão foi encerrada. Faça login novamente.",
     type: "error",
   },
 

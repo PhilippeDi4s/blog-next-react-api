@@ -50,9 +50,13 @@ export function useAdminForm<T extends Record<string, unknown>>(
   const [submitting, setSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
 
+  const needAdminPassword = pendingActions.some((a) => a.needsPassword);
+
+  const hasChanges = Object.keys(getFormDiff(original, current)).length > 0;
+
   function handleSubmit() {
+    if (!hasChanges) return;
     const changed = getFormDiff(original, current);
-    if (Object.keys(changed).length === 0) return;
 
     setPendingActions(buildActions(entityId, current, changed, ""));
     setReasons({});
@@ -63,7 +67,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setReasons((prev) => ({ ...prev, [key]: value }));
   }
 
-  function canConfirm(password: string = ""): boolean {
+  function canConfirm(password?: string): boolean {
     const reasonsValid = pendingActions.every(
       (a) =>
         ConfirmActionAdminSchema.shape.reason.safeParse(reasons[a.key] ?? "")
@@ -72,10 +76,15 @@ export function useAdminForm<T extends Record<string, unknown>>(
 
     if (!needAdminPassword) return reasonsValid;
 
-    return (
-      reasonsValid &&
-      ConfirmActionAdminSchema.shape.password.safeParse(password).success
-    );
+    const passwordValid =
+      ConfirmActionAdminSchema.shape.password.safeParse(password).success;
+
+    const isValidForm = reasonsValid === true && passwordValid === true;
+
+    if (isValidForm) {
+      return true;
+    }
+    return false;
   }
 
   async function handlePasswordConfirm(password: string) {
@@ -126,10 +135,11 @@ export function useAdminForm<T extends Record<string, unknown>>(
       (r) => r.status === "fulfilled" && r.value.success,
     );
     setSubmitting(false);
-    setModalOpen(false);
+    setModalOpen(true);
 
     if (allSucceeded) {
       showNotice(notice);
+      setModalOpen(false);
       router.push(getRedirectPath({ results, actions }));
     }
   }
@@ -140,8 +150,6 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setPendingActions([]);
     setReasons({});
   }
-
-  const needAdminPassword = pendingActions.some((a) => a.needsPassword);
 
   const modalProps = {
     open: modalOpen,
@@ -161,6 +169,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
     current,
     setCurrent,
     fieldErrors,
+    hasChanges,
     handleSubmit,
     modalProps,
   };

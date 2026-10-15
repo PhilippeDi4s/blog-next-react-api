@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { UserResponseDto } from "../user/schemas";
 import { Notice, redirectWithNotice } from "../notifications";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ActionResult } from "../shared/adminAction";
 import { cache } from "react";
+import { notFound } from "next/navigation";
 
 type LoginSessionResult = { jwt: string } & ActionResult;
 
@@ -56,8 +56,8 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
 
   const user = await res.data;
 
-  if (user.forceLogout) redirectWithNotice("login", Notice.USER_BLOCKED);
-  if (user.forceLogout) redirectWithNotice("login", Notice.USER_LOGOUT);
+  if (user.isBlocked) redirectWithNotice("login", Notice.USER_BLOCKED);
+  if (!user.isLogged) redirectWithNotice("login", Notice.SESSION_REVOKED);
 
   return {
     success: true,
@@ -74,19 +74,34 @@ export async function getLoginSessionOrRedirect() {
   return token.jwt;
 }
 
+async function redirectOnUnauthorized(res: Response) {
+  const body = await res.json().catch(() => null);
+
+  if (body?.code === "USER_BLOCKED") {
+    redirectWithNotice("login", Notice.USER_BLOCKED);
+  }
+  if (body?.code === "SESSION_REVOKED") {
+    redirectWithNotice("login", Notice.SESSION_REVOKED);
+  }
+
+  redirectWithNotice("login", Notice.SESSION_EXPIRED);
+}
+
 export const getAuthenticatedUserOrRedirect = cache(async () => {
   const cookieStore = await cookies();
 
   const token = cookieStore.get(loginCookieName)?.value;
 
   if (!token) {
-    redirectWithNotice("login", Notice.AUTH_LOGIN_REQUIRED);
+    notFound()
   }
 
   const res = await fetch(`${process.env.API_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
+
+  if (res.status === 401) await redirectOnUnauthorized(res);
 
   if (!res.ok) {
     throw new Error("Não foi possível verificar o usuário");
@@ -95,7 +110,7 @@ export const getAuthenticatedUserOrRedirect = cache(async () => {
   const user: UserResponseDto = await res.json();
 
   if (user.isBlocked) redirectWithNotice("login", Notice.USER_BLOCKED);
-  if (user.forceLogout) redirectWithNotice("login", Notice.AUTH_LOGIN_REQUIRED);
+  if (!user.isLogged) redirectWithNotice("login", Notice.SESSION_REVOKED);
 
   return user;
 });

@@ -34,7 +34,7 @@ export async function restoreImageAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/images/${imageId}/restore`,
+    `/admin/images/${imageId}/restore`,
     validation.token,
     {
       method: "PATCH",

@@ -1,8 +1,10 @@
 import { z } from "zod";
-import { Roles } from "./roles";
+import { Roles } from "./enums/roles";
 import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
+import { SessionStatus } from "./enums/sessionStatus";
 
 export const RoleSchema = z.enum(Roles);
+export const SessionStatusSchema = z.enum(SessionStatus);
 
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
@@ -84,7 +86,9 @@ export const UserResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.email(),
-  forceLogout: z.boolean(),
+  isLogged: z.boolean(),
+  sessionExpiresAt: z.string().nullable(),
+  sessionStatus: SessionStatusSchema,
   isBlocked: z.boolean(),
   role: RoleSchema,
   createdAt: z.string(),
@@ -107,7 +111,8 @@ export const AdminUserFormValuesSchema = UserResponseSchema.pick({
   email: true,
   role: true,
   isBlocked: true,
-  forceLogout: true,
+  isLogged: true,
+  sessionExpiresAt: true,
   deletedAt: true,
 });
 
@@ -120,7 +125,12 @@ export const AdminUserSearchSchema = z.object({
       error: "Cargo do usuário inválido.",
     })
     .optional(),
-  forceLogout: z
+  sessionStatus: z
+    .enum(SessionStatus, {
+      error: "Status do usuário inválido.",
+    })
+    .optional(),
+  isLogged: z
     .union(
       [
         z.literal("on"),
@@ -151,6 +161,16 @@ export const AdminUserSearchSchema = z.object({
     .default(false)
     .transform((val) => val === "on" || val === "true" || val === true)
     .optional(),
+  sessionExpiresStartDate: z
+    .date({
+      error: "Data inicial inválida.",
+    })
+    .optional(),
+  sessionExpiresEndDate: z
+    .date({
+      error: "Data final inválida.",
+    })
+    .optional(),
   startDate: z
     .date({
       error: "Data inicial inválida.",
@@ -177,6 +197,7 @@ export const UserSummarySchema = UserResponseSchema.pick({
   id: true,
   name: true,
   email: true,
+  sessionExpiresAt: true,
 });
 
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;

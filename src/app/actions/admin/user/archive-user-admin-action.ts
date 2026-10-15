@@ -24,7 +24,7 @@ export async function archiveUserAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/users/${userId}`,
+    `/admin/users/${userId}/archive`,
     validation.token,
     {
       method: "DELETE",

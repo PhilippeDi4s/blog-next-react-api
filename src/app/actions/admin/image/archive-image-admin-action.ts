@@ -34,7 +34,7 @@ export async function archiveImageAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/images/${imageId}`,
+    `/admin/images/${imageId}`,
     validation.token,
     {
       method: "DELETE",

@@ -33,7 +33,7 @@ export async function updatePostAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/posts/${postId}/update`,
+    `/admin/posts/${postId}/update`,
     validation.token,
     {
       method: "PATCH",

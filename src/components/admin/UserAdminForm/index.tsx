@@ -4,13 +4,14 @@ import { AdminUserFormValuesDto } from "@/lib/user/schemas";
 import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { InputSelect } from "@/components/ui/InputSelect";
-import { roleOptions, Roles } from "@/lib/user/roles";
+import { roleOptions, Roles } from "@/lib/user/enums/roles";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { getFieldErrors } from "@/lib/shared/getFieldErrors";
 import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { InfoMessage } from "@/components/ui/InfoMessage";
 
 type UserAdminFormProps = {
   userId: string;
@@ -18,9 +19,15 @@ type UserAdminFormProps = {
 };
 
 export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
-  const { current, setCurrent, fieldErrors, handleSubmit, modalProps } =
-    useUserAdminForm(userId, initialData);
-  
+  const {
+    current,
+    setCurrent,
+    fieldErrors,
+    handleSubmit,
+    modalProps,
+    hasChanges,
+  } = useUserAdminForm(userId, initialData);
+
   const [archivedIntent, setArchivedIntent] = useState(
     current.deletedAt !== null,
   );
@@ -89,7 +96,9 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
             setArchivedIntent(archived);
             setCurrent((prev) => ({
               ...prev,
-              deletedAt: archived ? new Date().toISOString() : null,
+              deletedAt: archived
+                ? (initialData.deletedAt ?? new Date().toISOString())
+                : null,
             }));
           }}
         >
@@ -109,22 +118,28 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
             }));
           }}
         />
-
-        <InputCheckbox
-          labelText="Está deslogado?"
-          name="forceLogout"
-          error={errorsByField.forceLogout}
-          checked={current.forceLogout}
-          onChange={(e) => {
-            setCurrent((prev) => ({
-              ...prev,
-              forceLogout: e.target.checked,
-            }));
-          }}
-        />
+        {current.sessionExpiresAt && (
+          <>
+            <InputCheckbox
+              labelText="Forçar logout"
+              name="isLogged"
+              error={errorsByField.isLogged}
+              onChange={(e) => {
+                setCurrent((prev) => ({
+                  ...prev,
+                  isLogged: !e.target.checked,
+                }));
+              }}
+            />
+            <InfoMessage>
+              A opção de forçar logout só aparecerá se o usuário possuir uma
+              sessão registrada como aberta.
+            </InfoMessage>{" "}
+          </>
+        )}
 
         <div className="flex gap-2 w-full">
-          <Button variant="danger" type="submit">
+          <Button variant="danger" type="submit" disabled={!hasChanges}>
             Atualizar
           </Button>
 

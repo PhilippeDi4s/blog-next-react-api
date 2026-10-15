@@ -1,8 +1,11 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { AdminUpdateUserRoleDto, AdminUpdateUserRoleSchema } from "@/lib/user/schemas";
-import { Roles } from "@/lib/user/roles";
+import {
+  AdminUpdateUserRoleDto,
+  AdminUpdateUserRoleSchema,
+} from "@/lib/user/schemas";
+import { Roles } from "@/lib/user/enums/roles";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
@@ -37,13 +40,21 @@ export async function updateRoleAdminAction(
     };
   }
 
+  console.log(parsed.data);
+
   const endpoint = parsed.data.role === Roles.ADMIN ? "promote" : "demote";
+
+  const payload = {
+    reason: parsed.data.reason,
+    password: parsed.data.password,
+  };
+
   const res = await authenticatedApiRequest(
-    `admin/users/${userId}/${endpoint}`,
+    `/admin/users/${userId}/${endpoint}`,
     validation.token,
     {
       method: "PATCH",
-      body: JSON.stringify(parsed.data),
+      body: JSON.stringify(payload),
       headers: { "Content-Type": "application/json" },
     },
   );

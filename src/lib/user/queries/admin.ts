@@ -24,8 +24,8 @@ export async function findManyUsers(
       searchParams.set("role", params.role);
     }
 
-    if (params?.forceLogout !== undefined) {
-      searchParams.set("forceLogout", String(params.forceLogout));
+    if (params?.isLogged !== undefined) {
+      searchParams.set("isLogged", String(params.isLogged));
     }
 
     if (params?.isBlocked !== undefined) {

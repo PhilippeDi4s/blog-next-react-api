@@ -23,7 +23,7 @@ export async function unblockUserAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/users/${userId}/unblock`,
+    `/admin/users/${userId}/unblock`,
     validation.token,
     {
       method: "PATCH",

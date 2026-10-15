@@ -19,7 +19,11 @@ export async function PostsListAuthor() {
   const posts = postsRes.data;
   if (posts.length <= 0) {
     return (
-      <ErrorMessage contentTitle="Ei 😅" content="Bora criar algum post??" />
+      <ErrorMessage
+        contentTitle="Ei 😅"
+        content="Bora criar algum post??"
+        pageTitle=" "
+      />
     );
   }
 

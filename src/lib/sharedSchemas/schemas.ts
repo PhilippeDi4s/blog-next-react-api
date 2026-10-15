@@ -13,7 +13,7 @@ export const AdminReasonFormStateSchema = z.object({
 });
 
 export const ConfirmPassworSchema = z.object({
-  password: z.string().trim(),
+  password: z.string().min(1).trim(),
 });
 
 export const ConfirmActionAdminSchema = z.object({

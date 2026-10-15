@@ -8,7 +8,7 @@ import {
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export async function blockUserAdminAction(
   userId: string,
@@ -26,7 +26,7 @@ export async function blockUserAdminAction(
   }
 
   const res = await authenticatedApiRequest(
-    `admin/users/${userId}/block`,
+    `/admin/users/${userId}/block`,
     validation.token,
     {
       method: "PATCH",
@@ -37,7 +37,7 @@ export async function blockUserAdminAction(
 
   if (!res.success) return { success: false, errors: res.errors };
 
-  revalidateTag("users", "max");
-  revalidateTag(`user-${userId}`, "max");
+  revalidatePath("/admin/users");
+  revalidatePath(`/admin/users/${userId}`);
   return { success: true, errors: [] };
 }

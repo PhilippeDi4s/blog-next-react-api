@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import clsx from "clsx";
 
@@ -10,14 +10,14 @@ type ErrorMessageProps = {
 };
 
 export function ErrorMessage({
-  pageTitle,
+  pageTitle = " ",
   contentTitle,
   contentTitleClassName,
   content,
 }: ErrorMessageProps) {
   return (
     <>
-      <title>{pageTitle ? pageTitle : 'Error'}</title>
+      <title>{pageTitle ? pageTitle : "Error"}</title>
       <section
         className={clsx(
           "min-h-87.5",
@@ -32,7 +32,12 @@ export function ErrorMessage({
         )}
       >
         <div>
-          <h1 className={clsx("mb-4 font-bold text-7xl/tight", contentTitleClassName)}>
+          <h1
+            className={clsx(
+              "mb-4 font-bold text-7xl/tight",
+              contentTitleClassName,
+            )}
+          >
             {contentTitle}
           </h1>
           <div className="mt-16">{content}</div>
