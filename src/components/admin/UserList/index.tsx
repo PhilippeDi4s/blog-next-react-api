@@ -1,7 +1,7 @@
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { getUsers } from "@/lib/user/queries/admin";
 import { AdminList } from "../AdminList";
-import { formatDate, formatHour } from "@/utils/format-datetime";
+import { formatDate } from "@/utils/format-datetime";
 import { SESSION_STATUS_LABELS } from "@/lib/user/enums/sessionStatus";
 
 export async function UserList() {
@@ -54,14 +54,6 @@ export async function UserList() {
             if (user.deletedAt) return "Arquivado";
             if (user.isBlocked) return "Bloqueado";
             return SESSION_STATUS_LABELS[user.sessionStatus];
-          },
-        },
-        {
-          header: "Login expira às",
-          cell: (user) => {
-            if (user.sessionExpiresAt === null) return "Expirado";
-            const sessionExpiresAt = new Date(user.sessionExpiresAt).getTime();
-            return formatHour(sessionExpiresAt);
           },
         },
         {
