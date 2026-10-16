@@ -1,5 +1,3 @@
-import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
-import { getUsers } from "@/lib/user/queries/admin";
 import { AdminList } from "../AdminList";
 import { formatDate } from "@/utils/format-datetime";
 import { SESSION_STATUS_LABELS } from "@/lib/user/enums/sessionStatus";
@@ -20,22 +18,13 @@ import {
   XIcon,
 } from "lucide-react";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { UserResponseDto } from "@/lib/user/schemas";
 
-export async function UserList() {
-  const res = await getUsers();
+type UserListProps = {
+  users: UserResponseDto[];
+};
 
-  if (!res.success) {
-    return (
-      <ErrorMessage
-        pageTitle="Usuários"
-        contentTitle="Não foi possível carregar os usuários"
-        contentTitleClassName="text-4xl/tight md:text-5xl"
-        content={res.errors.map((e) => e.message).join(" ")}
-      />
-    );
-  }
-
-  const { data: users } = res.data;
+export async function UserList({users}: UserListProps) {
 
   return (
     <AdminList
@@ -70,7 +59,7 @@ export async function UserList() {
               <span className="text-sm opacity-70 truncate">{user.email}</span>
             </div>
           ),
-          className: "max-w-55",
+          className: "max-w-60",
         },
         {
           header: "Perfil",
