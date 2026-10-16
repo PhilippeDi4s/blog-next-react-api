@@ -116,6 +116,35 @@ export const AdminUserFormValuesSchema = UserResponseSchema.pick({
   deletedAt: true,
 });
 
+const emptyToUndefined = (v: unknown) => (v === "" ? undefined : v);
+
+export const UserSearchParamsSchema = z.object({
+  id: z.preprocess(emptyToUndefined, z.string().optional()),
+  name: z.preprocess(emptyToUndefined, z.string().optional()),
+  email: z.preprocess(emptyToUndefined, z.string().optional()),
+  role: z.preprocess(emptyToUndefined, z.enum(Roles).optional()),
+  sessionStatus: z.preprocess(
+    emptyToUndefined,
+    z.enum(SessionStatus).optional(),
+  ),
+  isLogged: z.preprocess(emptyToUndefined, z.stringbool().optional()),
+  isBlocked: z.preprocess(emptyToUndefined, z.stringbool().optional()),
+  startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  sessionExpiresStartDate: z.preprocess(
+    emptyToUndefined,
+    z.coerce.date().optional(),
+  ),
+  sessionExpiresEndDate: z.preprocess(
+    emptyToUndefined,
+    z.coerce.date().optional(),
+  ),
+  page: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().min(1).optional(),
+  ),
+});
+
 export const AdminUserSearchSchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),

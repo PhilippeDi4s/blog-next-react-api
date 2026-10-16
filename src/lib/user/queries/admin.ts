@@ -47,6 +47,23 @@ export async function findManyUsers(
     if (params?.limit !== undefined) {
       searchParams.set("limit", String(params.limit));
     }
+    if (params?.sessionStatus) {
+      searchParams.set("sessionStatus", params.sessionStatus);
+    }
+
+    if (params?.sessionExpiresStartDate) {
+      searchParams.set(
+        "sessionExpiresStartDate",
+        params.sessionExpiresStartDate.toISOString(),
+      );
+    }
+
+    if (params?.sessionExpiresEndDate) {
+      searchParams.set(
+        "sessionExpiresEndDate",
+        params.sessionExpiresEndDate.toISOString(),
+      );
+    }
   }
 
   const query = searchParams.toString();

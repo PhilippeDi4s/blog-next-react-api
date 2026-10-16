@@ -3,6 +3,7 @@ import { UserList } from "@/components/admin/UserList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { getUsers } from "@/lib/user/queries/admin";
+import { AdminUserSearchSchema, UserSearchParamsSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 type UserListPageProps = {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default function UserListPage({ searchParams }: UserListPageProps) {
@@ -23,10 +24,11 @@ export default function UserListPage({ searchParams }: UserListPageProps) {
 }
 
 async function UserListPageContent({ searchParams }: UserListPageProps) {
-  const { page } = await searchParams;
-  const currentPage = Math.max(1, Number(page) || 1);
+  const raw = await searchParams;
+  const parsed = UserSearchParamsSchema.safeParse(raw);
+  const filters = parsed.success ? parsed.data : {};
 
-  const res = await getUsers({ page: currentPage });
+  const res = await getUsers(filters);
 
   if (!res.success) {
     return (
@@ -39,16 +41,17 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
     );
   }
 
-  const { data, total, limit, page: apiPage } = res.data;
+  const { data, total, limit, page } = res.data;
   const totalPages = Math.ceil(total / limit);
 
   return (
     <>
       <UserList users={data} />
       <AdminPagination
-        currentPage={apiPage}
+        currentPage={page}
         totalPages={totalPages}
         basePath="/admin/users"
+        searchParams={raw}
       />
     </>
   );

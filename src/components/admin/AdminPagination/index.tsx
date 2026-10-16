@@ -5,20 +5,38 @@ import Link from "next/link";
 type AdminPaginationProps = {
   currentPage: number;
   totalPages: number;
-  basePath: string; 
+  basePath: string;
+  searchParams?: Record<string, string | string[] | undefined>;
 };
 
 export function AdminPagination({
   currentPage,
   totalPages,
   basePath,
+  searchParams,
 }: AdminPaginationProps) {
   if (totalPages <= 1) return null;
 
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPages;
 
-  const getHref = (page: number) => `${basePath}?page=${page}`;
+  const getHref = (page: number) => {
+    const params = new URLSearchParams();
+
+    Object.entries(searchParams ?? {}).forEach(([key, value]) => {
+      if (key === "page" || value === undefined) return;
+
+      if (Array.isArray(value)) {
+        value.forEach((v) => params.append(key, v));
+      } else {
+        params.set(key, value);
+      }
+    });
+
+    params.set("page", String(page));
+
+    return `${basePath}?${params.toString()}`;
+  };
 
   const linkClass =
     "flex items-center gap-1 px-3 py-2 rounded transition hover:bg-slate-800";
