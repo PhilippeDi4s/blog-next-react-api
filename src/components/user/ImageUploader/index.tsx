@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CopyLinkButton } from "@/components/ui/CopyLinkButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 
 type ImageUploaderProps = {
   showPreview: boolean;
@@ -114,7 +114,7 @@ export function ImageUploader({
             alt="Imagem do post"
             src={imgUrl}
           />
-          <CopyLinkButton
+          <CopyTextButton
             text="Copiar URL da imagem"
             url={imgUrl}
             variant="default"

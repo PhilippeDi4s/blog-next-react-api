@@ -2,3 +2,23 @@
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
 @tailwind utilities;
+
+@layer utilities {
+  .admin-scrollbar::-webkit-scrollbar {
+    height: 12px;
+  }
+
+  .admin-scrollbar::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 8px;
+  }
+
+  .admin-scrollbar::-webkit-scrollbar-thumb {
+    background: oklch(44.6% 0.043 257.281);
+    border-radius: 8px;
+  }
+
+  .admin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: oklch(55.4% 0.046 257.417);
+  }
+}

@@ -3,8 +3,8 @@ export enum Roles {
   USER = "user",
 }
 
-const roleLabels: Record<Roles, string> = {
-  [Roles.ADMIN]: "Administrador",
+export const roleLabels: Record<Roles, string> = {
+  [Roles.ADMIN]: "Admin",
   [Roles.USER]: "Usuário",
 };
 

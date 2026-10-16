@@ -2,7 +2,7 @@ import Link from "next/link";
 const year = new Date().getFullYear();
 export function Footer() {
   return (
-    <footer className="pb-16 text-center">
+    <footer className="pb-16 text-center mt-10">
       <p>
         Copyright &copy; {year} - <Link href="/">The Blog</Link>
       </p>

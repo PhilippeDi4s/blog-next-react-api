@@ -1,6 +1,6 @@
 "use client";
 
-import { CopyLinkButton } from "@/components/ui/CopyLinkButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { formatDateTime } from "@/utils/format-datetime";
@@ -103,11 +103,11 @@ export function SingleImage({
               ))}
 
               <div className="flex flex-col gap-5 items-center justify-center w-full">
-                <CopyLinkButton
+                <CopyTextButton
                   className="font-semibold"
                   variant="default"
-                  text="Copiar link da imagem"
-                  url={imageData.url || ""}
+                  buttonText="Copiar link da imagem"
+                  textToCopy={imageData.url || ""}
                 />
 
                 <DeleteImageButton
