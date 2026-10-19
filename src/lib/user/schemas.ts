@@ -145,83 +145,6 @@ export const UserSearchParamsSchema = z.object({
   ),
 });
 
-export const AdminUserSearchSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().optional(),
-  role: z
-    .enum(Roles, {
-      error: "Cargo do usuário inválido.",
-    })
-    .optional(),
-  sessionStatus: z
-    .enum(SessionStatus, {
-      error: "Status do usuário inválido.",
-    })
-    .optional(),
-  isLogged: z
-    .union(
-      [
-        z.literal("on"),
-        z.literal("true"),
-        z.literal("false"),
-        z.literal(true),
-        z.literal(false),
-        z.literal(null),
-        z.literal(undefined),
-      ],
-      {
-        error: "Valor inválido para o filtro de encerramento de sessão.",
-      },
-    )
-    .default(false)
-    .transform((val) => val === "on" || val === "true" || val === true)
-    .optional(),
-  isBlocked: z
-    .union([
-      z.literal("on"),
-      z.literal("true"),
-      z.literal("false"),
-      z.literal(true),
-      z.literal(false),
-      z.literal(null),
-      z.literal(undefined),
-    ])
-    .default(false)
-    .transform((val) => val === "on" || val === "true" || val === true)
-    .optional(),
-  sessionExpiresStartDate: z
-    .date({
-      error: "Data inicial inválida.",
-    })
-    .optional(),
-  sessionExpiresEndDate: z
-    .date({
-      error: "Data final inválida.",
-    })
-    .optional(),
-  startDate: z
-    .date({
-      error: "Data inicial inválida.",
-    })
-    .optional(),
-  endDate: z
-    .date({
-      error: "Data final inválida.",
-    })
-    .optional(),
-  page: z
-    .int({
-      error: "A página deve ser um número inteiro.",
-    })
-    .optional(),
-  limit: z
-    .int({
-      error: "O limite deve ser um número inteiro.",
-    })
-    .optional(),
-});
-
 export const UserSummarySchema = UserResponseSchema.pick({
   id: true,
   name: true,
@@ -244,4 +167,5 @@ export type UserResponseDto = z.infer<typeof UserResponseSchema>;
 export type AdminUpdateUserDto = z.infer<typeof AdminUpdateUserSchema>;
 export type AdminUpdateUserRoleDto = z.infer<typeof AdminUpdateUserRoleSchema>;
 export type AdminUserFormValuesDto = z.infer<typeof AdminUserFormValuesSchema>;
-export type AdminUserSearchDto = z.infer<typeof AdminUserSearchSchema>;
+
+export type UserSearchParamsDto = z.infer<typeof UserSearchParamsSchema>;

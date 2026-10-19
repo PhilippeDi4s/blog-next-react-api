@@ -3,7 +3,7 @@ import { UserList } from "@/components/admin/UserList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { getUsers } from "@/lib/user/queries/admin";
-import { AdminUserSearchSchema, UserSearchParamsSchema } from "@/lib/user/schemas";
+import {  UserSearchParamsSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

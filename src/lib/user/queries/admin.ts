@@ -1,11 +1,11 @@
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { AdminUserSearchDto, UserResponseDto } from "../schemas";
+import { UserResponseDto, UserSearchParamsDto } from "../schemas";
 import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { PaginatedResponse } from "@/lib/shared/adminAction";
 
 export async function findManyUsers(
   token: string,
-  params?: AdminUserSearchDto,
+  params?: UserSearchParamsDto,
 ) {
   const searchParams = new URLSearchParams();
 
@@ -44,9 +44,6 @@ export async function findManyUsers(
       searchParams.set("page", String(params.page));
     }
 
-    if (params?.limit !== undefined) {
-      searchParams.set("limit", String(params.limit));
-    }
     if (params?.sessionStatus) {
       searchParams.set("sessionStatus", params.sessionStatus);
     }
@@ -95,7 +92,7 @@ export async function findUserById(token: string, id: string) {
   return { success: true as const, data: user };
 }
 
-export async function getUsers(params?: AdminUserSearchDto) {
+export async function getUsers(params?: UserSearchParamsDto) {
   const jwtToken = await getLoginSessionOrRedirect();
   return findManyUsers(jwtToken, params);
 }
