@@ -6,15 +6,15 @@ type InputSelectOption = {
 };
 
 type SelectProps = {
-  name: string;
-  value: string;
-  onChange: (value: string) => void;
+  name?: string;
+  value?: string;
+  onChange?: (value: string) => void;
   options?: InputSelectOption[];
   children?: React.ReactNode;
   className?: string;
-  labelText: string;
+  labelText?: string;
   error?: string;
-};
+} & React.ComponentProps<"input">;
 
 export function InputSelect({
   name,
@@ -34,7 +34,7 @@ export function InputSelect({
         id={id}
         name={name}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
         className={className}
       >
         {options

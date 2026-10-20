@@ -129,6 +129,7 @@ export const UserSearchParamsSchema = z.object({
   ),
   isLogged: z.preprocess(emptyToUndefined, z.stringbool().optional()),
   isBlocked: z.preprocess(emptyToUndefined, z.stringbool().optional()),
+  isDeleted: z.preprocess(emptyToUndefined, z.stringbool().optional()),
   startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
   endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
   sessionExpiresStartDate: z.preprocess(
@@ -149,7 +150,6 @@ export const UserSummarySchema = UserResponseSchema.pick({
   id: true,
   name: true,
   email: true,
-  sessionExpiresAt: true,
 });
 
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;

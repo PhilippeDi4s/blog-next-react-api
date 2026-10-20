@@ -1,9 +1,10 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
+import { UserFiltersForm } from "@/components/admin/UserFiltersForm";
 import { UserList } from "@/components/admin/UserList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { getUsers } from "@/lib/user/queries/admin";
-import {  UserSearchParamsSchema } from "@/lib/user/schemas";
+import { UserSearchParamsSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -45,7 +46,8 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <>
+    <section className="w-full flex flex-col gap-6">
+      <UserFiltersForm filters={raw} />
       <UserList users={data} />
       <AdminPagination
         currentPage={page}
@@ -53,6 +55,6 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
         basePath="/admin/users"
         searchParams={raw}
       />
-    </>
+    </section>
   );
 }
