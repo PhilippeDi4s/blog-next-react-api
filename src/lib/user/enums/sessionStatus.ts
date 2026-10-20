@@ -10,9 +10,10 @@ export const SESSION_STATUS_LABELS: Record<SessionStatus, string> = {
   [SessionStatus.LOGGED_OUT]: "Encerrada",
 };
 
-export const sessionStatusOptions = Object.values(SessionStatus).map(
-  (status) => ({
+export const sessionStatusOptions = [
+  { value: "", label: "Todos" },
+  ...Object.values(SessionStatus).map((status) => ({
     value: status,
     label: SESSION_STATUS_LABELS[status],
-  }),
-);
+  })),
+];

@@ -8,7 +8,17 @@ export const roleLabels: Record<Roles, string> = {
   [Roles.USER]: "Usuário",
 };
 
-export const roleOptions = Object.values(Roles).map((role) => ({
-  value: role,
-  label: roleLabels[role],
-}));
+export const roleOptions = [
+  {
+    value: "",
+    label: "Todos",
+  },
+  {
+    value: Roles.ADMIN,
+    label: roleLabels[Roles.ADMIN],
+  },
+  {
+    value: Roles.USER,
+    label: roleLabels[Roles.USER],
+  },
+];
