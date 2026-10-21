@@ -1,14 +1,12 @@
-import z from "zod";
+import { z } from "zod";
 import { UserSummarySchema } from "../user/schemas";
+import { emptyToUndefined } from "../sharedSchemas/schemas";
 
 export const ImageResponseSchema = z.object({
   id: z.string(),
-  publicId: z.string(),
-  url: z.url(),
-  folder: z.string(),
+  url: z.string(),
   createdAt: z.string(),
   uploadedBy: UserSummarySchema,
-  deletedAt: z.string().nullable(),
 });
 
 export const ImageSummarySchema = z.object({
@@ -17,33 +15,23 @@ export const ImageSummarySchema = z.object({
   uploadedBy: UserSummarySchema,
 });
 
-export const AdminImageSearchSchema = z.object({
-  id: z.string().optional(),
-  url: z.string().optional(),
-  userId: z.string().optional(),
-  userName: z.string().optional(),
-  userEmail: z.string().optional(),
-  startDate: z
-    .date({
-      error: "Data inicial inválida.",
-    })
-    .optional(),
-  endDate: z
-    .date({
-      error: "Data final inválida.",
-    })
-    .optional(),
-  page: z
-    .int({
-      error: "A página deve ser um número inteiro.",
-    })
-    .optional(),
-  limit: z
-    .int({
-      error: "O limite deve ser um número inteiro.",
-    })
-    .optional(),
+export const ImageSearchParamsSchema = z.object({
+  id: z.preprocess(emptyToUndefined, z.string().optional()),
+  url: z.preprocess(emptyToUndefined, z.string().optional()),
+  userId: z.preprocess(emptyToUndefined, z.string().optional()),
+  userName: z.preprocess(emptyToUndefined, z.string().optional()),
+  userEmail: z.preprocess(emptyToUndefined, z.string().optional()),
+  startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  page: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().min(1).optional(),
+  ),
+  limit: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().min(1).optional(),
+  ),
 });
 
 export type ImageResponseDto = z.infer<typeof ImageResponseSchema>;
-export type AdminImageSearchDto = z.infer<typeof AdminImageSearchSchema>;
+export type ImageSearchParamsDto = z.infer<typeof ImageSearchParamsSchema>;

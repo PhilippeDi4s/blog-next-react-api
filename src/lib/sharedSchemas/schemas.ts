@@ -1,5 +1,16 @@
 import { z } from "zod";
 
+export const emptyToUndefined = (value: unknown) =>
+  value === "" ? undefined : value;
+
+export const booleanFilter = (allValue: string) =>
+  z.preprocess(
+    (value) => (value === undefined || value === "" ? "false" : value),
+    z
+      .union([z.literal(allValue).transform(() => undefined), z.stringbool()])
+      .optional(),
+  );
+
 export const AdminReasonSchema = z.object({
   reason: z
     .string()
