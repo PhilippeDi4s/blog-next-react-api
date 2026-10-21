@@ -1,3 +1,5 @@
+import { LockKeyholeIcon, ShieldIcon, UnlockKeyholeIcon, UsersIcon } from "lucide-react";
+
 export enum BlockedFilter {
   NOT_BLOCKED = "false",
   INCLUDE_ALL = "",
@@ -14,5 +16,11 @@ export const blockedFilterOptions = Object.values(BlockedFilter).map(
   (isBlocked) => ({
     value: isBlocked,
     label: BLOCKED_FILTERS_LABEL[isBlocked],
+    icon:
+      isBlocked === BlockedFilter.BLOCKED_ONLY
+        ? LockKeyholeIcon
+        : isBlocked === BlockedFilter.NOT_BLOCKED
+          ? UnlockKeyholeIcon
+          : UsersIcon,
   }),
 );

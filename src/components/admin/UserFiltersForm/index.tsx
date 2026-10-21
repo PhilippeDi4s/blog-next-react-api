@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/Button";
 import { InputDate } from "@/components/ui/InputDate";
 import { InputSelect } from "@/components/ui/InputSelect";
@@ -11,11 +13,6 @@ import { formatDate } from "@/utils/format-datetime";
 import { FunnelIcon, MailIcon, TagIcon, UserIcon } from "lucide-react";
 
 export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
-  const serializableRoleOptions = roleOptions.map(({ value, label }) => ({
-    value,
-    label,
-  }));
-
   return (
     <div className="w-full min-w-0 overflow-x-auto admin-scrollbar">
       <form
@@ -54,14 +51,14 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
           name="role"
           labelText="Papel"
           defaultValue={filters.role ?? ""}
-          className="!w-48 !min-w-48"
-          options={serializableRoleOptions}
+          className="w-48! min-w-48!"
+          options={roleOptions}
         />
         <InputSelect
           name="blocked"
           labelText="Bloqueio"
           defaultValue={String(filters.isBlocked ?? false)}
-          className="!w-48 !min-w-48"
+          className="w-48! min-w-48!"
           options={blockedFilterOptions}
         />
         <InputSelect
@@ -70,13 +67,13 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
           options={sessionStatusOptions}
           placeholder="Sessão"
           defaultValue={filters.sessionStatus}
-          className="!w-48 !min-w-48"
+          className="w-48! min-w-48!"
         />
         <InputSelect
           name="deleted"
           labelText="Status da conta"
           defaultValue={String(filters.isDeleted ?? false)}
-          className="!w-48 !min-w-48"
+          className="w-48! min-w-48!"
           options={deletedFilterOptions}
         />
         <InputDate

@@ -1,3 +1,5 @@
+import { ShieldIcon, User2Icon, UsersIcon } from "lucide-react";
+
 export enum Roles {
   ADMIN = "admin",
   USER = "user",
@@ -12,13 +14,16 @@ export const roleOptions = [
   {
     value: "",
     label: "Todos",
+    icon: UsersIcon,
   },
   {
     value: Roles.ADMIN,
     label: roleLabels[Roles.ADMIN],
+    icon: ShieldIcon,
   },
   {
     value: Roles.USER,
     label: roleLabels[Roles.USER],
+    icon: User2Icon,
   },
 ];
