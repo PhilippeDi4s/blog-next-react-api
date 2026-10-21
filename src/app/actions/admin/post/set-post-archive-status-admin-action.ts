@@ -4,15 +4,16 @@ import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/adminAction";
 import { validateId } from "@/lib/shared/validate-id";
 import {
-  ConfirmActionAdminSchema,
   ConfirmActionAdminDto,
+  ConfirmActionAdminSchema,
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";
 
-export async function restorePostAdminAction(
+export async function setPostArchiveStatusAdminAction(
   postId: string,
+  isArchived: boolean,
   formData: ConfirmActionAdminDto,
 ): Promise<ActionResult> {
   const idErrors = validateId(postId);
@@ -22,7 +23,6 @@ export async function restorePostAdminAction(
   if (!validation.success) return { success: false, errors: validation.errors };
 
   const parsed = ConfirmActionAdminSchema.safeParse(formData);
-
   if (!parsed.success) {
     return {
       success: false,
@@ -30,22 +30,16 @@ export async function restorePostAdminAction(
     };
   }
 
-  const res = await authenticatedApiRequest(
-    `/admin/posts/${postId}/restoure`,
-    validation.token,
-    {
-      method: "PATCH",
-      body: JSON.stringify(parsed.data),
-      headers: { "Content-Type": "application/json" },
-    },
-  );
+  const endpoint = isArchived
+    ? `/admin/posts/${postId}`
+    : `/admin/posts/${postId}/restoure`;
+  const res = await authenticatedApiRequest(endpoint, validation.token, {
+    method: isArchived ? "DELETE" : "PATCH",
+    body: JSON.stringify(parsed.data),
+    headers: { "Content-Type": "application/json" },
+  });
 
-  if (!res.success) {
-    return {
-      success: false,
-      errors: res.errors,
-    };
-  }
+  if (!res.success) return { success: false, errors: res.errors };
 
   revalidateTag("posts", "max");
   revalidateTag(`post-${postId}`, "max");
