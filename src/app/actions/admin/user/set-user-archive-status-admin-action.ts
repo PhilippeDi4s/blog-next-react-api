@@ -3,15 +3,16 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/adminAction";
 import {
-  ConfirmActionAdminSchema,
   ConfirmActionAdminDto,
+  ConfirmActionAdminSchema,
 } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
-export async function blockUserAdminAction(
+export async function setUserArchiveStatusAdminAction(
   userId: string,
+  isArchived: boolean,
   data: ConfirmActionAdminDto,
 ): Promise<ActionResult> {
   const validation = await validateActionRequest();
@@ -25,11 +26,12 @@ export async function blockUserAdminAction(
     };
   }
 
+  const endpoint = isArchived ? "archive" : "restore";
   const res = await authenticatedApiRequest(
-    `/admin/users/${userId}/block`,
+    `/admin/users/${userId}/${endpoint}`,
     validation.token,
     {
-      method: "PATCH",
+      method: isArchived ? "DELETE" : "PATCH",
       body: JSON.stringify(parsed.data),
       headers: { "Content-Type": "application/json" },
     },
@@ -37,7 +39,7 @@ export async function blockUserAdminAction(
 
   if (!res.success) return { success: false, errors: res.errors };
 
-  revalidatePath("/admin/users");
-  revalidatePath(`/admin/users/${userId}`);
+  revalidateTag("users", "max");
+  revalidateTag(`user-${userId}`, "max");
   return { success: true, errors: [] };
 }
