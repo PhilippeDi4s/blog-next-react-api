@@ -7,25 +7,18 @@ import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 
-export async function archiveImageAdminAction(
+export async function setImageArchiveStatusAdminAction(
   imageId: string,
+  isArchived: boolean,
   formData: FormData,
 ): Promise<ActionResult> {
   const idErrors = validateId(imageId);
-
-  if (idErrors) {
-    return {
-      success: false,
-      errors: idErrors,
-    };
-  }
+  if (idErrors) return { success: false, errors: idErrors };
 
   const validation = await validateActionRequest();
-
   if (!validation.success) return { success: false, errors: validation.errors };
 
   const parsed = ConfirmActionAdminSchema.safeParse(formData);
-
   if (!parsed.success) {
     return {
       success: false,
@@ -33,25 +26,15 @@ export async function archiveImageAdminAction(
     };
   }
 
-  const res = await authenticatedApiRequest(
-    `/admin/images/${imageId}`,
-    validation.token,
-    {
-      method: "DELETE",
-      body: JSON.stringify(parsed.data),
-      headers: { "Content-Type": "application/json" },
-    },
-  );
+  const endpoint = isArchived
+    ? `/admin/images/${imageId}`
+    : `/admin/images/${imageId}/restore`;
+  const res = await authenticatedApiRequest(endpoint, validation.token, {
+    method: isArchived ? "DELETE" : "PATCH",
+    body: JSON.stringify(parsed.data),
+    headers: { "Content-Type": "application/json" },
+  });
 
-  if (!res.success) {
-    return {
-      success: false,
-      errors: res.errors,
-    };
-  }
-
-  return {
-    success: true,
-    errors: [],
-  };
+  if (!res.success) return { success: false, errors: res.errors };
+  return { success: true, errors: [] };
 }
