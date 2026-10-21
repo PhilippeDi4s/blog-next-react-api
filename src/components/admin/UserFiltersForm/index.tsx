@@ -11,159 +11,109 @@ import { sessionStatusOptions } from "@/lib/user/enums/sessionStatus";
 import { UserSearchParamsDto } from "@/lib/user/schemas";
 import { formatDate } from "@/utils/format-datetime";
 import {
-  FilterXIcon,
-  FunnelIcon,
   MailIcon,
   TagIcon,
   UserIcon,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { SubmitEvent, useState } from "react";
+import { FiltersForm } from "../FiltersForm";
 
 export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
-  const router = useRouter();
-  const [resetKey, setResetKey] = useState(0);
-
-  function handleReset() {
-    setResetKey((prev) => prev + 1);
-    router.push("/admin/users");
-  }
-  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const params = new URLSearchParams();
-
-    for (const [key, value] of formData.entries()) {
-      if (typeof value !== "string") continue;
-      const trimmed = value.trim();
-      if (trimmed === "") continue;
-
-      params.append(key, trimmed);
-    }
-
-    const query = params.toString();
-    router.push(query ? `/admin/users?${query}` : "/admin/users");
-  }
   return (
-    <div className="w-full min-w-0 overflow-x-auto admin-scrollbar">
-      <form
-        id="user-filters-form"
-        action="admin/users"
-        method="GET"
-        key={`${JSON.stringify(filters)}-${resetKey}`}
-        onSubmit={handleSubmit}
-        className="flex w-max min-w-full flex-nowrap items-center justify-start gap-8 p-3 *:shrink-0"
-      >
-        <InputText
-          name="id"
-          labelText="ID"
-          type="text"
-          icon={TagIcon}
-          placeholder="ID"
-          defaultValue={filters.id ?? ""}
-        />
+    <FiltersForm
+      basePath="/admin/users"
+      filtersKey={JSON.stringify(filters)}
+      id="user-filters-form"
+    >
+      <InputText
+        name="id"
+        labelText="ID"
+        type="text"
+        icon={TagIcon}
+        placeholder="ID"
+        defaultValue={filters.id ?? ""}
+      />
 
-        <InputText
-          name="name"
-          labelText="Nome"
-          type="text"
-          icon={UserIcon}
-          placeholder="Nome"
-          defaultValue={filters.name ?? ""}
-        />
-        <InputText
-          name="email"
-          labelText="E-mail"
-          type="text"
-          icon={MailIcon}
-          placeholder="E-mail"
-          defaultValue={filters.email ?? ""}
-        />
-        <InputSelect
-          name="role"
-          labelText="Papel"
-          defaultValue={filters.role ?? ""}
-          className="w-48! min-w-48!"
-          options={roleOptions}
-        />
-        <InputSelect
-          name="isBlocked"
-          labelText="Bloqueio"
-          defaultValue={String(filters.isBlocked ?? false)}
-          className="w-48! min-w-48!"
-          options={blockedFilterOptions}
-        />
-        <InputSelect
-          name="sessionStatus"
-          labelText="Status da sessão"
-          placeholder="Sessão"
-          defaultValue={filters.sessionStatus}
-          className="w-48! min-w-48!"
-          options={sessionStatusOptions}
-        />
-        <InputSelect
-          name="isDeleted"
-          labelText="Status da conta"
-          defaultValue={String(filters.isDeleted ?? false)}
-          className="w-48! min-w-48!"
-          options={deletedFilterOptions}
-        />
-        <InputDate
-          name="startDate"
-          labelText="Criado a partir de"
-          placeholder="DD/MM/AAAA"
-          defaultValue={
-            filters.startDate ? formatDate(String(filters.startDate)) : ""
-          }
-        />
-        <InputDate
-          name="endDate"
-          labelText="Criado até"
-          placeholder="DD/MM/AAAA"
-          defaultValue={
-            filters.endDate ? formatDate(String(filters.endDate)) : ""
-          }
-        />
-        <InputDate
-          name="sessionExpiresStartDate"
-          labelText="Sessão expira a partir de"
-          placeholder="DD/MM/AAAA"
-          defaultValue={
-            filters.sessionExpiresStartDate
-              ? formatDate(String(filters.sessionExpiresStartDate))
-              : ""
-          }
-        />
-        <InputDate
-          name="sessionExpiresEndDate"
-          labelText="Sessão expira até"
-          placeholder="DD/MM/AAAA"
-          defaultValue={
-            filters.sessionExpiresEndDate
-              ? formatDate(String(filters.sessionExpiresEndDate))
-              : ""
-          }
-        />
-      </form>
-      <div className="sticky left-0 flex gap-6 flex-wrap w-full justify-center py-4">
-        <Button
-          type="submit"
-          form="user-filters-form"
-          className="w-[40%] font-semibold"
-        >
-          <FunnelIcon size={18} strokeWidth={2.5} /> Filtrar
-        </Button>
-        <Button
-          type="reset"
-          variant="danger"
-          form="user-filters-form"
-          className="w-[40%] font-semibold"
-          onClick={handleReset}
-        >
-          <FilterXIcon size={18} strokeWidth={2.5} /> Limpar Filtro
-        </Button>
-      </div>
-    </div>
+      <InputText
+        name="name"
+        labelText="Nome"
+        type="text"
+        icon={UserIcon}
+        placeholder="Nome"
+        defaultValue={filters.name ?? ""}
+      />
+      <InputText
+        name="email"
+        labelText="E-mail"
+        type="text"
+        icon={MailIcon}
+        placeholder="E-mail"
+        defaultValue={filters.email ?? ""}
+      />
+      <InputSelect
+        name="role"
+        labelText="Papel"
+        defaultValue={filters.role ?? ""}
+        className="w-48! min-w-48!"
+        options={roleOptions}
+      />
+      <InputSelect
+        name="isBlocked"
+        labelText="Bloqueio"
+        defaultValue={String(filters.isBlocked ?? false)}
+        className="w-48! min-w-48!"
+        options={blockedFilterOptions}
+      />
+      <InputSelect
+        name="sessionStatus"
+        labelText="Status da sessão"
+        placeholder="Sessão"
+        defaultValue={filters.sessionStatus}
+        className="w-48! min-w-48!"
+        options={sessionStatusOptions}
+      />
+      <InputSelect
+        name="isDeleted"
+        labelText="Status da conta"
+        defaultValue={String(filters.isDeleted ?? false)}
+        className="w-48! min-w-48!"
+        options={deletedFilterOptions}
+      />
+      <InputDate
+        name="startDate"
+        labelText="Criado a partir de"
+        placeholder="DD/MM/AAAA"
+        defaultValue={
+          filters.startDate ? formatDate(String(filters.startDate)) : ""
+        }
+      />
+      <InputDate
+        name="endDate"
+        labelText="Criado até"
+        placeholder="DD/MM/AAAA"
+        defaultValue={
+          filters.endDate ? formatDate(String(filters.endDate)) : ""
+        }
+      />
+      <InputDate
+        name="sessionExpiresStartDate"
+        labelText="Sessão expira a partir de"
+        placeholder="DD/MM/AAAA"
+        defaultValue={
+          filters.sessionExpiresStartDate
+            ? formatDate(String(filters.sessionExpiresStartDate))
+            : ""
+        }
+      />
+      <InputDate
+        name="sessionExpiresEndDate"
+        labelText="Sessão expira até"
+        placeholder="DD/MM/AAAA"
+        defaultValue={
+          filters.sessionExpiresEndDate
+            ? formatDate(String(filters.sessionExpiresEndDate))
+            : ""
+        }
+      />
+    </FiltersForm>
   );
 }
