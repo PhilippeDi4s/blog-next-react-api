@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { Roles } from "./enums/roles";
-import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
+import {
+  booleanFilter,
+  ConfirmActionAdminSchema,
+  emptyToUndefined,
+} from "../sharedSchemas/schemas";
 import { SessionStatus } from "./enums/sessionStatus";
 import { BlockedFilter } from "./enums/isBlocked";
 import { DeletedFilter } from "./enums/isDeleted";
@@ -117,19 +121,6 @@ export const AdminUserFormValuesSchema = UserResponseSchema.pick({
   sessionExpiresAt: true,
   deletedAt: true,
 });
-
-const emptyToUndefined = (v: unknown) => (v === "" ? undefined : v);
-
-const booleanFilter = (allValue: string) =>
-  z.preprocess(
-    (value) => (value === undefined || value === "" ? "false" : value),
-    z
-      .union([
-        z.literal(allValue).transform(() => undefined),
-        z.stringbool(),
-      ])
-      .optional(),
-  );
 
 export const UserSearchParamsSchema = z.object({
   id: z.preprocess(emptyToUndefined, z.string().optional()),
