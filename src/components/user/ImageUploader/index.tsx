@@ -115,8 +115,8 @@ export function ImageUploader({
             src={imgUrl}
           />
           <CopyTextButton
-            text="Copiar URL da imagem"
-            url={imgUrl}
+            buttonText="Copiar URL da imagem"
+            textToCopy={imgUrl}
             variant="default"
             className="w-96"
           />

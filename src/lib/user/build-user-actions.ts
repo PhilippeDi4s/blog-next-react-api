@@ -1,10 +1,8 @@
-import { blockUserAdminAction } from "@/app/actions/admin/user/block-user-admin-action";
-import { restoreUserAdminAction } from "@/app/actions/admin/user/restore-user-admin-action";
-import { unblockUserAdminAction } from "@/app/actions/admin/user/unblock-user-admin-action";
+import { setUserBlockStatusAdminAction } from "@/app/actions/admin/user/set-user-block-status-admin-action";
+import { setUserArchiveStatusAdminAction } from "@/app/actions/admin/user/set-user-archive-status-admin-action";
 import { updateUserAdminAction } from "@/app/actions/admin/user/update-user-admin-action";
 import { updateRoleAdminAction } from "@/app/actions/admin/user/update-role-user-admin-action";
 import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logout-user-admin-action";
-import { archiveUserAdminAction } from "@/app/actions/admin/user/archive-user-admin-action";
 import { Roles } from "./enums/roles";
 import { AdminUserFormValuesDto } from "./schemas";
 import { FieldDiff } from "../shared/getFormDiff";
@@ -56,9 +54,10 @@ export function buildUserActions(
       label: formPayload.isBlocked ? "Bloquear usuário" : "Desbloquear usuário",
       needsPassword: true,
       run: (reason) =>
-        formPayload.isBlocked
-          ? blockUserAdminAction(userId, { password: password, reason })
-          : unblockUserAdminAction(userId, { password: password, reason }),
+        setUserBlockStatusAdminAction(userId, formPayload.isBlocked, {
+          password,
+          reason,
+        }),
     });
   }
 
@@ -78,9 +77,10 @@ export function buildUserActions(
       label: formPayload.deletedAt ? "Arquivar usuário" : "Restaurar usuário",
       needsPassword: true,
       run: (reason) =>
-        formPayload.deletedAt
-          ? archiveUserAdminAction(userId, { password, reason })
-          : restoreUserAdminAction(userId, { password, reason }),
+        setUserArchiveStatusAdminAction(userId, Boolean(formPayload.deletedAt), {
+          password,
+          reason,
+        }),
     });
   }
 

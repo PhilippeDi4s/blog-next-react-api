@@ -2,8 +2,7 @@ import { updatePostAdminAction } from "@/app/actions/admin/post/update-post-admi
 import { PendingAction } from "../shared/adminAction";
 import { FieldDiff } from "../shared/getFormDiff";
 import { AdminPostFormValuesDto } from "./schemas";
-import { archivePostAdminAction } from "@/app/actions/admin/post/archive-post-admin";
-import { restorePostAdminAction } from "@/app/actions/admin/post/restore-post-admin";
+import { setPostArchiveStatusAdminAction } from "@/app/actions/admin/post/set-post-archive-status-admin-action";
 
 export function buildPostAction(
   postId: string,
@@ -42,9 +41,11 @@ export function buildPostAction(
       label: formPayload.deletedAt ? "Arquivar post" : "Restaurar post",
       needsPassword: true,
       run: (reason) =>
-        formPayload.deletedAt
-          ? archivePostAdminAction(postId, { password, reason })
-          : restorePostAdminAction(postId, {password, reason}),
+        setPostArchiveStatusAdminAction(
+          postId,
+          Boolean(formPayload.deletedAt),
+          { password, reason },
+        ),
     });
   }
   return actions;
