@@ -10,16 +10,49 @@ import { roleOptions } from "@/lib/user/enums/roles";
 import { sessionStatusOptions } from "@/lib/user/enums/sessionStatus";
 import { UserSearchParamsDto } from "@/lib/user/schemas";
 import { formatDate } from "@/utils/format-datetime";
-import { FunnelIcon, MailIcon, TagIcon, UserIcon } from "lucide-react";
+import {
+  FilterXIcon,
+  FunnelIcon,
+  MailIcon,
+  TagIcon,
+  UserIcon,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { SubmitEvent, useState } from "react";
 
 export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
+  const router = useRouter();
+  const [resetKey, setResetKey] = useState(0);
+
+  function handleReset() {
+    setResetKey((prev) => prev + 1);
+    router.push("/admin/users");
+  }
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const params = new URLSearchParams();
+
+    for (const [key, value] of formData.entries()) {
+      if (typeof value !== "string") continue;
+      const trimmed = value.trim();
+      if (trimmed === "") continue;
+
+      params.append(key, trimmed);
+    }
+
+    const query = params.toString();
+    router.push(query ? `/admin/users?${query}` : "/admin/users");
+  }
   return (
     <div className="w-full min-w-0 overflow-x-auto admin-scrollbar">
       <form
         id="user-filters-form"
         action="admin/users"
         method="GET"
-        key={JSON.stringify(filters)}
+        key={`${JSON.stringify(filters)}-${resetKey}`}
+        onSubmit={handleSubmit}
         className="flex w-max min-w-full flex-nowrap items-center justify-start gap-8 p-3 *:shrink-0"
       >
         <InputText
@@ -42,7 +75,7 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
         <InputText
           name="email"
           labelText="E-mail"
-          type="email"
+          type="text"
           icon={MailIcon}
           placeholder="E-mail"
           defaultValue={filters.email ?? ""}
@@ -55,22 +88,22 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
           options={roleOptions}
         />
         <InputSelect
-          name="blocked"
+          name="isBlocked"
           labelText="Bloqueio"
           defaultValue={String(filters.isBlocked ?? false)}
           className="w-48! min-w-48!"
           options={blockedFilterOptions}
         />
         <InputSelect
-          name="session"
+          name="sessionStatus"
           labelText="Status da sessão"
-          options={sessionStatusOptions}
           placeholder="Sessão"
           defaultValue={filters.sessionStatus}
           className="w-48! min-w-48!"
+          options={sessionStatusOptions}
         />
         <InputSelect
-          name="deleted"
+          name="isDeleted"
           labelText="Status da conta"
           defaultValue={String(filters.isDeleted ?? false)}
           className="w-48! min-w-48!"
@@ -113,9 +146,22 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
           }
         />
       </form>
-      <div className="sticky left-0 flex w-full justify-center py-4">
-        <Button type="submit" form="user-filters-form" className="w-[40%] font-semibold">
-           <FunnelIcon size={18} strokeWidth={2.5} /> Filtrar
+      <div className="sticky left-0 flex gap-6 flex-wrap w-full justify-center py-4">
+        <Button
+          type="submit"
+          form="user-filters-form"
+          className="w-[40%] font-semibold"
+        >
+          <FunnelIcon size={18} strokeWidth={2.5} /> Filtrar
+        </Button>
+        <Button
+          type="reset"
+          variant="danger"
+          form="user-filters-form"
+          className="w-[40%] font-semibold"
+          onClick={handleReset}
+        >
+          <FilterXIcon size={18} strokeWidth={2.5} /> Limpar Filtro
         </Button>
       </div>
     </div>

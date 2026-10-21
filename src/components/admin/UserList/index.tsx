@@ -99,7 +99,7 @@ export async function UserList({users}: UserListProps) {
             }
 
             if (user.deletedAt) {
-              userState = "Arquivado";
+              userState = "Excluído";
               StatusIcon = ArchiveIcon;
               statusClassName = " text-amber-700";
             }

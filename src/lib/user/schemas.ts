@@ -2,6 +2,8 @@ import { z } from "zod";
 import { Roles } from "./enums/roles";
 import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
 import { SessionStatus } from "./enums/sessionStatus";
+import { BlockedFilter } from "./enums/isBlocked";
+import { DeletedFilter } from "./enums/isDeleted";
 
 export const RoleSchema = z.enum(Roles);
 export const SessionStatusSchema = z.enum(SessionStatus);
@@ -118,6 +120,17 @@ export const AdminUserFormValuesSchema = UserResponseSchema.pick({
 
 const emptyToUndefined = (v: unknown) => (v === "" ? undefined : v);
 
+const booleanFilter = (allValue: string) =>
+  z.preprocess(
+    (value) => (value === undefined || value === "" ? "false" : value),
+    z
+      .union([
+        z.literal(allValue).transform(() => undefined),
+        z.stringbool(),
+      ])
+      .optional(),
+  );
+
 export const UserSearchParamsSchema = z.object({
   id: z.preprocess(emptyToUndefined, z.string().optional()),
   name: z.preprocess(emptyToUndefined, z.string().optional()),
@@ -128,8 +141,8 @@ export const UserSearchParamsSchema = z.object({
     z.enum(SessionStatus).optional(),
   ),
   isLogged: z.preprocess(emptyToUndefined, z.stringbool().optional()),
-  isBlocked: z.preprocess(emptyToUndefined, z.stringbool().optional()),
-  isDeleted: z.preprocess(emptyToUndefined, z.stringbool().optional()),
+  isBlocked: booleanFilter(BlockedFilter.INCLUDE_ALL),
+  isDeleted: booleanFilter(DeletedFilter.INCLUDE),
   startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
   endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
   sessionExpiresStartDate: z.preprocess(

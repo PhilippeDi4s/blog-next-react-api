@@ -2,14 +2,14 @@ import { ArchiveIcon, User2Icon, UsersIcon } from "lucide-react";
 
 export enum DeletedFilter {
   ACTIVE = "false",
-  INCLUDE = "",
+  INCLUDE = "all",
   ONLY = "true",
 }
 
 export const DELETED_FILTER_LABELS: Record<DeletedFilter, string> = {
-  [DeletedFilter.ACTIVE]: "Somente ativos",
-  [DeletedFilter.INCLUDE]: "Incluir excluídos",
-  [DeletedFilter.ONLY]: "Somente excluídos",
+  [DeletedFilter.ACTIVE]: "Ativos",
+  [DeletedFilter.INCLUDE]: "Todos",
+  [DeletedFilter.ONLY]: "Excluídos",
 };
 
 export const deletedFilterOptions = Object.values(DeletedFilter).map(
@@ -24,3 +24,8 @@ export const deletedFilterOptions = Object.values(DeletedFilter).map(
           : UsersIcon,
   }),
 );
+
+export function deletedFilterFromBoolean(value?: boolean): DeletedFilter {
+  if (value === undefined) return DeletedFilter.INCLUDE;
+  return value ? DeletedFilter.ONLY : DeletedFilter.ACTIVE;
+}

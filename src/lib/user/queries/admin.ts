@@ -32,6 +32,10 @@ export async function findManyUsers(
       searchParams.set("isBlocked", String(params.isBlocked));
     }
 
+    if (params?.isDeleted !== undefined) {
+      searchParams.set("isDeleted", String(params.isDeleted));
+    }
+
     if (params?.startDate) {
       searchParams.set("startDate", params.startDate.toISOString());
     }
