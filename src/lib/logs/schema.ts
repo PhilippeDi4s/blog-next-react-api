@@ -1,44 +1,36 @@
-import z from "zod";
+import { z } from "zod";
 import { UserSummarySchema } from "../user/schemas";
-import { ActionType, EntityType } from "./enums";
+import { ActionType } from "./enums/actionType";
+import { EntityType } from "./enums/entityType";
+import { emptyToUndefined } from "../sharedSchemas/schemas";
 
 export const LogResponseSchema = z.object({
-  id: z.string(),
-  author: UserSummarySchema,
+  activityLogId: z.string(),
+  user: UserSummarySchema,
   action: z.enum(ActionType),
   entityType: z.enum(EntityType),
   entityId: z.string(),
-  reason: z.string(),
+  reason: z.string().nullable(),
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.string(),
 });
 
-export const AdminLogSearchSchema = z.object({
-  action: z.enum(ActionType).optional(),
-  userId: z.string().optional(),
-  entityType: z.enum(EntityType),
-  entityId: z.string().optional(),
-  startDate: z
-    .date({
-      error: "Data inicial inválida.",
-    })
-    .optional(),
-  endDate: z
-    .date({
-      error: "Data final inválida.",
-    })
-    .optional(),
-  page: z
-    .int({
-      error: "A página deve ser um número inteiro.",
-    })
-    .optional(),
-  limit: z
-    .int({
-      error: "O limite deve ser um número inteiro.",
-    })
-    .optional(),
+export const LogSearchParamsSchema = z.object({
+  action: z.preprocess(emptyToUndefined, z.enum(ActionType).optional()),
+  userId: z.preprocess(emptyToUndefined, z.string().optional()),
+  entityType: z.preprocess(emptyToUndefined, z.enum(EntityType).optional()),
+  entityId: z.preprocess(emptyToUndefined, z.string().optional()),
+  startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  page: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().min(1).optional(),
+  ),
+  limit: z.preprocess(
+    emptyToUndefined,
+    z.coerce.number().int().min(1).optional(),
+  ),
 });
 
 export type LogResponseDto = z.infer<typeof LogResponseSchema>;
-export type AdminLogSearchDto = z.infer<typeof AdminLogSearchSchema>;
+export type LogSearchParamsDto = z.infer<typeof LogSearchParamsSchema>;

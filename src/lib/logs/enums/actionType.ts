@@ -1,0 +1,31 @@
+export enum ActionType {
+  CREATED = "CREATED",
+  UPDATED = "UPDATED",
+  DELETED = "DELETED",
+  RESTORED = "RESTORED",
+  LOGIN = "LOGIN",
+  LOGOUT = "LOGOUT",
+  REVOKE_FORCE_LOGOUT = "REVOKE_FORCE_LOGOUT",
+  PASSWORD_RESET = "PASSWORD_RESET",
+  PASSWORD_CHANGE = "PASSWORD_CHANGE",
+  PROMOTE = "PROMOTE",
+  DEMOTE = "DEMOTE",
+  BLOCK_USER = "BLOCK_USER",
+  UNBLOCK_USER = "UNBLOCK_USER",
+}
+
+export const ACTION_TYPE_LABELS: Record<ActionType, string> = {
+  [ActionType.CREATED]: "Criado",
+  [ActionType.UPDATED]: "Atualizado",
+  [ActionType.DELETED]: "Excluído",
+  [ActionType.RESTORED]: "Restaurado",
+  [ActionType.LOGIN]: "Login",
+  [ActionType.LOGOUT]: "Logout",
+  [ActionType.REVOKE_FORCE_LOGOUT]: "Logout forçado",
+  [ActionType.PASSWORD_RESET]: "Senha redefinida",
+  [ActionType.PASSWORD_CHANGE]: "Senha alterada",
+  [ActionType.PROMOTE]: "Promovido a administrador",
+  [ActionType.DEMOTE]: "Rebaixado a usuário",
+  [ActionType.BLOCK_USER]: "Usuário bloqueado",
+  [ActionType.UNBLOCK_USER]: "Usuário desbloqueado",
+};
