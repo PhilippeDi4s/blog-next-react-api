@@ -1,15 +1,31 @@
+"use client";
+
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { formatDate } from "@/utils/format-datetime";
 import { AdminList } from "../AdminList";
-import { Calendar1Icon, ImageIcon, IdCardIcon, UserIcon } from "lucide-react";
+import { Calendar1Icon, ImageIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
+import { ImagePreview } from "@/components/images/ImagePreview";
+import { useState } from "react";
 
 type ImageListProps = {
   images: ImageResponseDto[];
 };
 
 export function ImageList({ images }: ImageListProps) {
+  const [isOpen, setIsOpen] = useState<string | null>(null);
+
+  function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(id);
+  }
+
+  function closePreview() {
+    setIsOpen(null);
+  }
+
   return (
     <AdminList
       items={images}
@@ -26,11 +42,21 @@ export function ImageList({ images }: ImageListProps) {
           headerIcon: ImageIcon,
           cell: (image) => (
             <div className="relative w-[6rem] h-[6rem]">
-              <Image
-                alt=""
-                src={image.url}
-                fill
-                className="rounded-xl object-cover object-top"
+              <button
+                className="cursor-pointer "
+                onClick={(e) => openPreview(e, image.id)}
+              >
+                <Image
+                  alt=""
+                  src={image.url}
+                  fill
+                  className="rounded-xl object-cover object-top transition hover:scale-105"
+                />
+              </button>
+              <ImagePreview
+                imageSrc={image.url}
+                isOpen={isOpen === image.id}
+                onClose={closePreview}
               />
             </div>
           ),
