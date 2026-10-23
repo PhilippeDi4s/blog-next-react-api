@@ -3,6 +3,7 @@ import { ImageResponseDto } from "@/lib/image/schema";
 import { formatDate } from "@/utils/format-datetime";
 import { AdminList } from "../AdminList";
 import { Calendar1Icon, ImageIcon, IdCardIcon, UserIcon } from "lucide-react";
+import Image from "next/image";
 
 type ImageListProps = {
   images: ImageResponseDto[];
@@ -21,15 +22,17 @@ export function ImageList({ images }: ImageListProps) {
       }}
       columns={[
         {
-          header: "ID",
-          headerIcon: IdCardIcon,
+          header: "Preview",
+          headerIcon: ImageIcon,
           cell: (image) => (
-            <CopyTextButton
-              buttonText="Copiar id"
-              textToCopy={image.id}
-              variant="ghost"
-              size="sm"
-            />
+            <div className="relative w-[6rem] h-[6rem]">
+              <Image
+                alt=""
+                src={image.url}
+                fill
+                className="rounded-xl object-cover object-top"
+              />
+            </div>
           ),
         },
         {
