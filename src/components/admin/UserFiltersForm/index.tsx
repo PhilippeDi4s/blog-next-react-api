@@ -58,7 +58,7 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
       <InputSelect
         name="isBlocked"
         labelText="Bloqueio"
-        defaultValue={String(filters.isBlocked ?? false)}
+        defaultValue={String(filters.isBlocked ?? "all")}
         className="w-48! min-w-48!"
         options={blockedFilterOptions}
       />
@@ -73,7 +73,7 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
       <InputSelect
         name="isDeleted"
         labelText="Status da conta"
-        defaultValue={String(filters.isDeleted ?? false)}
+        defaultValue={String(filters.isDeleted ?? "all")}
         className="w-48! min-w-48!"
         options={deletedFilterOptions}
       />
