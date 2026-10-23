@@ -1,14 +1,12 @@
 import { Notice } from "../notifications";
 import { useAdminForm } from "../shared/useAdminForm";
 import { buildPostAction } from "./build-post-action";
-import { AdminPostFormValuesDto, PostResponseDto } from "./schemas";
+import {  PostResponseDto } from "./schemas";
 
 export function usePostAdminForm(
-  postId: string,
-  original: AdminPostFormValuesDto,
-  fallbackSlug: string,
+  original: PostResponseDto,
 ) {
-  return useAdminForm(postId, original, {
+  return useAdminForm(original.id, original, {
     buildActions: buildPostAction,
     notice: Notice.ADMIN_POST_UPDATE,
     formErrorMessage: "Não foi possível salvar as alterações do post.",
@@ -21,7 +19,7 @@ export function usePostAdminForm(
           ? (result.value.data as PostResponseDto | undefined)
           : undefined;
 
-      return `/blog/${updatedPost?.slug ?? fallbackSlug}`;
+      return `/admin/posts/${updatedPost?.id ?? original.id}`;
     },
   });
 }

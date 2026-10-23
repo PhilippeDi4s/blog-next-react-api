@@ -89,8 +89,7 @@ export const PostResponseSchema = z.object({
       id: z.string(),
       uploadedBy: z.string().nullable(),
       url: z.string(),
-    })
-    .nullable(),
+    }),
   author: UserSummarySchema,
   deletedAt: z.string().nullable(),
 });

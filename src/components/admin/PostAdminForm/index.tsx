@@ -1,6 +1,6 @@
 "use client";
 
-import { AdminPostFormValuesDto } from "@/lib/post/schemas";
+import {  PostResponseDto } from "@/lib/post/schemas";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { PostFormFields } from "@/components/post/PostFormFields";
 import { useState } from "react";
@@ -9,25 +9,17 @@ import { Button } from "@/components/ui/Button";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 
 type PostAdminFormProps = {
-  postId: string;
-  slug: string;
-  authorName: string;
-  initialData: AdminPostFormValuesDto;
+  initialData: PostResponseDto;
 };
 
-export function PostAdminForm({
-  postId,
-  slug,
-  authorName,
-  initialData,
-}: PostAdminFormProps) {
+export function PostAdminForm({ initialData }: PostAdminFormProps) {
   const { current, setCurrent, fieldErrors, handleSubmit, modalProps } =
-    usePostAdminForm(postId, initialData, slug);
+    usePostAdminForm(initialData);
 
   const [contentValue, setContentValue] = useState(initialData.content);
 
   function handleFieldChange(
-    field: keyof AdminPostFormValuesDto,
+    field: keyof PostResponseDto,
     value: string | boolean,
   ) {
     setCurrent((prev) => ({ ...prev, [field]: value }));
@@ -45,15 +37,16 @@ export function PostAdminForm({
   return (
     <>
       <form
+      className="flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
       >
         <PostFormFields
-          id={postId}
-          slug={slug}
-          authorName={authorName}
+          id={initialData.id}
+          slug={initialData.slug}
+          authorName={initialData.author.name}
           formState={current}
           isPending={modalProps.submitting}
           contentValue={contentValue}

@@ -16,7 +16,8 @@ export async function findManyPosts(
     if (params?.slug) searchParams.set("slug", params.slug);
     if (params?.authorId) searchParams.set("authorId", params.authorId);
     if (params?.authorName) searchParams.set("authorName", params.authorName);
-    if (params?.authorEmail) searchParams.set("authorEmail", params.authorEmail);
+    if (params?.authorEmail)
+      searchParams.set("authorEmail", params.authorEmail);
     if (params?.published !== undefined) {
       searchParams.set("published", String(params.published));
     }
@@ -42,7 +43,30 @@ export async function findManyPosts(
   );
 }
 
+export async function findPostById(token: string, id: string) {
+  const res = await findManyPosts(token, { id });
+
+  if (!res.success) return res;
+
+  const post = res.data.data[0];
+
+  if (!post) {
+    return {
+      success: false as const,
+      status: 404,
+      errors: [{ code: "404", message: "Usuário não encontrado" }],
+    };
+  }
+
+  return { success: true as const, data: post };
+}
+
 export async function getPosts(params?: PostSearchParamsDto) {
   const token = await getLoginSessionOrRedirect();
   return findManyPosts(token, params);
+}
+
+export async function getPostById(id: string) {
+  const token = await getLoginSessionOrRedirect();
+  return findPostById(token, id);
 }

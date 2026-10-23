@@ -4,7 +4,7 @@ import { InputText } from "@/components/ui/InputText";
 import { LinkButton } from "@/components/ui/Link";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
-import { PostFormValuesDto } from "@/lib/post/schemas";
+import { PostResponseDto } from "@/lib/post/schemas";
 import { FieldError } from "@/lib/shared/adminAction";
 import {
   GalleryVerticalEndIcon,
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 type PostFormFieldsProps = {
-  formState: PostFormValuesDto;
+  formState: PostResponseDto;
   isPending: boolean;
   authorName: string;
   contentValue: string;
@@ -25,7 +25,7 @@ type PostFormFieldsProps = {
   id?: string;
   slug?: string;
   onFieldChange?: (
-    field: keyof PostFormValuesDto,
+    field: keyof PostResponseDto,
     value: string | boolean,
   ) => void;
   errors?: FieldError[];
@@ -120,7 +120,7 @@ export function PostFormFields({
         placeholder="Adicione a url da capa do post"
         labelText="URL da imagem de capa"
         name="coverImage"
-        defaultValue={formState.coverImage}
+        defaultValue={formState.coverImage?.url}
         disabled={isPending}
         type="text"
         onChange={(e) => onFieldChange?.("coverImage", e.target.value)}

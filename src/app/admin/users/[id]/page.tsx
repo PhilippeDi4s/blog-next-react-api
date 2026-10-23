@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+
 export const metadata: Metadata = {
   title: "Editar usuário",
 };
@@ -34,8 +35,6 @@ export async function UserEditPageContent({ params }: UserIdPageProps) {
   if (!res.success) notFound();
 
   const parsedData = AdminUserFormValuesSchema.parse(res.data);
-
-  console.log(parsedData);
 
   return <UserAdminForm initialData={parsedData} userId={id} />;
 }
