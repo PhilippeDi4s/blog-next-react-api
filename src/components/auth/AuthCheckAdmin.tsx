@@ -8,7 +8,7 @@ type AuthCheckAdminProps = {
 
 export async function AuthCheckAdmin({ children }: AuthCheckAdminProps) {
   const currentUser = await getAuthenticatedUserOrRedirect();
-  if (currentUser.role !== Roles.ADMIN) {
+  if (!currentUser || currentUser.role !== Roles.ADMIN) {
     notFound();
   }
   return <>{children}</>;

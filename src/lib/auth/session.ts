@@ -93,7 +93,7 @@ export const getAuthenticatedUserOrRedirect = cache(async () => {
   const token = cookieStore.get(loginCookieName)?.value;
 
   if (!token) {
-    notFound()
+    return null;
   }
 
   const res = await fetch(`${process.env.API_URL}/auth/me`, {
