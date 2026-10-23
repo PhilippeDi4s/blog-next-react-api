@@ -1,13 +1,13 @@
 import { updatePostAdminAction } from "@/app/actions/admin/post/update-post-admin";
 import { PendingAction } from "../shared/adminAction";
 import { FieldDiff } from "../shared/getFormDiff";
-import { PostResponseDto } from "./schemas";
+import { AdminPostFormValuesDto } from "./schemas";
 import { setPostArchiveStatusAdminAction } from "@/app/actions/admin/post/set-post-archive-status-admin-action";
 
 export function buildPostAction(
   postId: string,
-  formPayload: PostResponseDto,
-  changed: FieldDiff<PostResponseDto>,
+  formPayload: AdminPostFormValuesDto,
+  changed: FieldDiff<AdminPostFormValuesDto>,
   password: string,
 ): PendingAction[] {
   const actions: PendingAction[] = [];
@@ -28,7 +28,7 @@ export function buildPostAction(
           title: formPayload.title,
           excerpt: formPayload.excerpt,
           content: formPayload.content,
-          coverImage: formPayload.coverImage.url,
+          coverImage: formPayload.coverImage,
           published: formPayload.published,
           reason,
         }),

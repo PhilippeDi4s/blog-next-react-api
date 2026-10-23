@@ -1,9 +1,8 @@
 "use client";
 
-import {  PostResponseDto } from "@/lib/post/schemas";
+import { AdminPostFormValuesDto, PostResponseDto } from "@/lib/post/schemas";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { PostFormFields } from "@/components/post/PostFormFields";
-import { useState } from "react";
 import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
 import { Button } from "@/components/ui/Button";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
@@ -13,21 +12,21 @@ type PostAdminFormProps = {
 };
 
 export function PostAdminForm({ initialData }: PostAdminFormProps) {
-  const { current, setCurrent, fieldErrors, handleSubmit, modalProps } =
-    usePostAdminForm(initialData);
-
-  const [contentValue, setContentValue] = useState(initialData.content);
+  const {
+    current,
+    setCurrent,
+    fieldErrors,
+    clearFieldError,
+    handleSubmit,
+    modalProps,
+  } = usePostAdminForm(initialData);
 
   function handleFieldChange(
-    field: keyof PostResponseDto,
+    field: keyof AdminPostFormValuesDto,
     value: string | boolean,
   ) {
     setCurrent((prev) => ({ ...prev, [field]: value }));
-  }
-
-  function handleContentChange(value: string) {
-    setContentValue(value);
-    setCurrent((prev) => ({ ...prev, content: value }));
+    clearFieldError(field);
   }
 
   function handleCancel() {
@@ -37,7 +36,7 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
   return (
     <>
       <form
-      className="flex flex-col gap-5"
+        className="flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
@@ -49,8 +48,11 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
           authorName={initialData.author.name}
           formState={current}
           isPending={modalProps.submitting}
-          contentValue={contentValue}
-          setContentValue={handleContentChange}
+          contentValue={current.content}
+          setContentValue={(v) => {
+            setCurrent((prev) => ({ ...prev, content: v }));
+            clearFieldError("content");
+          }}
           onFieldChange={handleFieldChange}
           errors={fieldErrors}
         />

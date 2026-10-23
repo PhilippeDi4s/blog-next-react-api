@@ -16,8 +16,15 @@ import {
   User2Icon,
 } from "lucide-react";
 
+type PostFormFieldsState = {
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  published: boolean;
+};
+
 type PostFormFieldsProps = {
-  formState: PostResponseDto;
+  formState: PostFormFieldsState;
   isPending: boolean;
   authorName: string;
   contentValue: string;
@@ -25,7 +32,7 @@ type PostFormFieldsProps = {
   id?: string;
   slug?: string;
   onFieldChange?: (
-    field: keyof PostResponseDto,
+    field: keyof PostFormFieldsState,
     value: string | boolean,
   ) => void;
   errors?: FieldError[];
@@ -72,7 +79,6 @@ export function PostFormFields({
       )}
       <InputText
         labelText="Autor(a)"
-        name="author"
         readOnly
         disabled
         defaultValue={authorName}
@@ -120,7 +126,7 @@ export function PostFormFields({
         placeholder="Adicione a url da capa do post"
         labelText="URL da imagem de capa"
         name="coverImage"
-        defaultValue={formState.coverImage?.url}
+        defaultValue={formState.coverImage}
         disabled={isPending}
         type="text"
         onChange={(e) => onFieldChange?.("coverImage", e.target.value)}

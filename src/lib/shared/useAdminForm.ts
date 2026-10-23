@@ -11,6 +11,8 @@ import {
 import { ActionResult, PendingAction, FieldError } from "./adminAction";
 import { FieldDiff, getFormDiff } from "./getFormDiff";
 import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
+import { ZodType } from "zod";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 
 type SettledResult = PromiseSettledResult<ActionResult<unknown>>;
 
@@ -27,7 +29,12 @@ type UseAdminFormOptions<T> = {
   }) => string;
   notice: NoticeKey;
   formErrorMessage: string;
+  schema?: ZodType;
 };
+
+const CONFIRM_FIELDS = ["reason", "password"];
+const isConfirmError = (e: FieldError) =>
+  !!e.field && CONFIRM_FIELDS.includes(e.field);
 
 export function useAdminForm<T extends Record<string, unknown>>(
   entityId: string,
@@ -37,6 +44,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
     getRedirectPath,
     notice,
     formErrorMessage,
+    schema,
   }: UseAdminFormOptions<T>,
 ) {
   const router = useRouter();
@@ -56,11 +64,37 @@ export function useAdminForm<T extends Record<string, unknown>>(
 
   function handleSubmit() {
     if (!hasChanges) return;
-    const changed = getFormDiff(original, current);
 
-    setPendingActions(buildActions(entityId, current, changed, ""));
+    if (schema) {
+      const parsed = schema.safeParse(current);
+      if (!parsed.success) {
+        setFieldErrors(
+          parsed.error.issues.map((issue) => ({
+            field: issue.path.map(String).join("."),
+            code: "INVALID_VALIDATION",
+            message: issue.message,
+          })),
+        );
+        getZodErrorMessages(parsed.error).map((error) => showMessage.error(error.message))
+        return;
+      }
+    }
+
+    const changed = getFormDiff(original, current);
+    setFieldErrors([]);
+    setReasonError({});
+    setPasswordError(null);
     setReasons({});
+    setPendingActions(buildActions(entityId, current, changed, ""));
     setModalOpen(true);
+  }
+
+  function getFieldError(field: string) {
+    return fieldErrors.find((e) => e.field === field)?.message;
+  }
+
+  function clearFieldError(field: string) {
+    setFieldErrors((prev) => prev.filter((e) => e.field !== field));
   }
 
   function setReason(key: string, value: string) {
@@ -90,6 +124,8 @@ export function useAdminForm<T extends Record<string, unknown>>(
   async function handlePasswordConfirm(password: string) {
     setSubmitting(true);
     setPasswordError(null);
+    setReasonError({});
+    setFieldErrors([]);
 
     const changed = getFormDiff(original, current);
     const actions = buildActions(entityId, current, changed, password);
@@ -103,6 +139,15 @@ export function useAdminForm<T extends Record<string, unknown>>(
         : [{ code: "CONNECTION_ERROR", message: "Erro de rede inesperado" }],
     );
 
+    // TEMPORÁRIO: remova depois de confirmar o formato
+    console.log("[useAdminForm] errors:", JSON.stringify(errors, null, 2));
+
+    const networkErrors = errors.filter((e) => e.code === "CONNECTION_ERROR");
+    const confirmErrors = errors.filter(isConfirmError);
+    const formErrors = errors.filter(
+      (e) => e.code !== "CONNECTION_ERROR" && !isConfirmError(e),
+    );
+
     const newReasonError: Record<string, string> = {};
     results.forEach((r, i) => {
       if (r.status !== "fulfilled" || r.value.success) return;
@@ -111,36 +156,39 @@ export function useAdminForm<T extends Record<string, unknown>>(
     });
     setReasonError(newReasonError);
 
-    const passwordFailed = errors.some((e) => e.field === "password");
-    if (passwordFailed) setPasswordError("Senha incorreta. Tente novamente.");
-
-    const hasConfirmError =
-      Object.keys(newReasonError).length > 0 || passwordFailed;
-    const hasNetworkError = errors.some((e) => e.field === "CONNECTION_ERROR");
-    const hasFormError = errors.some(
-      (e) => e.code !== "INVALID_VALIDATION" && e.code !== "CONNECTION_ERROR",
-    );
-
-    if (hasFormError) showMessage.error(formErrorMessage);
-    if (hasConfirmError) showMessage.error(CONFIRM_ERROR_MESSAGE);
-    if (hasNetworkError) showMessage.error(NETWORK_ERROR_MESSAGE);
-
-    if (passwordFailed) {
-      setSubmitting(false);
-      return;
+    const passwordErr = errors.find((e) => e.field === "password");
+    if (passwordErr) {
+      setPasswordError(
+        passwordErr.message || "Senha incorreta. Tente novamente.",
+      );
     }
 
-    setFieldErrors(errors);
+    setFieldErrors(formErrors);
+    setSubmitting(false);
+
     const allSucceeded = results.every(
       (r) => r.status === "fulfilled" && r.value.success,
     );
-    setSubmitting(false);
-    setModalOpen(true);
 
     if (allSucceeded) {
       showNotice(notice);
       setModalOpen(false);
       router.push(getRedirectPath({ results, actions }));
+      return;
+    }
+
+    if (networkErrors.length) showMessage.error(NETWORK_ERROR_MESSAGE);
+
+    // Erro de motivo/senha: modal continua aberto, erro aparece no modal
+    if (confirmErrors.length) {
+      showMessage.error(CONFIRM_ERROR_MESSAGE);
+      return;
+    }
+
+    // Erro de campo: fecha o modal para o erro aparecer sob o input
+    if (formErrors.length) {
+      showMessage.error(formErrorMessage);
+      handleModalCancel();
     }
   }
 
@@ -149,6 +197,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
     setPasswordError(null);
     setPendingActions([]);
     setReasons({});
+    setReasonError({});
   }
 
   const modalProps = {
@@ -171,6 +220,8 @@ export function useAdminForm<T extends Record<string, unknown>>(
     fieldErrors,
     hasChanges,
     handleSubmit,
+    getFieldError,
+    clearFieldError,
     modalProps,
   };
 }

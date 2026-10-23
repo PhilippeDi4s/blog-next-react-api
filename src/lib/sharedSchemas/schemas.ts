@@ -5,7 +5,7 @@ export const emptyToUndefined = (value: unknown) =>
 
 export const booleanFilter = (allValue: string) =>
   z.preprocess(
-    (value) => (value === undefined || value === "" ? "false" : value),
+    (value) => (value === undefined || value === "" ? "all" : value),
     z
       .union([z.literal(allValue).transform(() => undefined), z.stringbool()])
       .optional(),

@@ -70,25 +70,24 @@ export function ImageUploader({
     startTransition(async () => {
       const result = await uploadImageAction(formData);
 
+      showMessage.dismiss();
       if (result.errors.length > 0) {
-        showMessage.dismiss();
-
         result.errors.forEach((error) => {
           const messages = Array.isArray(error.message)
             ? error.message
             : [error.message];
-
           messages.forEach((msg) => showMessage.error(msg));
         });
-
-        setImgUrl(result.url);
-
-        if (!showPreview) {
-          router.refresh();
-        }
-
-        showMessage.success("Imagem adicionada à sua galeria!");
+        return;
       }
+
+      setImgUrl(result.url);
+
+      if (!showPreview) {
+        router.refresh();
+      }
+
+      showMessage.success("Imagem adicionada à sua galeria!");
     });
   }
   return (

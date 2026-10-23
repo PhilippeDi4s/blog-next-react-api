@@ -15,17 +15,17 @@ const PostBaseSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(3, "Título deve ter, no mínimo, 3 caracteres")
+    .min(10, "Título deve ter, no mínimo, 10 caracteres")
     .max(120, "Título deve ter um máximo de 120 caracteres"),
   content: z
     .string()
     .trim()
-    .min(3, "Conteúdo é obrigatório")
+    .min(10, "Conteúdo é obrigatório")
     .transform((val) => sanitizeHtml(val)),
   excerpt: z
     .string()
     .trim()
-    .min(3, "Excerto precisa de um mínimo de 3 caracteres")
+    .min(10, "Excerto precisa de um mínimo de 10 caracteres")
     .max(200, "Excerto não deve ter mais que 200 caracteres"),
   coverImage: z
     .string()
@@ -84,12 +84,11 @@ export const PostResponseSchema = z.object({
   published: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  coverImage: z
-    .object({
-      id: z.string(),
-      uploadedBy: z.string().nullable(),
-      url: z.string(),
-    }),
+  coverImage: z.object({
+    id: z.string(),
+    uploadedBy: z.string().nullable(),
+    url: z.string(),
+  }),
   author: UserSummarySchema,
   deletedAt: z.string().nullable(),
 });
@@ -97,16 +96,22 @@ export const PostResponseSchema = z.object({
 export const AdminUpdatePostSchema = AdminReasonSchema.extend(
   UpdatePostSchema.shape,
 );
-
-export const AdminPostFormValuesSchema = PostResponseSchema.pick({
-  title: true,
-  content: true,
-  excerpt: true,
-  published: true,
-  deletedAt: true,
-}).extend({
-  coverImage: z.string(),
+export const AdminPostFormValuesSchema = UpdatePostSchema.extend({
+  deletedAt: z.string().nullable(),
 });
+
+export function toAdminPostFormValues(
+  post: PostResponseDto,
+): AdminPostFormValuesDto {
+  return {
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    coverImage: post.coverImage.url,
+    published: post.published,
+    deletedAt: post.deletedAt,
+  };
+}
 
 export const PostSearchParamsSchema = z.object({
   id: z.preprocess(emptyToUndefined, z.string().optional()),
