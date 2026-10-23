@@ -41,8 +41,6 @@ async function PostListPageContent({ searchParams }: PostListPageProps) {
   const { data, total, limit, page } = res.data;
   const totalPages = Math.ceil(total / limit);
 
-  console.log(parsed)
-
   return (
     <section className="flex w-full flex-col gap-6">
       <PostList posts={data} />

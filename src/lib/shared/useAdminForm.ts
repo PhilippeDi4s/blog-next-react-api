@@ -139,9 +139,6 @@ export function useAdminForm<T extends Record<string, unknown>>(
         : [{ code: "CONNECTION_ERROR", message: "Erro de rede inesperado" }],
     );
 
-    // TEMPORÁRIO: remova depois de confirmar o formato
-    console.log("[useAdminForm] errors:", JSON.stringify(errors, null, 2));
-
     const networkErrors = errors.filter((e) => e.code === "CONNECTION_ERROR");
     const confirmErrors = errors.filter(isConfirmError);
     const formErrors = errors.filter(

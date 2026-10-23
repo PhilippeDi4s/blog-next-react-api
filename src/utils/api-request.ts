@@ -26,12 +26,6 @@ export async function apiRequest<T>(
     const body = await res.json().catch(() => null);
 
     if (!res.ok) {
-      console.log(
-        "[apiRequest] status:",
-        res.status,
-        "body:",
-        JSON.stringify(body),
-      );
       const errors: FieldError[] = Array.isArray(body?.errors)
         ? body.errors
         : [

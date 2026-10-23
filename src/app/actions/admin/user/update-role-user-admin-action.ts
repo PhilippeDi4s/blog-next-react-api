@@ -40,8 +40,6 @@ export async function updateRoleAdminAction(
     };
   }
 
-  console.log(parsed.data);
-
   const endpoint = parsed.data.role === Roles.ADMIN ? "promote" : "demote";
 
   const payload = {
