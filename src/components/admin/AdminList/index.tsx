@@ -53,7 +53,13 @@ export function AdminList<T>({
                 className="py-2 px-3 bg-slate-700 whitespace-nowrap font-normal"
               >
                 <div className="flex gap-2 items-center">
-                  {col.headerIcon && <col.headerIcon size={20} strokeWidth={1.7} className="opacity-80"/>}
+                  {col.headerIcon && (
+                    <col.headerIcon
+                      size={20}
+                      strokeWidth={1.7}
+                      className="opacity-80"
+                    />
+                  )}
                   {col.header}
                 </div>
               </th>
@@ -64,7 +70,12 @@ export function AdminList<T>({
           {items.map((item) => (
             <tr
               key={getRowKey(item)}
-              className="whitespace-nowrap cursor-pointer border-b-2 border-b-slate-500 last:border-b-0 transition hover:bg-slate-800"
+              className="whitespace-nowrap 
+              cursor-pointer 
+              border-b-2 
+              border-b-slate-500 
+              last:border-b-0 transition 
+              [&:not(:has([data-no-row-hover]:hover))]:hover:bg-slate-800"
             >
               {columns.map((col) => (
                 <td

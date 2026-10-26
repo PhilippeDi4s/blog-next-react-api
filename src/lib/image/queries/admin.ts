@@ -38,7 +38,29 @@ export async function findManyImages(
   );
 }
 
+export async function findImageById(token: string, id: string) {
+  const res = await findManyImages(token, { id });
+  if (!res.success) return res;
+
+  const image = res.data.data[0];
+
+  if (!image) {
+    return {
+      success: false as const,
+      status: 404,
+      errors: [{ code: "404", message: "Imagem não encontrado" }],
+    };
+  }
+
+  return { success: true as const, data: image };
+}
+
 export async function getImages(params?: ImageSearchParamsDto) {
   const token = await getLoginSessionOrRedirect();
   return findManyImages(token, params);
+}
+
+export async function getImagesById(id: string) {
+  const token = await getLoginSessionOrRedirect();
+  return findImageById(token, id);
 }

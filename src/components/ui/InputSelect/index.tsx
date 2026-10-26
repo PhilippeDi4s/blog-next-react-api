@@ -19,6 +19,7 @@ type InputSelectOption = {
   value: string;
   label: string;
   icon?: LucideIcon;
+  iconClassName?: string;
 };
 
 type SelectProps = Omit<
@@ -97,7 +98,8 @@ export function InputSelect({
       }
     }
     document.addEventListener("pointerdown", handleOutsideClick);
-    return () => document.removeEventListener("pointerdown", handleOutsideClick);
+    return () =>
+      document.removeEventListener("pointerdown", handleOutsideClick);
   }, [isOpen]);
 
   useEffect(() => {
@@ -167,8 +169,8 @@ export function InputSelect({
         onClick={() => setIsOpen((open) => !open)}
         className={clsx(
           inputStyle,
+          "flex items-center justify-between bg-slate-700! pl-3! text-left w-full",
           className,
-          "flex items-center justify-between bg-slate-700! pl-3! text-left",
           {
             "ring-blue-600": isOpen,
             "cursor-not-allowed": disabled,
@@ -179,7 +181,10 @@ export function InputSelect({
         {selectedOption?.icon && (
           <selectedOption.icon
             aria-hidden="true"
-            className="mr-2 h-4 w-4 shrink-0"
+            className={clsx(
+              "mr-2 h-4 w-4 shrink-0",
+              selectedOption.iconClassName,
+            )}
           />
         )}
         <span className={clsx("truncate", !selectedOption && "text-slate-400")}>
@@ -188,7 +193,7 @@ export function InputSelect({
         <ChevronDown
           aria-hidden="true"
           className={clsx(
-            "ml-3 h-4 w-4 shrink-0 transition-transform duration-200",
+            "ml-auto h-4 w-4 shrink-0 transition-transform duration-200",
             {
               "rotate-180": isOpen,
             },
@@ -245,7 +250,10 @@ export function InputSelect({
                     {option.icon && (
                       <option.icon
                         aria-hidden="true"
-                        className="mr-2 h-4 w-4 shrink-0"
+                        className={clsx(
+                          "mr-2 h-4 w-4 shrink-0",
+                          option.iconClassName,
+                        )}
                       />
                     )}
                     <span>{option.label}</span>

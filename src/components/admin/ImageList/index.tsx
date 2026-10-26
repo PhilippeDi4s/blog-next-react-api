@@ -45,12 +45,13 @@ export function ImageList({ images }: ImageListProps) {
               <button
                 className="cursor-pointer "
                 onClick={(e) => openPreview(e, image.id)}
+                data-no-row-hover
               >
                 <Image
                   alt=""
                   src={image.url}
                   fill
-                  className="rounded-xl object-cover object-top transition hover:scale-105"
+                  className="cursor-zoom-in rounded-xl object-cover object-top transition hover:scale-105  hover:ring-2 hover:ring-blue-500"
                 />
               </button>
               <ImagePreview
