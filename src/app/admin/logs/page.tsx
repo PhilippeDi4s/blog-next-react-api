@@ -1,4 +1,5 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
+import { LogFiltersForm } from "@/components/admin/LogFiltersForm";
 import { LogList } from "@/components/admin/LogList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
@@ -43,6 +44,7 @@ async function LogListPageContent({ searchParams }: LogListPageProps) {
 
   return (
     <section className="flex w-full flex-col gap-6">
+      <LogFiltersForm filters={filters} />
       <LogList logs={data} />
       <AdminPagination
         currentPage={page}

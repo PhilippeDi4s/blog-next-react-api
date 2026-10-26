@@ -9,7 +9,9 @@ import {
   ArchiveRestoreIcon,
   Calendar1Icon,
   CirclePlusIcon,
+  FileTextIcon,
   IdCardIcon,
+  ImageIcon,
   KeyRoundIcon,
   LayersIcon,
   LockKeyholeIcon,
@@ -19,6 +21,7 @@ import {
   PencilIcon,
   ShieldIcon,
   UnlockKeyholeIcon,
+  UploadIcon,
   UserIcon,
 } from "lucide-react";
 import { AdminList } from "../AdminList";
@@ -102,6 +105,19 @@ export function LogList({ logs }: LogListProps) {
           className: "max-w-60",
         },
         {
+          header: "ID Ator",
+          headerIcon: UserIcon,
+          cell: (log) => (
+            <CopyTextButton
+              buttonText="Copiar id"
+              textToCopy={log.activityLogId}
+              variant="ghost"
+              size="sm"
+            />
+          ),
+          className: "max-w-60",
+        },
+        {
           header: "Ação",
           headerIcon: ActivityIcon,
           cell: (log) => {
@@ -118,14 +134,26 @@ export function LogList({ logs }: LogListProps) {
           header: "Entidade",
           headerIcon: LayersIcon,
           cell: (log) => (
-            <div className="flex max-w-60 flex-col">
-              <span>{ENTITY_TYPE_LABELS[log.entityType]}</span>
-              <span className="truncate text-sm opacity-70" title={log.entityId}>
-                {log.entityId}
-              </span>
-            </div>
+            <span className="inline-flex items-center gap-2">
+              {log.entityType === "USER" && <UserIcon size={16} />}
+              {log.entityType === "POST" && <FileTextIcon size={16} />}
+              {log.entityType === "IMAGE" && <ImageIcon size={16} />}
+              {log.entityType === "UPLOAD" && <UploadIcon size={16} />}
+              {ENTITY_TYPE_LABELS[log.entityType]}
+            </span>
           ),
-          className: "max-w-60",
+        },
+        {
+          header: "ID Entidade",
+          headerIcon: LayersIcon,
+          cell: (log) => (
+            <CopyTextButton
+              buttonText="Copiar id"
+              textToCopy={log.entityId}
+              variant="ghost"
+              size="sm"
+            />
+          ),
         },
         {
           header: "Motivo",

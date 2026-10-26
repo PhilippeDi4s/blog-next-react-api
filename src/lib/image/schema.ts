@@ -2,6 +2,30 @@ import { z } from "zod";
 import { UserSummarySchema } from "../user/schemas";
 import { emptyToUndefined } from "../sharedSchemas/schemas";
 
+const imageSearchDateFilter = z.preprocess(
+  (value) => {
+    const emptyValue = emptyToUndefined(value);
+    if (typeof emptyValue !== "string") return emptyValue;
+
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(emptyValue);
+    if (!match) return emptyValue;
+
+    const [, day, month, year] = match;
+    const isoDate = `${year}-${month}-${day}`;
+    const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
+
+    if (
+      Number.isNaN(parsedDate.getTime()) ||
+      parsedDate.toISOString().slice(0, 10) !== isoDate
+    ) {
+      return emptyValue;
+    }
+
+    return isoDate;
+  },
+  z.coerce.date().optional(),
+);
+
 export const ImageResponseSchema = z.object({
   id: z.string(),
   url: z.string(),
@@ -21,8 +45,8 @@ export const ImageSearchParamsSchema = z.object({
   userId: z.preprocess(emptyToUndefined, z.string().optional()),
   userName: z.preprocess(emptyToUndefined, z.string().optional()),
   userEmail: z.preprocess(emptyToUndefined, z.string().optional()),
-  startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
-  endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
+  startDate: imageSearchDateFilter,
+  endDate: imageSearchDateFilter,
   page: z.preprocess(
     emptyToUndefined,
     z.coerce.number().int().min(1).optional(),

@@ -1,3 +1,18 @@
+import {
+  ActivityIcon,
+  ArchiveIcon,
+  ArchiveRestoreIcon,
+  CirclePlusIcon,
+  KeyRoundIcon,
+  LockKeyholeIcon,
+  LogInIcon,
+  LogOutIcon,
+  PencilIcon,
+  ShieldIcon,
+  UnlockKeyholeIcon,
+  type LucideIcon,
+} from "lucide-react";
+
 export enum ActionType {
   CREATED = "CREATED",
   UPDATED = "UPDATED",
@@ -29,3 +44,28 @@ export const ACTION_TYPE_LABELS: Record<ActionType, string> = {
   [ActionType.BLOCK_USER]: "Usuário bloqueado",
   [ActionType.UNBLOCK_USER]: "Usuário desbloqueado",
 };
+
+const actionTypeIcons = {
+  [ActionType.CREATED]: CirclePlusIcon,
+  [ActionType.UPDATED]: PencilIcon,
+  [ActionType.DELETED]: ArchiveIcon,
+  [ActionType.RESTORED]: ArchiveRestoreIcon,
+  [ActionType.LOGIN]: LogInIcon,
+  [ActionType.LOGOUT]: LogOutIcon,
+  [ActionType.REVOKE_FORCE_LOGOUT]: LogOutIcon,
+  [ActionType.PASSWORD_RESET]: KeyRoundIcon,
+  [ActionType.PASSWORD_CHANGE]: KeyRoundIcon,
+  [ActionType.PROMOTE]: ShieldIcon,
+  [ActionType.DEMOTE]: ShieldIcon,
+  [ActionType.BLOCK_USER]: LockKeyholeIcon,
+  [ActionType.UNBLOCK_USER]: UnlockKeyholeIcon,
+} satisfies Record<ActionType, LucideIcon>;
+
+export const actionTypeOptions = [
+  { value: "", label: "Todas as ações", icon: ActivityIcon },
+  ...Object.values(ActionType).map((action) => ({
+    value: action,
+    label: ACTION_TYPE_LABELS[action],
+    icon: actionTypeIcons[action],
+  })),
+];
