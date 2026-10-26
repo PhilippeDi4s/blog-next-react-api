@@ -27,6 +27,15 @@ export default function UserListPage({ searchParams }: UserListPageProps) {
 async function UserListPageContent({ searchParams }: UserListPageProps) {
   const raw = await searchParams;
   const parsed = UserSearchParamsSchema.safeParse(raw);
+  if (!parsed.success) {
+    return (
+      <ErrorMessage
+        pageTitle="Usuários"
+        contentTitle="Parâmetros inválidos"
+        content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
+      />
+    );
+  }
   const filters = parsed.success ? parsed.data : {};
 
   const res = await getUsers(filters);
@@ -47,7 +56,7 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
 
   return (
     <section className="w-full flex flex-col gap-6">
-      <UserFiltersForm filters={raw} />
+      <UserFiltersForm filters={parsed.data} />
       <UserList users={data} />
       <AdminPagination
         currentPage={page}

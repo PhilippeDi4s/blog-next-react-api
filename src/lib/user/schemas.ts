@@ -12,6 +12,30 @@ import { DeletedFilter } from "./enums/isDeleted";
 export const RoleSchema = z.enum(Roles);
 export const SessionStatusSchema = z.enum(SessionStatus);
 
+const userSearchDateFilter = z.preprocess(
+  (value) => {
+    const emptyValue = emptyToUndefined(value);
+    if (typeof emptyValue !== "string") return emptyValue;
+
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(emptyValue);
+    if (!match) return emptyValue;
+
+    const [, day, month, year] = match;
+    const isoDate = `${year}-${month}-${day}`;
+    const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
+
+    if (
+      Number.isNaN(parsedDate.getTime()) ||
+      parsedDate.toISOString().slice(0, 10) !== isoDate
+    ) {
+      return emptyValue;
+    }
+
+    return isoDate;
+  },
+  z.coerce.date().optional(),
+);
+
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
   email: z.email({ message: "E-mail inválido" }).trim(),
@@ -134,16 +158,10 @@ export const UserSearchParamsSchema = z.object({
   isLogged: z.preprocess(emptyToUndefined, z.stringbool().optional()),
   isBlocked: booleanFilter(BlockedFilter.INCLUDE_ALL),
   isDeleted: booleanFilter(DeletedFilter.INCLUDE),
-  startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
-  endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
-  sessionExpiresStartDate: z.preprocess(
-    emptyToUndefined,
-    z.coerce.date().optional(),
-  ),
-  sessionExpiresEndDate: z.preprocess(
-    emptyToUndefined,
-    z.coerce.date().optional(),
-  ),
+  startDate: userSearchDateFilter,
+  endDate: userSearchDateFilter,
+  sessionExpiresStartDate: userSearchDateFilter,
+  sessionExpiresEndDate: userSearchDateFilter,
   page: z.preprocess(
     emptyToUndefined,
     z.coerce.number().int().min(1).optional(),

@@ -1,4 +1,5 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
+import { PostFiltersForm } from "@/components/admin/PostFiltersForm";
 import { PostList } from "@/components/admin/PostList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
@@ -24,7 +25,16 @@ export default function PostListPage({ searchParams }: PostListPageProps) {
 async function PostListPageContent({ searchParams }: PostListPageProps) {
   const raw = await searchParams;
   const parsed = PostSearchParamsSchema.safeParse(raw);
-  const filters = parsed.success ? parsed.data : {};
+  if (!parsed.success) {
+    return (
+      <ErrorMessage
+        pageTitle="Posts"
+        contentTitle="Parâmetros inválidos"
+        content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
+      />
+    );
+  }
+  const filters = parsed.data;
   const res = await getPosts(filters);
 
   if (!res.success) {
@@ -43,6 +53,7 @@ async function PostListPageContent({ searchParams }: PostListPageProps) {
 
   return (
     <section className="flex w-full flex-col gap-6">
+      <PostFiltersForm filters={filters} />
       <PostList posts={data} />
       <AdminPagination
         currentPage={page}

@@ -54,7 +54,7 @@ export async function findPostById(token: string, id: string) {
     return {
       success: false as const,
       status: 404,
-      errors: [{ code: "404", message: "Usuário não encontrado" }],
+      errors: [{ code: "404", message: "Post não encontrado" }],
     };
   }
 

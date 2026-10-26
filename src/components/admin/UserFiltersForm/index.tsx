@@ -82,7 +82,9 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
         labelText="Criado a partir de"
         placeholder="DD/MM/AAAA"
         defaultValue={
-          filters.startDate ? formatDate(String(filters.startDate)) : ""
+          filters.startDate
+            ? formatDate(filters.startDate.toISOString().slice(0, 10))
+            : ""
         }
       />
       <InputDate
@@ -90,7 +92,9 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
         labelText="Criado até"
         placeholder="DD/MM/AAAA"
         defaultValue={
-          filters.endDate ? formatDate(String(filters.endDate)) : ""
+          filters.endDate
+            ? formatDate(filters.endDate.toISOString().slice(0, 10))
+            : ""
         }
       />
       <InputDate
@@ -99,7 +103,9 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
         placeholder="DD/MM/AAAA"
         defaultValue={
           filters.sessionExpiresStartDate
-            ? formatDate(String(filters.sessionExpiresStartDate))
+            ? formatDate(
+                filters.sessionExpiresStartDate.toISOString().slice(0, 10),
+              )
             : ""
         }
       />
@@ -109,7 +115,9 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
         placeholder="DD/MM/AAAA"
         defaultValue={
           filters.sessionExpiresEndDate
-            ? formatDate(String(filters.sessionExpiresEndDate))
+            ? formatDate(
+                filters.sessionExpiresEndDate.toISOString().slice(0, 10),
+              )
             : ""
         }
       />
