@@ -18,7 +18,7 @@ export async function PostsList() {
   }
 
   const posts = postsRes.data;
-  
+
   if (!posts || posts.length <= 0) {
     return (
       <ErrorMessage
@@ -46,11 +46,9 @@ export async function PostsList() {
           <div key={post.id}>
             <Link href={postLink} className={clsx("flex flex-col gap-4 group")}>
               <PostImage
-                imageProps={{
-                  src: post.coverImage.url,
-                  alt: `Imagem do Post ${post.title}`,
-                }}
-                imageHeight={12.5}
+               alt={"Imagem de capa do post " + post.title}
+               src={post.coverImage?.url}
+               containerClassName="h-60"
               />
 
               <PostSummary

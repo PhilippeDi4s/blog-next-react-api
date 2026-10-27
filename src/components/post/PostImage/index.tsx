@@ -1,38 +1,38 @@
-import Image from "next/image";
 import clsx from "clsx";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 
 type PostImageProps = {
-  imageProps: React.ComponentProps<typeof Image>;
-  imageHeight?: "full" | number;
+  src?: string | null;
+  alt: string;
+  containerClassName?: string;
+  imageClassName?: string;
 };
 
 export function PostImage({
-  imageProps,
-  imageHeight = "full",
+  src,
+  alt,
+  containerClassName,
+  imageClassName,
 }: PostImageProps) {
   return (
-    <div
-      className={clsx("w-full", "overflow-hidden", "rounded-2xl")}
-      style={{
-        height: imageHeight === "full" ? "100%" : `${imageHeight}rem`,
-      }}
-    >
-      <Image
-        {...imageProps}
-        className={clsx(
-          "w-full",
-          "h-full",
-          "object-cover",
-          "object-center",
-          "group-hover:scale-105",
-          "transition",
-          "duration-500",
-          imageProps.className,
-        )}
-        width={1200}
-        height={720}
-        alt={imageProps.alt}
-      />
-    </div>
+    <ImageWithFallback
+      alt={alt}
+      src={src}
+      containerClassName={clsx(
+        "relative",
+        "w-full",
+        "overflow-hidden",
+        "rounded-2xl",
+        containerClassName,
+      )}
+      imageClassName={clsx(
+        "object-cover",
+        "object-center",
+        "group-hover:scale-105",
+        "transition",
+        "duration-500",
+        imageClassName,
+      )}
+    />
   );
 }

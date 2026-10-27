@@ -1,5 +1,5 @@
 import { findPublicPostBySlugCached } from "@/lib/post/queries/public";
-import Image from "next/image";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { PostHeading } from "../PostHeading";
 import { PostDate } from "../PostDate";
 import { SafeMarkdown } from "@/components/SafeMarkDown";
@@ -26,12 +26,11 @@ export async function SinglePost({ slug }: SinglePostProps) {
   return (
     <article>
       <div className="flex flex-col gap-4 mb-4">
-        <Image
-          className="rounded-xl"
-          src={post.coverImage.url}
-          width={1200}
-          height={720}
+        <ImageWithFallback
+          src={post.coverImage?.url}
           alt={post.title}
+          containerClassName="relative aspect-video max-h-[28rem] w-full overflow-hidden rounded-xl"
+          imageClassName="rounded-xl object-cover"
         />
         <PostHeading>{post.title}</PostHeading>
 

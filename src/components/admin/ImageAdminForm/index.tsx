@@ -6,6 +6,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { ImageResponseDto } from "@/lib/image/schema";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { formatDateTime } from "@/utils/format-datetime";
 import {
   CalendarIcon,
@@ -16,7 +17,6 @@ import {
   TrashIcon,
   UserIcon,
 } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { PendingAction } from "@/lib/shared/adminAction";
@@ -121,20 +121,12 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
 
   return (
     <>
-      <button onClick={openPreview} className="w-full ">
-        <Image
+      <button onClick={openPreview} className="w-full my-5">
+        <ImageWithFallback
           alt=""
           src={imageData.url}
-          className="cursor-zoom-in 
-          rounded-xl 
-          mx-auto 
-          mb-5 
-          transition 
-          hover:scale-105  
-          hover:ring-2 
-          hover:ring-blue-500"
-          width={500}
-          height={500}
+          containerClassName="w-[80%] h-100 object-cover mx-auto"
+          imageClassName="object-cover cursor-zoom-in rounded-xl transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
         />
       </button>
       <ImagePreview

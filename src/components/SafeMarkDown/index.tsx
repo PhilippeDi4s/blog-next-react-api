@@ -2,6 +2,7 @@ import clsx from "clsx";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 
 type SafeMarkdownProps = {
   markdown: string;
@@ -28,6 +29,16 @@ export function SafeMarkdown({ markdown }: SafeMarkdownProps) {
         rehypePlugins={[rehypeSanitize]}
         remarkPlugins={[remarkGfm]}
         components={{
+          img: ({ src, alt }) => (
+            <ImageWithFallback
+              src={typeof src === "string" ? src : undefined}
+              alt={alt ?? ""}
+              className="relative mx-auto w-full"
+              imageClassName="object-contain"
+              sizes="100vw"
+              intrinsic
+            />
+          ),
             table: ({node, ...props}) => {
                 if(!node?.children) return ''
                 return(

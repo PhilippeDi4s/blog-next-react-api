@@ -15,7 +15,6 @@ export async function PostFeatured() {
 
   const post = posts[0];
 
-  
   return (
     <section>
       <Link
@@ -23,14 +22,9 @@ export async function PostFeatured() {
         className={clsx("grid grid-cols-1 gap-8 mb-16 group", "sm:grid-cols-2")}
       >
         <PostImage
-          imageProps={{
-            width: 1200,
-            height: 720,
-            src: post.coverImage.url,
-            alt: post.title,
-            priority: true,
-          }}
-          imageHeight={17}
+          src={post.coverImage?.url}
+          alt={post.title}
+          containerClassName="h-80"
         />
 
         <PostSummary

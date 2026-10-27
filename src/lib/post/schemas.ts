@@ -131,7 +131,7 @@ export function toAdminPostFormValues(
     title: post.title,
     excerpt: post.excerpt,
     content: post.content,
-    coverImage: post.coverImage.url,
+    coverImage: post.coverImage?.url ?? "",
     published: post.published,
     deletedAt: post.deletedAt,
   };

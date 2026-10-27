@@ -7,6 +7,7 @@ import { ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 
 type ImageUploaderProps = {
   showPreview: boolean;
@@ -107,11 +108,13 @@ export function ImageUploader({
 
       {!!imgUrl && showPreview && (
         <div className="flex flex-col gap-8 mt-8">
-          {/* eslint-disable-next-line */}
-          <img
-            className="w-96 max-h-96 max-w-96 rounded"
+          <ImageWithFallback
             alt="Imagem do post"
             src={imgUrl}
+            className="relative w-96 max-h-96 max-w-96 rounded"
+            imageClassName="rounded object-contain"
+            sizes="384px"
+            intrinsic
           />
           <CopyTextButton
             buttonText="Copiar URL da imagem"

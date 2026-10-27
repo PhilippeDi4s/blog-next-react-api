@@ -42,8 +42,6 @@ export async function apiRequest<T>(
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") throw err;
 
-    console.error("[apiRequest]", url, err);
-
     return {
       errors: [
         { code: "500", message: "Não foi possível conectar-se ao servidor" },

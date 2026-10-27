@@ -1,10 +1,10 @@
 "use client";
 
 import clsx from "clsx";
-import Image from "next/image";
 import { useState } from "react";
 import { SingleImage } from "../SingleImage";
 import { ImageResponseDto } from "@/lib/image/schema";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 
 type ImageListProps = {
   images: ImageResponseDto[];
@@ -58,7 +58,12 @@ export function ImageList({ images }: ImageListProps) {
             lg:hover:scale-105
             "
           >
-            <Image src={image.url} alt="Imagem" fill className="object-cover" />
+            <ImageWithFallback
+              src={image?.url}
+              alt="Imagem"
+              containerClassName="h-full"
+              imageClassName="object-cover"
+            />
           </button>
         );
       })}

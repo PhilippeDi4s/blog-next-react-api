@@ -5,7 +5,7 @@ import { ImageResponseDto } from "@/lib/image/schema";
 import { formatDate } from "@/utils/format-datetime";
 import { AdminList } from "../AdminList";
 import { Calendar1Icon, ImageIcon, UserIcon } from "lucide-react";
-import Image from "next/image";
+import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
 
@@ -43,15 +43,15 @@ export function ImageList({ images }: ImageListProps) {
           cell: (image) => (
             <div className="relative w-[6rem] h-[6rem]">
               <button
-                className="cursor-pointer "
+                className="cursor-pointer h-full w-full"
                 onClick={(e) => openPreview(e, image.id)}
                 data-no-row-hover
               >
-                <Image
+                <ImageWithFallback
                   alt=""
                   src={image.url}
-                  fill
-                  className="cursor-zoom-in rounded-xl object-cover object-top transition hover:scale-105  hover:ring-2 hover:ring-blue-500"
+                  containerClassName="w-full h-full"
+                  imageClassName="cursor-zoom-in rounded-xl object-cover object-top transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
                 />
               </button>
               <ImagePreview
