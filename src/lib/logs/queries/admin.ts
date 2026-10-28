@@ -9,9 +9,10 @@ export async function findManyLogs(token: string, params?: LogSearchParamsDto) {
     searchParams.set("id", params.id);
   } else {
     if (params?.action) searchParams.set("action", params.action);
-    if (params?.userId) searchParams.set("userId", params.userId);
+    if (params?.actorId) searchParams.set("actorId", params.actorId);
     if (params?.entityType) searchParams.set("entityType", params.entityType);
     if (params?.entityId) searchParams.set("entityId", params.entityId);
+    if (params?.affectedUserId) searchParams.set("affectedUserId", params.affectedUserId);
     if (params?.startDate) {
       searchParams.set("startDate", params.startDate.toISOString());
     }

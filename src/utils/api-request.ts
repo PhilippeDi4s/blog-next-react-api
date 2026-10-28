@@ -42,7 +42,6 @@ export async function apiRequest<T>(
 
       return { errors, success: false };
     }
-
     return { data: body as T, success: true };
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") throw err;

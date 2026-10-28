@@ -11,7 +11,7 @@ export const LogResponseSchema = z.object({
   action: z.enum(ActionType),
   entityType: z.enum(EntityType),
   entityId: z.string(),
-  affectedUser: UserSummarySchema,
+  affectedUser: UserSummarySchema.nullable(),
   reason: z.string().nullable(),
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.string(),

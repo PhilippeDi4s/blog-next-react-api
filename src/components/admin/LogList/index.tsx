@@ -110,7 +110,7 @@ export function LogList({ logs }: LogListProps) {
           cell: (log) => (
             <CopyTextButton
               buttonText="Copiar id"
-              textToCopy={log.activityLogId}
+              textToCopy={log.actor.id}
               variant="ghost"
               size="sm"
             />
