@@ -96,9 +96,9 @@ export function LogList({ logs }: LogListProps) {
           headerIcon: UserIcon,
           cell: (log) => (
             <div className="flex flex-col">
-              <span className="truncate">{log.user.name}</span>
+              <span className="truncate">{log.actor.name}</span>
               <span className="truncate text-sm opacity-70">
-                {log.user.email}
+                {log.actor.email}
               </span>
             </div>
           ),
@@ -131,7 +131,7 @@ export function LogList({ logs }: LogListProps) {
           },
         },
         {
-          header: "Entidade",
+          header: "Tipo Entidade",
           headerIcon: LayersIcon,
           cell: (log) => (
             <span className="inline-flex items-center gap-2">
@@ -154,6 +154,40 @@ export function LogList({ logs }: LogListProps) {
               size="sm"
             />
           ),
+        },
+        {
+          header: "Usuário Afetado",
+          headerIcon: UserIcon,
+          cell: (log) => {
+            const user = log.affectedUser;
+            if (!user) return "Não registrado";
+            return (
+              <div className="flex flex-col">
+                <span className="truncate">{user.name}</span>
+                <span className="truncate text-sm opacity-70">
+                  {user.email}
+                </span>
+              </div>
+            );
+          },
+          className: "max-w-60",
+        },
+        {
+          header: "ID Usário",
+          headerIcon: LayersIcon,
+          cell: (log) => {
+            const user = log.affectedUser;
+
+            if (!user) return "Não registrado";
+            return (
+              <CopyTextButton
+                buttonText="Copiar id"
+                textToCopy={user.id}
+                variant="ghost"
+                size="sm"
+              />
+            );
+          },
         },
         {
           header: "Motivo",

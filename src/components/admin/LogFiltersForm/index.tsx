@@ -8,7 +8,7 @@ import { actionTypeOptions } from "@/lib/logs/enums/actionType";
 import { entityTypeOptions } from "@/lib/logs/enums/entityType";
 import type { LogSearchParamsDto } from "@/lib/logs/schema";
 import { formatDate } from "@/utils/format-datetime";
-import { IdCardIcon, LayersIcon, TagIcon } from "lucide-react";
+import { IdCardIcon, LayersIcon, TagIcon, UserIcon } from "lucide-react";
 
 export function LogFiltersForm({ filters }: { filters: LogSearchParamsDto }) {
   return (
@@ -33,12 +33,12 @@ export function LogFiltersForm({ filters }: { filters: LogSearchParamsDto }) {
         options={actionTypeOptions}
       />
       <InputText
-        name="userId"
+        name="actorId"
         labelText="ID do Ator"
         type="text"
         icon={IdCardIcon}
         placeholder="ID do ator"
-        defaultValue={filters.userId ?? ""}
+        defaultValue={filters.actorId ?? ""}
       />
       <InputSelect
         name="entityType"
@@ -54,6 +54,14 @@ export function LogFiltersForm({ filters }: { filters: LogSearchParamsDto }) {
         icon={LayersIcon}
         placeholder="ID da entidade"
         defaultValue={filters.entityId ?? ""}
+      />
+      <InputText
+        name="affectedUserId"
+        labelText="ID do usuário"
+        type="text"
+        icon={UserIcon}
+        placeholder="ID do usuário"
+        defaultValue={filters.affectedUserId ?? ""}
       />
       <InputDate
         name="startDate"

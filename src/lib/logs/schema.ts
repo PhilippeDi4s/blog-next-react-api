@@ -7,10 +7,11 @@ import { withDateRanges } from "../sharedSchemas/dateRange";
 
 export const LogResponseSchema = z.object({
   activityLogId: z.string(),
-  user: UserSummarySchema,
+  actor: UserSummarySchema,
   action: z.enum(ActionType),
   entityType: z.enum(EntityType),
   entityId: z.string(),
+  affectedUser: UserSummarySchema,
   reason: z.string().nullable(),
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.string(),
@@ -20,9 +21,10 @@ export const LogSearchParamsSchema = withDateRanges(
   z.object({
     id: z.preprocess(emptyToUndefined, z.string().optional()),
     action: z.preprocess(emptyToUndefined, z.enum(ActionType).optional()),
-    userId: z.preprocess(emptyToUndefined, z.string().optional()),
+    actorId: z.preprocess(emptyToUndefined, z.string().optional()),
     entityType: z.preprocess(emptyToUndefined, z.enum(EntityType).optional()),
     entityId: z.preprocess(emptyToUndefined, z.string().optional()),
+    affectedUserId: z.preprocess(emptyToUndefined, z.string().optional()),
     startDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
     endDate: z.preprocess(emptyToUndefined, z.coerce.date().optional()),
     page: z.preprocess(
