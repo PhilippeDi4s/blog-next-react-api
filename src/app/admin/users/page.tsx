@@ -3,8 +3,10 @@ import { UserFiltersForm } from "@/components/admin/UserFiltersForm";
 import { UserList } from "@/components/admin/UserList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
 import { getUsers } from "@/lib/user/queries/admin";
 import { UserSearchParamsSchema } from "@/lib/user/schemas";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -28,12 +30,18 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
   const raw = await searchParams;
   const parsed = UserSearchParamsSchema.safeParse(raw);
   if (!parsed.success) {
+    const erros = getZodErrorMessages(parsed.error);
+
     return (
-      <ErrorMessage
-        pageTitle="Usuários"
-        contentTitle="Parâmetros inválidos"
-        content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
-      />
+      <section className="w-full flex flex-col gap-6">
+        <ToastOnMount errors={erros.map((e) => e.message)} />
+        <UserFiltersForm filters={{}} />
+        <ErrorMessage
+          pageTitle="Usuários"
+          contentTitle="Parâmetros inválidos"
+          content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
+        />
+      </section>
     );
   }
   const filters = parsed.success ? parsed.data : {};

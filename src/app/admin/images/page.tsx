@@ -3,8 +3,10 @@ import { ImageFiltersForm } from "@/components/admin/ImageFiltersForm";
 import { ImageList } from "@/components/admin/ImageList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
 import { getImages } from "@/lib/image/queries/admin";
 import { ImageSearchParamsSchema } from "@/lib/image/schema";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -25,6 +27,23 @@ export default function ImageListPage({ searchParams }: ImageListPageProps) {
 async function ImageListPageContent({ searchParams }: ImageListPageProps) {
   const raw = await searchParams;
   const parsed = ImageSearchParamsSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    const erros = getZodErrorMessages(parsed.error);
+
+    return (
+      <section className="w-full flex flex-col gap-6">
+        <ToastOnMount errors={erros.map((e) => e.message)} />
+        <ImageFiltersForm filters={{}} />
+        <ErrorMessage
+          pageTitle="Posts"
+          contentTitle="Parâmetros inválidos"
+          content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
+        />
+      </section>
+    );
+  }
+
   const filters = parsed.success ? parsed.data : {};
   const res = await getImages(filters);
 

@@ -8,6 +8,7 @@ import {
 import { SessionStatus } from "./enums/sessionStatus";
 import { BlockedFilter } from "./enums/isBlocked";
 import { DeletedFilter } from "./enums/isDeleted";
+import { withDateRanges } from "../sharedSchemas/dateRange";
 
 export const RoleSchema = z.enum(Roles, { error: "Papel de usuário inválido" });
 export const SessionStatusSchema = z.enum(SessionStatus);
@@ -152,27 +153,37 @@ export const AdminUserFormSchema = UpdateUserSchema.extend({
     .nullable(),
 });
 
-export const UserSearchParamsSchema = z.object({
-  id: z.preprocess(emptyToUndefined, z.string().optional()),
-  name: z.preprocess(emptyToUndefined, z.string().optional()),
-  email: z.preprocess(emptyToUndefined, z.string().optional()),
-  role: z.preprocess(emptyToUndefined, z.enum(Roles).optional()),
-  sessionStatus: z.preprocess(
-    emptyToUndefined,
-    z.enum(SessionStatus).optional(),
-  ),
-  isLogged: z.preprocess(emptyToUndefined, z.stringbool().optional()),
-  isBlocked: booleanFilter(BlockedFilter.INCLUDE_ALL),
-  isDeleted: booleanFilter(DeletedFilter.INCLUDE),
-  startDate: userSearchDateFilter,
-  endDate: userSearchDateFilter,
-  sessionExpiresStartDate: userSearchDateFilter,
-  sessionExpiresEndDate: userSearchDateFilter,
-  page: z.preprocess(
-    emptyToUndefined,
-    z.coerce.number().int().min(1).optional(),
-  ),
-});
+export const UserSearchParamsSchema = withDateRanges(
+  z.object({
+    id: z.preprocess(emptyToUndefined, z.string().optional()),
+    name: z.preprocess(emptyToUndefined, z.string().optional()),
+    email: z.preprocess(emptyToUndefined, z.string().optional()),
+    role: z.preprocess(emptyToUndefined, z.enum(Roles).optional()),
+    sessionStatus: z.preprocess(
+      emptyToUndefined,
+      z.enum(SessionStatus).optional(),
+    ),
+    isLogged: z.preprocess(emptyToUndefined, z.stringbool().optional()),
+    isBlocked: booleanFilter(BlockedFilter.INCLUDE_ALL),
+    isDeleted: booleanFilter(DeletedFilter.INCLUDE),
+    startDate: userSearchDateFilter,
+    endDate: userSearchDateFilter,
+    sessionExpiresStartDate: userSearchDateFilter,
+    sessionExpiresEndDate: userSearchDateFilter,
+    page: z.preprocess(
+      emptyToUndefined,
+      z.coerce.number().int().min(1).optional(),
+    ),
+  }),
+  [
+    { start: "startDate", end: "endDate" },
+    {
+      start: "sessionExpiresStartDate",
+      end: "sessionExpiresEndDate",
+      message: "A data final da sessão não pode ser anterior à data inicial",
+    },
+  ],
+);
 
 export const UserSummarySchema = UserResponseSchema.pick({
   id: true,

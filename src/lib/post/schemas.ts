@@ -8,6 +8,7 @@ import {
   emptyToUndefined,
 } from "../sharedSchemas/schemas";
 import { PublishedFilter } from "./enums/publishedFilter";
+import { withDateRanges } from "../sharedSchemas/dateRange";
 
 const ALLOWED_IMAGE_HOST = "res.cloudinary.com";
 
@@ -137,7 +138,7 @@ export function toAdminPostFormValues(
   };
 }
 
-export const PostSearchParamsSchema = z.object({
+export const PostSearchParamsSchema = withDateRanges(z.object({
   id: z.preprocess(emptyToUndefined, z.string().optional()),
   title: z.preprocess(emptyToUndefined, z.string().optional()),
   slug: z.preprocess(emptyToUndefined, z.string().optional()),
@@ -155,7 +156,9 @@ export const PostSearchParamsSchema = z.object({
     emptyToUndefined,
     z.coerce.number().int().min(1).optional(),
   ),
-});
+}),  [
+    { start: "startDate", end: "endDate" },
+  ],);
 
 export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;
 

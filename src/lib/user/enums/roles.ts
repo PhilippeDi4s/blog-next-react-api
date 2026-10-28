@@ -11,11 +11,6 @@ export const roleLabels: Record<Roles, string> = {
 };
 
 export const roleOptions = [
-  // {
-  //   value: "",
-  //   label: "Todos",
-  //   icon: UsersIcon,
-  // },
   {
     value: Roles.ADMIN,
     label: roleLabels[Roles.ADMIN],

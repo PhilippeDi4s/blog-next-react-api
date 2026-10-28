@@ -3,8 +3,10 @@ import { PostFiltersForm } from "@/components/admin/PostFiltersForm";
 import { PostList } from "@/components/admin/PostList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
 import { getPosts } from "@/lib/post/queries/admin";
 import { PostSearchParamsSchema } from "@/lib/post/schemas";
+import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -26,14 +28,21 @@ async function PostListPageContent({ searchParams }: PostListPageProps) {
   const raw = await searchParams;
   const parsed = PostSearchParamsSchema.safeParse(raw);
   if (!parsed.success) {
+    const erros = getZodErrorMessages(parsed.error);
+
     return (
-      <ErrorMessage
-        pageTitle="Posts"
-        contentTitle="Parâmetros inválidos"
-        content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
-      />
+      <section className="w-full flex flex-col gap-6">
+        <ToastOnMount errors={erros.map((e) => e.message)} />
+        <PostFiltersForm filters={{}} />
+        <ErrorMessage
+          pageTitle="Posts"
+          contentTitle="Parâmetros inválidos"
+          content="Não foi possível interpretar os filtros da URL. Limpe os filtros e tente novamente."
+        />
+      </section>
     );
   }
+
   const filters = parsed.data;
   const res = await getPosts(filters);
 
