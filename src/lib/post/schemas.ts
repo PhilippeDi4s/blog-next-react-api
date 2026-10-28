@@ -112,7 +112,7 @@ export const PostResponseSchema = z.object({
   coverImage: z.object({
     id: z.string(),
     uploadedBy: z.string().nullable(),
-    url: z.string(),
+    url: z.string().nullable(),
   }),
   author: UserSummarySchema,
   deletedAt: z.string().nullable(),
