@@ -9,14 +9,14 @@ import { roleOptions } from "@/lib/user/enums/roles";
 import { sessionStatusOptions } from "@/lib/user/enums/sessionStatus";
 import { UserSearchParamsDto } from "@/lib/user/schemas";
 import { formatDate } from "@/utils/format-datetime";
-import {
-  MailIcon,
-  TagIcon,
-  UserIcon,
-} from "lucide-react";
+import { MailIcon, TagIcon, UserIcon } from "lucide-react";
 import { FiltersForm } from "../FiltersForm";
 
 export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
+  const filterRoleOptions = [
+    { icon: UserIcon, label: "Todos", value: "" },
+    ...roleOptions,
+  ];
   return (
     <FiltersForm
       basePath="/admin/users"
@@ -53,7 +53,7 @@ export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
         labelText="Papel"
         defaultValue={filters.role ?? ""}
         className="w-48! min-w-48!"
-        options={roleOptions}
+        options={filterRoleOptions}
       />
       <InputSelect
         name="isBlocked"

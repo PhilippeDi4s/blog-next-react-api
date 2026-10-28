@@ -3,7 +3,6 @@ import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Heading } from "@/components/ui/Heading";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { getPostById } from "@/lib/post/queries/admin";
-import { AdminPostFormValuesSchema } from "@/lib/post/schemas";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

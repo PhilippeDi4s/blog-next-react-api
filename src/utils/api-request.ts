@@ -26,19 +26,24 @@ export async function apiRequest<T>(
     const body = await res.json().catch(() => null);
 
     if (!res.ok) {
+      const message = Array.isArray(body?.message)
+        ? body.message.join(" ")
+        : (body?.message ?? "Erro inesperado");
+
       const errors: FieldError[] = Array.isArray(body?.errors)
         ? body.errors
         : [
             {
               code: "REQUEST_ERROR",
-              message: body?.message ?? "Erro inesperado",
+              field: body?.field,
+              message,
             },
           ];
 
       return { errors, success: false };
     }
 
-    return { success: true, data: body as T };
+    return { data: body as T, success: true };
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") throw err;
 

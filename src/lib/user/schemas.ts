@@ -9,32 +9,29 @@ import { SessionStatus } from "./enums/sessionStatus";
 import { BlockedFilter } from "./enums/isBlocked";
 import { DeletedFilter } from "./enums/isDeleted";
 
-export const RoleSchema = z.enum(Roles);
+export const RoleSchema = z.enum(Roles, { error: "Papel de usuário inválido" });
 export const SessionStatusSchema = z.enum(SessionStatus);
 
-const userSearchDateFilter = z.preprocess(
-  (value) => {
-    const emptyValue = emptyToUndefined(value);
-    if (typeof emptyValue !== "string") return emptyValue;
+const userSearchDateFilter = z.preprocess((value) => {
+  const emptyValue = emptyToUndefined(value);
+  if (typeof emptyValue !== "string") return emptyValue;
 
-    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(emptyValue);
-    if (!match) return emptyValue;
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(emptyValue);
+  if (!match) return emptyValue;
 
-    const [, day, month, year] = match;
-    const isoDate = `${year}-${month}-${day}`;
-    const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
+  const [, day, month, year] = match;
+  const isoDate = `${year}-${month}-${day}`;
+  const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
 
-    if (
-      Number.isNaN(parsedDate.getTime()) ||
-      parsedDate.toISOString().slice(0, 10) !== isoDate
-    ) {
-      return emptyValue;
-    }
+  if (
+    Number.isNaN(parsedDate.getTime()) ||
+    parsedDate.toISOString().slice(0, 10) !== isoDate
+  ) {
+    return emptyValue;
+  }
 
-    return isoDate;
-  },
-  z.coerce.date().optional(),
-);
+  return isoDate;
+}, z.coerce.date().optional());
 
 const CreateUserBase = z.object({
   name: z.string().trim().min(4, "Nome precisa ter um mínimo de 4 caracteres"),
@@ -146,6 +143,15 @@ export const AdminUserFormValuesSchema = UserResponseSchema.pick({
   deletedAt: true,
 });
 
+export const AdminUserFormSchema = UpdateUserSchema.extend({
+  role: RoleSchema,
+  isBlocked: z.boolean({ error: "Valor inválido para o bloqueio do usuário" }),
+  isLogged: z.boolean({ error: "Valor inválido para a sessão do usuário" }),
+  deletedAt: z.iso
+    .datetime({ offset: true, error: "Data de arquivamento inválida" })
+    .nullable(),
+});
+
 export const UserSearchParamsSchema = z.object({
   id: z.preprocess(emptyToUndefined, z.string().optional()),
   name: z.preprocess(emptyToUndefined, z.string().optional()),
@@ -189,5 +195,7 @@ export type UserResponseDto = z.infer<typeof UserResponseSchema>;
 export type AdminUpdateUserDto = z.infer<typeof AdminUpdateUserSchema>;
 export type AdminUpdateUserRoleDto = z.infer<typeof AdminUpdateUserRoleSchema>;
 export type AdminUserFormValuesDto = z.infer<typeof AdminUserFormValuesSchema>;
+
+export type AdminUserFormDto = z.infer<typeof AdminUserFormSchema>;
 
 export type UserSearchParamsDto = z.infer<typeof UserSearchParamsSchema>;

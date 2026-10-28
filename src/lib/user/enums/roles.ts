@@ -1,4 +1,4 @@
-import { ShieldIcon, User2Icon, UsersIcon } from "lucide-react";
+import { ShieldIcon, User2Icon} from "lucide-react";
 
 export enum Roles {
   ADMIN = "admin",
@@ -11,11 +11,11 @@ export const roleLabels: Record<Roles, string> = {
 };
 
 export const roleOptions = [
-  {
-    value: "",
-    label: "Todos",
-    icon: UsersIcon,
-  },
+  // {
+  //   value: "",
+  //   label: "Todos",
+  //   icon: UsersIcon,
+  // },
   {
     value: Roles.ADMIN,
     label: roleLabels[Roles.ADMIN],

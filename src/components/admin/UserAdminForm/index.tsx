@@ -5,13 +5,15 @@ import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { roleOptions, Roles } from "@/lib/user/enums/roles";
-import { useState } from "react";
+import {  useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
 import { getFieldErrors } from "@/lib/shared/getFieldErrors";
 import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { InfoMessage } from "@/components/ui/InfoMessage";
+import { showMessage } from "@/lib/show-message";
+import { ArchiveIcon, CircleCheckIcon, LockKeyholeIcon, LockKeyholeOpenIcon, MailIcon, UserIcon } from "lucide-react";
 
 type UserAdminFormProps = {
   userId: string;
@@ -35,8 +37,15 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
   const errorsByField = getFieldErrors(fieldErrors);
 
   function handleCancelForm() {
+    showMessage.dismiss();
+    setCurrent(initialData);
     redirectWithNotice("admin/users", Notice.ACTION_CANCELLED);
   }
+
+  useEffect(() => {
+  console.log("UserAdminForm montou");
+  return () => console.log("UserAdminForm desmontou");
+}, []);
 
   return (
     <>
@@ -50,6 +59,7 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
         <InputText
           labelText="Nome do usuário"
           placeholder="Digite o nome do usuário"
+          icon={UserIcon}
           type="text"
           name="name"
           error={errorsByField.name}
@@ -67,6 +77,7 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
           placeholder="Digite o e-mail do usuário"
           type="email"
           name="email"
+          icon={MailIcon}
           error={errorsByField.email}
           value={current.email}
           onChange={(e) => {
@@ -101,22 +112,47 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
                 : null,
             }));
           }}
-        >
-          <option value="active">Ativo</option>
-          <option value="archived">Arquivado</option>
-        </InputSelect>
+          options={[
+            {
+              label: "Ativo",
+              value: "active",
+              icon: CircleCheckIcon,
+              iconClassName: "text-green-600",
+            },
+            {
+              label: "Arquivado",
+              value: "archived",
+              icon: ArchiveIcon,
+              iconClassName: "text-amber-700",
+            },
+          ]}
+        />
 
-        <InputCheckbox
-          labelText="Está bloqueado?"
+        <InputSelect
+          labelText="Status de bloqueio"
           name="isBlocked"
           error={errorsByField.isBlocked}
-          checked={current.isBlocked}
-          onChange={(e) => {
+          value={current.isBlocked ? "true" : "false"}
+          onChange={(value) => {
             setCurrent((prev) => ({
               ...prev,
-              isBlocked: e.target.checked,
+              isBlocked: value === "true",
             }));
           }}
+          options={[
+            {
+              label: "Desbloqueado",
+              value: "false",
+              icon: LockKeyholeOpenIcon,
+              iconClassName: "text-green-600",
+            },
+            {
+              label: "Bloqueado",
+              value: "true",
+              icon: LockKeyholeIcon,
+              iconClassName: "text-red-600",
+            },
+          ]}
         />
         {current.sessionExpiresAt && (
           <>

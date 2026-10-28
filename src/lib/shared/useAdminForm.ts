@@ -68,6 +68,7 @@ export function useAdminForm<T extends Record<string, unknown>>(
     if (schema) {
       const parsed = schema.safeParse(current);
       if (!parsed.success) {
+        console.log(current);
         setFieldErrors(
           parsed.error.issues.map((issue) => ({
             field: issue.path.map(String).join("."),
@@ -75,7 +76,9 @@ export function useAdminForm<T extends Record<string, unknown>>(
             message: issue.message,
           })),
         );
-        getZodErrorMessages(parsed.error).map((error) => showMessage.error(error.message))
+        getZodErrorMessages(parsed.error).map((error) =>
+          showMessage.error(error.message),
+        );
         return;
       }
     }
@@ -139,6 +142,8 @@ export function useAdminForm<T extends Record<string, unknown>>(
         : [{ code: "CONNECTION_ERROR", message: "Erro de rede inesperado" }],
     );
 
+    console.log(JSON.stringify(errors, null, 2));
+
     const networkErrors = errors.filter((e) => e.code === "CONNECTION_ERROR");
     const confirmErrors = errors.filter(isConfirmError);
     const formErrors = errors.filter(
@@ -176,16 +181,13 @@ export function useAdminForm<T extends Record<string, unknown>>(
 
     if (networkErrors.length) showMessage.error(NETWORK_ERROR_MESSAGE);
 
-    // Erro de motivo/senha: modal continua aberto, erro aparece no modal
     if (confirmErrors.length) {
       showMessage.error(CONFIRM_ERROR_MESSAGE);
       return;
     }
 
-    // Erro de campo: fecha o modal para o erro aparecer sob o input
     if (formErrors.length) {
       showMessage.error(formErrorMessage);
-      handleModalCancel();
     }
   }
 
