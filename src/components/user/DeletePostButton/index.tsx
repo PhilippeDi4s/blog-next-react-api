@@ -11,9 +11,14 @@ import { Button } from "@/components/ui/Button";
 type DeletePostButtonProps = {
   id: string;
   title: string;
+  className?: string;
 };
 
-export function DeletePostButton({ id, title }: DeletePostButtonProps) {
+export function DeletePostButton({
+  id,
+  title,
+  className,
+}: DeletePostButtonProps) {
   const [modal, setModal] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -51,6 +56,10 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
           "hover:scale-120",
           "hover:text-red-400",
           "transition",
+          "outline",
+          "outline-offset-7",
+          "rounded-2xl",
+          className,
         )}
         aria-label={`Apagar post ${title}`}
         title={`Apagar post ${title}`}
@@ -60,12 +69,12 @@ export function DeletePostButton({ id, title }: DeletePostButtonProps) {
       </button>
 
       <DefaultModal
-        modalTitle={<h3 className="text-xl font-extrabold">Apagar Post</h3>}
+        modalTitle="Apagar Post"
         modalQuestion={
-          <p className="text-xl">
+          <>
             Você tem certeza que deseja apagar o post &quot;
             <span className="font-bold italic">{title}</span>&quot;{" "}
-          </p>
+          </>
         }
         isOpen={modal}
         onClose={closeModal}

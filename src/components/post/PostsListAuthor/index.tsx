@@ -28,23 +28,43 @@ export async function PostsListAuthor() {
   }
 
   return (
-    <div className="mb-16">
+    <div className="mb-16 flex flex-col gap-2">
       {posts.map((post) => {
         return (
           <div
-            className={clsx(
-              "py-2 px-2",
-              !post.published && "bg-slate-300 dark:bg-slate-600",
-              "flex gap-2 items-center justify-between",
-            )}
             key={post.id}
-          >
-            <Link href={`/author/post/${post.id}`}>{post.title}</Link>
-            {!post.published && (
-              <span className="text-xs text-slate-600 dark:text-slate-300 italic">
-                (Não publicado)
-              </span>
+            className={clsx(
+              "py-2",
+              "px-4",
+              "flex",
+              "items-center",
+              "justify-between",
+              "transition",
+              "duration-300",
+              "hover:border-white/60",
+              "hover:bg-white/10",
+              "border",
+              "border-white/10",
+              "rounded-xl",
+              "has-[button:hover]:bg-transparent",
+              "has-[button:hover]:border-white/10",
             )}
+          >
+            <Link
+              href={`/author/post/${post.id}`}
+              className={clsx(
+                "w-full py-2 px-2",
+                !post.published && "bg-slate-300 dark:bg-slate-600",
+                "flex gap-2 items-center justify-between",
+              )}
+            >
+              {!post.published && (
+                <span className="text-xs text-slate-600 dark:text-slate-300 italic">
+                  (Não publicado)
+                </span>
+              )}
+              {post.title}
+            </Link>
             <DeletePostButton id={post.id} title={post.title} />
           </div>
         );
