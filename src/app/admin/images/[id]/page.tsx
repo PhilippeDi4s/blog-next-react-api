@@ -1,7 +1,7 @@
 import { ImageAdminForm } from "@/components/admin/ImageAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Heading } from "@/components/ui/Heading";
-import { getImagesById } from "@/lib/image/queries/admin";
+import { getImagesById } from "@/lib/image/queries/admin-image";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { Suspense } from "react";
 

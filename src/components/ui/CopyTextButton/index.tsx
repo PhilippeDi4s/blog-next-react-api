@@ -1,6 +1,6 @@
 "use client";
 
-import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/button-style";
+import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/styles/button-style";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
 

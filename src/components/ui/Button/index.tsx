@@ -1,4 +1,4 @@
-import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/button-style";
+import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/styles/button-style";
 
 type ButtonProps = {
   variant?: BtnVariants;

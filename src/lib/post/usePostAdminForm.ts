@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Notice } from "../notifications";
-import { useAdminForm } from "../shared/useAdminForm";
+import { useAdminForm } from "../shared/hooks/useAdminForm";
 import { buildPostAction } from "./build-post-action";
 import { PostResponseDto, toAdminPostFormValues, UpdatePostSchema } from "./schemas";
 

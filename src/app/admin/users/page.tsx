@@ -4,7 +4,7 @@ import { AdminUserList } from "@/components/admin/AdminUserList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
-import { getUsers } from "@/lib/user/queries/admin";
+import { getUsers } from "@/lib/user/queries/admin-user";
 import { UserSearchParamsSchema } from "@/lib/user/schemas";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { Metadata } from "next";

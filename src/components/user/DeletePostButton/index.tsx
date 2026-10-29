@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { DefaultModal } from "@/components/ui/DefaultModal";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 import { Button } from "@/components/ui/Button";
 
 type DeletePostButtonProps = {

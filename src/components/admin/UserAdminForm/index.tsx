@@ -8,11 +8,11 @@ import { roleOptions, Roles } from "@/lib/user/enums/roles";
 import {  useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
-import { getFieldErrors } from "@/lib/shared/getFieldErrors";
+import { getFieldErrors } from "@/lib/forms/get-field-errors";
 import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { InfoMessage } from "@/components/ui/InfoMessage";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 import { ArchiveIcon, CircleCheckIcon, LockKeyholeIcon, LockKeyholeOpenIcon, MailIcon, UserIcon } from "lucide-react";
 
 type UserAdminFormProps = {

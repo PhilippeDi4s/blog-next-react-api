@@ -1,4 +1,4 @@
-import { showMessage as toastMessage } from "@/lib/show-message";
+import { showMessage as toastMessage } from "@/lib/notifications/toast/show-message";
 
 import { noticeConfig, type NoticeKey } from "./notices";
 

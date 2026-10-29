@@ -4,7 +4,7 @@ import { loginAction } from "@/app/actions/login/login-action";
 import { Button } from "@/components/ui/Button";
 import { InputPassword } from "@/components/ui/InputPassword";
 import { InputText } from "@/components/ui/InputText";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 import { UserFormStateSchema } from "@/lib/user/schemas";
 import clsx from "clsx";
 import { LogInIcon, MailIcon } from "lucide-react";

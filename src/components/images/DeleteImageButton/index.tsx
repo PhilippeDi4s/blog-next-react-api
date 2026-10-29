@@ -3,7 +3,7 @@
 import { deleteImageAction } from "@/app/actions/image/delete-image-action";
 import { Button } from "@/components/ui/Button";
 import { DefaultModal } from "@/components/ui/DefaultModal";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 

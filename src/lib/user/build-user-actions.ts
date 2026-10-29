@@ -5,7 +5,7 @@ import { updateRoleAdminAction } from "@/app/actions/admin/user/update-role-user
 import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logout-user-admin-action";
 import { Roles } from "./enums/roles";
 import { AdminUserFormValuesDto } from "./schemas";
-import { FieldDiff } from "../shared/getFormDiff";
+import { FieldDiff } from "../forms/get-form-diff";
 import { PendingAction } from "../shared/types/action";
 
 export function buildUserActions(

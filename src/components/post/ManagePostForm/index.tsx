@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { createPostAction } from "@/app/actions/post/create-post-action";
 import { updatePostAction } from "@/app/actions/post/update-post-action";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 import { PostFormStateDto, PostFormStateSchema } from "@/lib/post/schemas";
 import { PostFormFields } from "../PostFormFields";
 

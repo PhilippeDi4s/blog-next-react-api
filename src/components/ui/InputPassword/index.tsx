@@ -1,6 +1,6 @@
 "use client";
 
-import { inputError, inputLeftIcon, inputRightIcon, inputStyle, inputWrapper } from "@/lib/input-styles";
+import { inputError, inputLeftIcon, inputRightIcon, inputStyle, inputWrapper } from "@/lib/styles/input-styles";
 import clsx from "clsx";
 import { EyeClosedIcon, EyeIcon, LockKeyholeIcon } from "lucide-react";
 import { useId, useState } from "react";

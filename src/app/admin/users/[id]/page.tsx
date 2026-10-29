@@ -1,7 +1,7 @@
 import { UserAdminForm } from "@/components/admin/UserAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Heading } from "@/components/ui/Heading";
-import { getUserById } from "@/lib/user/queries/admin";
+import { getUserById } from "@/lib/user/queries/admin-user";
 import { AdminUserFormValuesSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";

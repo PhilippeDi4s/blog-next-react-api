@@ -8,7 +8,7 @@ import { useActionState, useEffect } from "react";
 import { createUserAction } from "@/app/actions/user/create-user-action";
 import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/ui/Button";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 import { InputPassword } from "@/components/ui/InputPassword";
 
 export function CreateUserForm() {

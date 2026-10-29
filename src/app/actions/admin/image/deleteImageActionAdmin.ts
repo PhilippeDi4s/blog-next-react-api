@@ -2,7 +2,7 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ActionResult } from "@/lib/shared/types/action";
-import { validateId } from "@/lib/shared/validate-id";
+import { validateId } from "@/lib/shared/validation/validate-id";
 import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/confirmAdminAction";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";

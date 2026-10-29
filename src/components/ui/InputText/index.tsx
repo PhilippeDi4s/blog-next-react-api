@@ -3,7 +3,7 @@ import {
   inputLeftIcon,
   inputStyle,
   inputWrapper,
-} from "@/lib/input-styles";
+} from "@/lib/styles/input-styles";
 import clsx from "clsx";
 import { LucideIcon } from "lucide-react";
 import { useId } from "react";

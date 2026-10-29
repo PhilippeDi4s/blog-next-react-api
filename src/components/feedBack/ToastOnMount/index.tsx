@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { showMessage } from "@/lib/show-message";
+import { showMessage } from "@/lib/notifications/toast/show-message";
 
 type ToastOnMountProps = {
   errors: string[];

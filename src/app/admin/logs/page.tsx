@@ -4,7 +4,7 @@ import { AdminLogList } from "@/components/admin/AdminLogList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
-import { getLogs } from "@/lib/logs/queries/admin";
+import { getLogs } from "@/lib/logs/queries/admin-log";
 import { LogSearchParamsSchema } from "@/lib/logs/schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { Metadata } from "next";

@@ -1,4 +1,4 @@
-import { FieldError } from "./types/error";
+import { FieldError } from "../shared/types/error";
 
 export function getFieldErrors(
   fieldErrors: FieldError[],

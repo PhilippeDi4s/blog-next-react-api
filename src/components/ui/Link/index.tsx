@@ -1,4 +1,4 @@
-import { BtnVariants, BtnSize, getButtonClasses } from "@/lib/button-style";
+import { BtnVariants, BtnSize, getButtonClasses } from "@/lib/styles/button-style";
 import Link from "next/link";
 
 type LinkButtonProps = {

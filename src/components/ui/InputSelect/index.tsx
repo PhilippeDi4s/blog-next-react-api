@@ -1,6 +1,6 @@
 "use client";
 
-import { inputStyle } from "@/lib/input-styles";
+import { inputStyle } from "@/lib/styles/input-styles";
 import clsx from "clsx";
 import { ChevronDown, type LucideIcon } from "lucide-react";
 import {

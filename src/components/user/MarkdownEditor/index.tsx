@@ -1,6 +1,6 @@
 "use client";
 
-import { inputError } from "@/lib/input-styles";
+import { inputError } from "@/lib/styles/input-styles";
 import dynamic from "next/dynamic";
 import { useId } from "react";
 import rehypeSanitize from "rehype-sanitize";

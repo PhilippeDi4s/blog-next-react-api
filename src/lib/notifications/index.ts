@@ -3,10 +3,9 @@ export {
   noticeConfig,
   type NoticeKey,
   type NoticeType,
+  isNoticeKey,
+  redirectWithNotice,
+  showNotice,
 } from "./notices";
 
-export { redirectWithNotice } from "./redirect-with-notice";
-
-export { showNotice } from "./show-notice";
-
-export { isNoticeKey } from "./is-notice-key";
+export { showMessage } from "./toast";

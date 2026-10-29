@@ -4,7 +4,7 @@ import { AdminImageList } from "@/components/admin/AdminImageList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
-import { getImages } from "@/lib/image/queries/admin";
+import { getImages } from "@/lib/image/queries/admin-image";
 import { ImageSearchParamsSchema } from "@/lib/image/schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { Metadata } from "next";

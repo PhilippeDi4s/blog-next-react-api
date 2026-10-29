@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { showMessage } from "@/lib/show-message";
-import { NoticeKey, showNotice } from "../notifications";
+import { showMessage } from "@/lib/notifications/toast/show-message";
+import { NoticeKey, showNotice } from "../../notifications";
 import {
   CONFIRM_ERROR_MESSAGE,
   NETWORK_ERROR_MESSAGE,
-} from "../notifications/adminFormMessages";
-import { ActionResult, PendingAction } from "./types/action";
-import { FieldError } from "./types/error";
-import { FieldDiff, getFormDiff } from "./getFormDiff";
-import { ConfirmActionAdminSchema } from "../sharedSchemas/confirmAdminAction";
+} from "../../notifications/adminFormMessages";
+import { ActionResult, PendingAction } from "../types/action";
+import { FieldError } from "../types/error";
+import { FieldDiff, getFormDiff } from "../../forms/get-form-diff";
+import { ConfirmActionAdminSchema } from "../../sharedSchemas/confirmAdminAction";
 import { ZodType } from "zod";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 

@@ -1,6 +1,6 @@
 import { updatePostAdminAction } from "@/app/actions/admin/post/update-post-admin";
 import { PendingAction } from "../shared/types/action";
-import { FieldDiff } from "../shared/getFormDiff";
+import { FieldDiff } from "../forms/get-form-diff";
 import { AdminPostFormValuesDto } from "./schemas";
 import { setPostArchiveStatusAdminAction } from "@/app/actions/admin/post/set-post-archive-status-admin-action";
 

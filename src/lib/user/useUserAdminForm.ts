@@ -1,5 +1,5 @@
 import { Notice } from "../notifications";
-import { useAdminForm } from "../shared/useAdminForm";
+import { useAdminForm } from "../shared/hooks/useAdminForm";
 import { buildUserActions } from "./build-user-actions";
 import { AdminUserFormSchema, AdminUserFormValuesDto } from "./schemas";
 
