@@ -9,11 +9,11 @@ import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
 
-type ImageListProps = {
+type AdminImageListProps = {
   images: ImageResponseDto[];
 };
 
-export function ImageList({ images }: ImageListProps) {
+export function AdminImageList({ images }: AdminImageListProps) {
   const [isOpen, setIsOpen] = useState<string | null>(null);
 
   function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {

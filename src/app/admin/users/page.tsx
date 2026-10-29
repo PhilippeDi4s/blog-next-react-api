@@ -1,6 +1,6 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { UserFiltersForm } from "@/components/admin/UserFiltersForm";
-import { UserList } from "@/components/admin/UserList";
+import { AdminUserList } from "@/components/admin/AdminUserList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
@@ -65,7 +65,7 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
   return (
     <section className="w-full flex flex-col gap-6">
       <UserFiltersForm filters={parsed.data} />
-      <UserList users={data} />
+      <AdminUserList users={data} />
       <AdminPagination
         currentPage={page}
         totalPages={totalPages}

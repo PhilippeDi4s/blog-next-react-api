@@ -1,6 +1,6 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { ImageFiltersForm } from "@/components/admin/ImageFiltersForm";
-import { ImageList } from "@/components/admin/ImageList";
+import { AdminImageList } from "@/components/admin/AdminImageList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
@@ -64,7 +64,7 @@ async function ImageListPageContent({ searchParams }: ImageListPageProps) {
   return (
     <section className="flex w-full flex-col gap-6">
       <ImageFiltersForm filters={filters} />
-      <ImageList images={data} />
+      <AdminImageList images={data} />
       <AdminPagination
         currentPage={page}
         totalPages={totalPages}

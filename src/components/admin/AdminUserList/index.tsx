@@ -20,11 +20,11 @@ import {
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { UserResponseDto } from "@/lib/user/schemas";
 
-type UserListProps = {
+type AdminUserListProps = {
   users: UserResponseDto[];
 };
 
-export async function UserList({users}: UserListProps) {
+export async function AdminUserList({users}: AdminUserListProps) {
 
   return (
     <AdminList

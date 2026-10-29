@@ -18,11 +18,11 @@ import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
 
-type PostListProps = {
+type AdminPostListProps = {
   posts: PostResponseDto[];
 };
 
-export function PostList({ posts }: PostListProps) {
+export function AdminPostList({ posts }: AdminPostListProps) {
   const [isOpen, setIsOpen] = useState<string | null>(null);
 
   function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {

@@ -63,11 +63,11 @@ const actionPresentation = {
   { Icon: typeof ActivityIcon; className: string }
 >;
 
-type LogListProps = {
+type AdminLogListProps = {
   logs: LogResponseDto[];
 };
 
-export function LogList({ logs }: LogListProps) {
+export function AdminLogList({ logs }: AdminLogListProps) {
   return (
     <AdminList
       items={logs}

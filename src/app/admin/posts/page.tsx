@@ -1,6 +1,6 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { PostFiltersForm } from "@/components/admin/PostFiltersForm";
-import { PostList } from "@/components/admin/PostList";
+import { AdminPostList } from "@/components/admin/AdminPostList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";
@@ -63,7 +63,7 @@ async function PostListPageContent({ searchParams }: PostListPageProps) {
   return (
     <section className="flex w-full flex-col gap-6">
       <PostFiltersForm filters={filters} />
-      <PostList posts={data} />
+      <AdminPostList posts={data} />
       <AdminPagination
         currentPage={page}
         totalPages={totalPages}
