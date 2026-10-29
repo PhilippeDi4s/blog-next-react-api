@@ -90,6 +90,7 @@ export const UpdatePostSchema = PostBaseSchema;
 export const PostFormStateSchema = PostBaseSchema.extend({
   title: z.string().default(""),
   excerpt: z.string().default(""),
+  slug: z.string().default(""),
   author: UserSummarySchema.optional().default({
     id: "",
     email: "",

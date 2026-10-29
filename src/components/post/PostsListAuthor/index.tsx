@@ -39,6 +39,7 @@ export async function PostsListAuthor() {
               "flex",
               "items-center",
               "justify-between",
+              "gap-5",
               "transition",
               "duration-300",
               "hover:border-white/60",
@@ -48,22 +49,22 @@ export async function PostsListAuthor() {
               "rounded-xl",
               "has-[button:hover]:bg-transparent",
               "has-[button:hover]:border-white/10",
+              !post.published && "bg-slate-700 hover:bg-slate-800!",
             )}
           >
             <Link
               href={`/author/post/${post.id}`}
               className={clsx(
-                "w-full py-2 px-2",
-                !post.published && "bg-slate-300 dark:bg-slate-600",
-                "flex gap-2 items-center justify-between",
+                "min-w-0 flex-1 py-2 px-2",
+                "flex gap-2 items-center",
               )}
             >
               {!post.published && (
-                <span className="text-xs text-slate-600 dark:text-slate-300 italic">
+                <span className="shrink-0 text-xs text-slate-600 dark:text-slate-300 italic">
                   (Não publicado)
                 </span>
               )}
-              {post.title}
+              <span className="truncate max-w-full">{post.title}</span>
             </Link>
             <DeletePostButton id={post.id} title={post.title} />
           </div>

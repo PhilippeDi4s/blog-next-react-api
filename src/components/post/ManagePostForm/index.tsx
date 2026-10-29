@@ -72,6 +72,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
         authorName={authorName}
         contentValue={contentValue}
         setContentValue={setContentValue}
+        slug={formState.slug}
       />
       <Button type="submit" className="mt-8" disabled={isPending}>
         {mode === "update" ? "Atualizar Post" : "Criar Post"}
