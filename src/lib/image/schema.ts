@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { UserSummarySchema } from "../user/schemas";
-import { emptyToUndefined } from "../sharedSchemas/schemas";
+import { emptyToUndefined } from "../sharedSchemas/confirmAdminAction";
 import { withDateRanges } from "../sharedSchemas/dateRange";
 
 const imageSearchDateFilter = z.preprocess((value) => {

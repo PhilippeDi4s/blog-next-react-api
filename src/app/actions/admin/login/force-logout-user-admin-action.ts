@@ -1,8 +1,8 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { ActionResult } from "@/lib/shared/adminAction";
-import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/schemas";
+import { ActionResult } from "@/lib/shared/types/action";
+import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/confirmAdminAction";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";

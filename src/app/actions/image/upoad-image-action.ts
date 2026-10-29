@@ -2,7 +2,7 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ImageResponseDto } from "@/lib/image/schema";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 

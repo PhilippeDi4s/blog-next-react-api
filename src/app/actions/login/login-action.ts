@@ -3,7 +3,7 @@
 import { createLoginSession } from "@/lib/auth/session";
 import { parseFormData } from "@/lib/forms/parse-form-data";
 import { LoginResponseDto, LoginSchema } from "@/lib/login/schema";
-import { FormActionResult } from "@/lib/shared/adminAction";
+import { FormActionResult } from "@/lib/shared/types/action";
 import { LoginFormStateDto, LoginFormStateSchema } from "@/lib/user/schemas";
 import { apiRequest } from "@/utils/api-request";
 import { simulateDelay } from "@/utils/async-delay";

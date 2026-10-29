@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { UserResponseDto } from "../user/schemas";
 import { Notice, redirectWithNotice } from "../notifications";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { ActionResult } from "../shared/adminAction";
+import { ActionResult } from "../shared/types/action";
 import { cache } from "react";
 import { notFound } from "next/navigation";
 

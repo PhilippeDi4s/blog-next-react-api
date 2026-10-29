@@ -8,9 +8,10 @@ import {
   CONFIRM_ERROR_MESSAGE,
   NETWORK_ERROR_MESSAGE,
 } from "../notifications/adminFormMessages";
-import { ActionResult, PendingAction, FieldError } from "./adminAction";
+import { ActionResult, PendingAction } from "./types/action";
+import { FieldError } from "./types/error";
 import { FieldDiff, getFormDiff } from "./getFormDiff";
-import { ConfirmActionAdminSchema } from "../sharedSchemas/schemas";
+import { ConfirmActionAdminSchema } from "../sharedSchemas/confirmAdminAction";
 import { ZodType } from "zod";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 

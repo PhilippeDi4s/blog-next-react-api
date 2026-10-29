@@ -7,7 +7,7 @@ import {
   PostResponseDto,
   PostResponseSchema,
 } from "@/lib/post/schemas";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";

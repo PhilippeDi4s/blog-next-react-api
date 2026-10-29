@@ -1,4 +1,4 @@
-import { FieldError } from "../shared/adminAction";
+import { FieldError } from "../shared/types/error";
 import { getLoginSession } from "./session";
 
 type ActionValidationResult =

@@ -1,6 +1,6 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { UpdatePasswordSchema } from "@/lib/user/schemas";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";

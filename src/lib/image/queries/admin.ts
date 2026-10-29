@@ -1,5 +1,5 @@
 import { getLoginSessionOrRedirect } from "@/lib/auth/session";
-import { PaginatedResponse } from "@/lib/shared/adminAction";
+import { PaginatedResponse } from "@/lib/shared/types/pagination";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ImageResponseDto, ImageSearchParamsDto } from "../schema";
 

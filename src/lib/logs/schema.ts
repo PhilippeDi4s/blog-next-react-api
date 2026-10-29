@@ -2,7 +2,7 @@ import { z } from "zod";
 import { UserSummarySchema } from "../user/schemas";
 import { ActionType } from "./enums/actionType";
 import { EntityType } from "./enums/entityType";
-import { emptyToUndefined } from "../sharedSchemas/schemas";
+import { emptyToUndefined } from "../sharedSchemas/confirmAdminAction";
 import { withDateRanges } from "../sharedSchemas/dateRange";
 
 export const LogResponseSchema = z.object({

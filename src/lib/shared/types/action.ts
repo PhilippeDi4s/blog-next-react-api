@@ -1,8 +1,4 @@
-export type FieldError = {
-  code: string;
-  field?: string;
-  message: string;
-};
+import { FieldError } from "./error";
 
 export type ActionResult<TData = undefined> = {
   success: boolean;
@@ -21,11 +17,4 @@ export type FormActionResult<TFormState> = {
   success: boolean;
   errors: FieldError[];
   formState: TFormState;
-};
-
-export type PaginatedResponse<T> = {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
 };

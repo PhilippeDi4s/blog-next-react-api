@@ -1,7 +1,7 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { parseFormData } from "@/lib/forms/parse-form-data";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { FormActionResult } from "@/lib/shared/adminAction";
+import { FormActionResult } from "@/lib/shared/types/action";
 import {
   UpdateUserSchema,
   UserFormStateDto,

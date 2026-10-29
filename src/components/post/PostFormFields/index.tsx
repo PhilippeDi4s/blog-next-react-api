@@ -5,7 +5,7 @@ import { LinkButton } from "@/components/ui/Link";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
 import { PostResponseDto } from "@/lib/post/schemas";
-import { FieldError } from "@/lib/shared/adminAction";
+import { FieldError } from "@/lib/shared/types/error";
 import {
   GalleryVerticalEndIcon,
   Heading1Icon,

@@ -2,7 +2,7 @@
 
 import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 
 export async function logoutAction(): Promise<ActionResult> {

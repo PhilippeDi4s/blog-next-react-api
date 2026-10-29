@@ -19,8 +19,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
-import { PendingAction } from "@/lib/shared/adminAction";
-import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/schemas";
+import { PendingAction } from "@/lib/shared/types/action";
+import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/confirmAdminAction";
 import { deleteImageActionAdmin } from "@/app/actions/admin/image/deleteImageActionAdmin";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 

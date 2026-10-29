@@ -9,7 +9,7 @@ import {
   PostFormStateSchema,
   PostResponseDto,
 } from "@/lib/post/schemas";
-import { FormActionResult } from "@/lib/shared/adminAction";
+import { FormActionResult } from "@/lib/shared/types/action";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 

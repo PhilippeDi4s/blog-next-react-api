@@ -7,7 +7,7 @@ import { InputTextArea } from "@/components/ui/InputTextArea";
 import { InputPassword } from "@/components/ui/InputPassword";
 import { Button } from "@/components/ui/Button";
 import { PostHeading } from "@/components/post/PostHeading";
-import { PendingAction } from "@/lib/shared/adminAction";
+import { PendingAction } from "@/lib/shared/types/action";
 import { InfoMessage } from "@/components/ui/InfoMessage";
 
 type ConfirmAdminActionsModalProps = {

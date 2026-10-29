@@ -3,7 +3,7 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { PostResponseDto } from "@/lib/post/schemas";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { validateId } from "@/lib/shared/validate-id";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";

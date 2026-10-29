@@ -1,5 +1,5 @@
 import "server-only";
-import { FieldError } from "@/lib/shared/adminAction";
+import { FieldError } from "@/lib/shared/types/error";
 
 type ApiRequestError = {
   errors: FieldError[];

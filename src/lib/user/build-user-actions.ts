@@ -6,7 +6,7 @@ import { forceLogoutUserAdminAction } from "@/app/actions/admin/login/force-logo
 import { Roles } from "./enums/roles";
 import { AdminUserFormValuesDto } from "./schemas";
 import { FieldDiff } from "../shared/getFormDiff";
-import { PendingAction } from "../shared/adminAction";
+import { PendingAction } from "../shared/types/action";
 
 export function buildUserActions(
   userId: string,

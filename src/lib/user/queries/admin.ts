@@ -1,7 +1,7 @@
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { UserResponseDto, UserSearchParamsDto } from "../schemas";
 import { getLoginSessionOrRedirect } from "@/lib/auth/session";
-import { PaginatedResponse } from "@/lib/shared/adminAction";
+import { PaginatedResponse } from "@/lib/shared/types/pagination";
 
 export async function findManyUsers(
   token: string,

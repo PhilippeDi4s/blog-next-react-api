@@ -4,7 +4,7 @@ import {
   booleanFilter,
   ConfirmActionAdminSchema,
   emptyToUndefined,
-} from "../sharedSchemas/schemas";
+} from "../sharedSchemas/confirmAdminAction";
 import { SessionStatus } from "./enums/sessionStatus";
 import { BlockedFilter } from "./enums/isBlocked";
 import { DeletedFilter } from "./enums/isDeleted";

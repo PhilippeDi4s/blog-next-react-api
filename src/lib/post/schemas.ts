@@ -6,7 +6,7 @@ import {
   AdminReasonSchema,
   booleanFilter,
   emptyToUndefined,
-} from "../sharedSchemas/schemas";
+} from "../sharedSchemas/confirmAdminAction";
 import { PublishedFilter } from "./enums/publishedFilter";
 import { withDateRanges } from "../sharedSchemas/dateRange";
 

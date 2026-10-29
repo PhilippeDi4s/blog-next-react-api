@@ -1,4 +1,4 @@
-import { FieldError } from "@/lib/shared/adminAction";
+import { FieldError } from "@/lib/shared/types/error";
 import z from "zod";
 
 export function getZodErrorMessages<T>(error: z.ZodError<T>): FieldError[] {

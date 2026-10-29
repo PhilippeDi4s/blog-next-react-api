@@ -1,12 +1,12 @@
 "use server";
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { validateId } from "@/lib/shared/validate-id";
 import {
   ConfirmActionAdminDto,
   ConfirmActionAdminSchema,
-} from "@/lib/sharedSchemas/schemas";
+} from "@/lib/sharedSchemas/confirmAdminAction";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-message";
 import { revalidateTag } from "next/cache";

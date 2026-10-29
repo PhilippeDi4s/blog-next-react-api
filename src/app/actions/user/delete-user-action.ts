@@ -1,6 +1,6 @@
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
-import { ActionResult } from "@/lib/shared/adminAction";
+import { ActionResult } from "@/lib/shared/types/action";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 
 export async function DeleteUserAction(): Promise<ActionResult> {
