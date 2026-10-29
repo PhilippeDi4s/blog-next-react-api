@@ -1,5 +1,6 @@
 import { ImageAdminForm } from "@/components/admin/adminImage/ImageAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { BackButton } from "@/components/ui/BackButton";
 import { Heading } from "@/components/ui/Heading";
 import { getImagesById } from "@/lib/image/queries/admin-image";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
@@ -11,12 +12,13 @@ type AdminPImageIdPageProps = {
 
 export default function AdminPImageIdPage({ params }: AdminPImageIdPageProps) {
   return (
-    <>
-      <Heading as="h2">Editar Imagem</Heading>
+    <section className="flex flex-col gap-3">
+      <BackButton pathLabel="Admin / Lista de Imagens" />
+      <Heading as="h1">Editar Imagem</Heading>
       <Suspense fallback={<SpinLoader />}>
         <AdminPImageIdPageContent params={params} />
       </Suspense>
-    </>
+    </section>
   );
 }
 

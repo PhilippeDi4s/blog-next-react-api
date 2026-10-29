@@ -1,5 +1,6 @@
 import { PostAdminForm } from "@/components/admin/adminPost/PostAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { BackButton } from "@/components/ui/BackButton";
 import { Heading } from "@/components/ui/Heading";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { getPostById } from "@/lib/post/queries/admin-post";
@@ -16,12 +17,13 @@ type AdminPostIdPageProps = {
 
 export default function AdminPostIdPage({ params }: AdminPostIdPageProps) {
   return (
-    <>
-      <Heading as="h2">Editar Post</Heading>
+    <section className="flex flex-col gap-3">
+      <BackButton pathLabel="Admin / Lista de Posts" />
+      <Heading as="h1">Editar Post</Heading>
       <Suspense fallback={<SpinLoader />}>
         <AdminPostIdPageContent params={params} />
       </Suspense>
-    </>
+    </section>
   );
 }
 
@@ -33,10 +35,5 @@ export async function AdminPostIdPageContent({ params }: AdminPostIdPageProps) {
     redirectWithNotice("*", Notice.POST_NOT_FOUND);
   }
 
-
-  return (
-    <PostAdminForm
-      initialData={res.data}
-    />
-  );
+  return <PostAdminForm initialData={res.data} />;
 }

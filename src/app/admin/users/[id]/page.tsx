@@ -1,12 +1,12 @@
 import { UserAdminForm } from "@/components/admin/adminUser/UserAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { BackButton } from "@/components/ui/BackButton";
 import { Heading } from "@/components/ui/Heading";
 import { getUserById } from "@/lib/user/queries/admin-user";
 import { AdminUserFormValuesSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-
 
 export const metadata: Metadata = {
   title: "Editar usuário",
@@ -18,12 +18,13 @@ type UserIdPageProps = {
 
 export default function AdminUserIdPage({ params }: UserIdPageProps) {
   return (
-    <>
-      <Heading as="h2">Editar Usuário</Heading>
+    <section className="flex flex-col gap-3">
+      <BackButton pathLabel="Admin / Lista de Usuários" />
+      <Heading as="h1">Editar Usuário</Heading>
       <Suspense fallback={<SpinLoader />}>
         <UserEditPageContent params={params} />
       </Suspense>
-    </>
+    </section>
   );
 }
 
