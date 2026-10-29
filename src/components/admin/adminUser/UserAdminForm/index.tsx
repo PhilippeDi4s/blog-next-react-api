@@ -7,7 +7,7 @@ import { InputSelect } from "@/components/ui/InputSelect";
 import { roleOptions, Roles } from "@/lib/user/enums/roles";
 import {  useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
+import { ConfirmAdminActionModal } from "../../ConfirmAdminActionModal";
 import { getFieldErrors } from "@/lib/forms/get-field-errors";
 import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 import { Notice, redirectWithNotice } from "@/lib/notifications";

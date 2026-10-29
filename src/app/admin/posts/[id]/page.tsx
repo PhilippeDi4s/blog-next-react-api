@@ -1,4 +1,4 @@
-import { PostAdminForm } from "@/components/admin/PostAdminForm";
+import { PostAdminForm } from "@/components/admin/adminPost/PostAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Heading } from "@/components/ui/Heading";
 import { Notice, redirectWithNotice } from "@/lib/notifications";

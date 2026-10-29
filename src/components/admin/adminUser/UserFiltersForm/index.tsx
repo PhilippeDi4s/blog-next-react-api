@@ -10,7 +10,7 @@ import { sessionStatusOptions } from "@/lib/user/enums/sessionStatus";
 import { UserSearchParamsDto } from "@/lib/user/schemas";
 import { formatDate } from "@/utils/format-datetime";
 import { MailIcon, TagIcon, UserIcon } from "lucide-react";
-import { FiltersForm } from "../FiltersForm";
+import { FiltersForm } from "../../FiltersForm";
 
 export function UserFiltersForm({ filters }: { filters: UserSearchParamsDto }) {
   const filterRoleOptions = [

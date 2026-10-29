@@ -1,6 +1,6 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
-import { LogFiltersForm } from "@/components/admin/LogFiltersForm";
-import { AdminLogList } from "@/components/admin/AdminLogList";
+import { LogFiltersForm } from "@/components/admin/adminLog/LogFiltersForm";
+import { AdminLogList } from "@/components/admin/adminLog/AdminLogList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";

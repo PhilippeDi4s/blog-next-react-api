@@ -1,4 +1,4 @@
-import { ImageAdminForm } from "@/components/admin/ImageAdminForm";
+import { ImageAdminForm } from "@/components/admin/adminImage/ImageAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Heading } from "@/components/ui/Heading";
 import { getImagesById } from "@/lib/image/queries/admin-image";

@@ -1,4 +1,3 @@
-import { AdminList } from "../AdminList";
 import { formatDate } from "@/utils/format-datetime";
 import { SESSION_STATUS_LABELS } from "@/lib/user/enums/sessionStatus";
 import { roleLabels } from "@/lib/user/enums/roles";
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { UserResponseDto } from "@/lib/user/schemas";
+import { AdminList } from "../../AdminList";
 
 type AdminUserListProps = {
   users: UserResponseDto[];

@@ -1,6 +1,6 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
-import { ImageFiltersForm } from "@/components/admin/ImageFiltersForm";
-import { AdminImageList } from "@/components/admin/AdminImageList";
+import { AdminImageList } from "@/components/admin/adminImage/AdminImageList";
+import { ImageFiltersForm } from "@/components/admin/adminImage/ImageFiltersForm";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";

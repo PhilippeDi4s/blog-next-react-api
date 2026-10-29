@@ -1,6 +1,6 @@
 import { AdminPagination } from "@/components/admin/AdminPagination";
-import { UserFiltersForm } from "@/components/admin/UserFiltersForm";
-import { AdminUserList } from "@/components/admin/AdminUserList";
+import { AdminUserList } from "@/components/admin/adminUser/AdminUserList";
+import { UserFiltersForm } from "@/components/admin/adminUser/UserFiltersForm";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { ToastOnMount } from "@/components/feedBack/ToastOnMount";

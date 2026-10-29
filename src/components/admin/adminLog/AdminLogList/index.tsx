@@ -24,7 +24,7 @@ import {
   UploadIcon,
   UserIcon,
 } from "lucide-react";
-import { AdminList } from "../AdminList";
+import { AdminList } from "../../AdminList";
 
 const actionPresentation = {
   [ActionType.CREATED]: { Icon: CirclePlusIcon, className: "text-green-700" },

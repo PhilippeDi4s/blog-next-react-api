@@ -3,11 +3,11 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { formatDate } from "@/utils/format-datetime";
-import { AdminList } from "../AdminList";
 import { Calendar1Icon, ImageIcon, UserIcon } from "lucide-react";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
+import { AdminList } from "../../AdminList";
 
 type AdminImageListProps = {
   images: ImageResponseDto[];

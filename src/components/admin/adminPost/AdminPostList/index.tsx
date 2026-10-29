@@ -13,7 +13,7 @@ import {
   ImageIcon,
   UserIcon,
 } from "lucide-react";
-import { AdminList } from "../AdminList";
+import { AdminList } from "../../AdminList";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
@@ -67,7 +67,7 @@ export function AdminPostList({ posts }: AdminPostListProps) {
             return (
               <div className="relative w-[6rem] h-[6rem]">
                 <button
-                  className="cursor-pointer h-full w-full disabled:cursor-default"
+                  className="cursor-zoom-in h-full w-full disabled:cursor-default"
                   onClick={(e) => cover && openPreview(e, cover.id)}
                   disabled={!coverUrl}
                   data-no-row-hover

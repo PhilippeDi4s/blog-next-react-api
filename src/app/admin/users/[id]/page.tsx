@@ -1,4 +1,4 @@
-import { UserAdminForm } from "@/components/admin/UserAdminForm";
+import { UserAdminForm } from "@/components/admin/adminUser/UserAdminForm";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { Heading } from "@/components/ui/Heading";
 import { getUserById } from "@/lib/user/queries/admin-user";

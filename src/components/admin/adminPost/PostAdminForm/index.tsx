@@ -1,7 +1,7 @@
 "use client";
 
 import { AdminPostFormValuesDto, PostResponseDto } from "@/lib/post/schemas";
-import { ConfirmAdminActionModal } from "../ConfirmAdminActionModal";
+import { ConfirmAdminActionModal } from "../../ConfirmAdminActionModal";
 import { PostFormFields } from "@/components/post/PostFormFields";
 import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
 import { Button } from "@/components/ui/Button";

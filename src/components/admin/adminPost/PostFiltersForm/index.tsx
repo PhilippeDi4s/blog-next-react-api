@@ -8,9 +8,6 @@ import { publishedFilterOptions } from "@/lib/post/enums/publishedFilter";
 import type { PostSearchParamsDto } from "@/lib/post/schemas";
 import { formatDate } from "@/utils/format-datetime";
 import {
-  AtSignIcon,
-  FileTextIcon,
-  HashIcon,
   Heading1Icon,
   IdCardIcon,
   LinkIcon,
