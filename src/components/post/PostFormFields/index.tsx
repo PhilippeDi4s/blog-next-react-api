@@ -1,12 +1,18 @@
+"use client";
+
+import { getAllImagesOwnedAction } from "@/app/actions/image/get-all-images-owned-action";
+import { ImageGalleryModal } from "@/components/images/ImageGalleryModal";
 import { InfoMessage } from "@/components/ui/InfoMessage";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
+import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
-import { LinkButton } from "@/components/ui/Link";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
+import { FetchImages } from "@/lib/image/types/imageGalleryModalType";
 import { FieldError } from "@/lib/shared/types/error";
 import {
-  GalleryVerticalEndIcon,
+  CheckCheckIcon,
+  FileTextIcon,
   Heading1Icon,
   ImageIcon,
   LinkIcon,
@@ -14,6 +20,7 @@ import {
   TextQuoteIcon,
   User2Icon,
 } from "lucide-react";
+import { useState } from "react";
 
 type PostFormFieldsState = {
   title: string;
@@ -35,6 +42,7 @@ type PostFormFieldsProps = {
     value: string | boolean,
   ) => void;
   errors?: FieldError[];
+  fetchImages?: FetchImages;
 };
 
 export function PostFormFields({
@@ -47,7 +55,18 @@ export function PostFormFields({
   slug,
   onFieldChange,
   errors,
+  fetchImages,
 }: PostFormFieldsProps) {
+  const [openImageGallery, setOpenImageGallery] = useState(false);
+
+  function handleGalleryOpen() {
+    setOpenImageGallery(true);
+  }
+
+  function handleGalleryClose() {
+    setOpenImageGallery(false);
+  }
+
   return (
     <>
       {id !== undefined && (
@@ -61,7 +80,7 @@ export function PostFormFields({
           icon={TagIcon}
         />
       )}
-      {slug !== undefined && (
+      {slug != null && (
         <>
           <InputText
             labelText="Slug"
@@ -116,11 +135,15 @@ export function PostFormFields({
         showPreview={true}
         disabled={isPending}
         actions={
-          <LinkButton href="/author/imageGallery" variant="ghost">
-            <GalleryVerticalEndIcon /> Galeria de imagens
-          </LinkButton>
+          <ImageGalleryModal
+            isOpen={openImageGallery}
+            openGallery={handleGalleryOpen}
+            closeGallery={handleGalleryClose}
+            fetchImages={fetchImages}
+          />
         }
       />
+
       <InputText
         placeholder="Adicione a url da capa do post"
         labelText="URL da imagem de capa"
@@ -148,18 +171,26 @@ export function PostFormFields({
             : ""
         }
       />
-      <InputCheckbox
-        labelText="Publicar?"
+      <InputSelect
+        options={[
+          {
+            label: "Publicado",
+            value: "true",
+            icon: CheckCheckIcon,
+            iconClassName: "text-green-700",
+          },
+          {
+            label: "Rascunho",
+            value: "false",
+            icon: FileTextIcon,
+            iconClassName: "text-orange-700",
+          },
+        ]}
         name="published"
-        defaultChecked={formState.published}
+        labelText="Status do Post"
+        defaultValue={formState.published ? "true" : "false"}
         disabled={isPending}
-        type="checkbox"
-        onChange={(e) => onFieldChange?.("published", e.target.checked)}
-        error={
-          errors
-            ? errors.find((error) => error.field === "published")?.message
-            : ""
-        }
+        onChange={(value) => onFieldChange?.("published", value === "true")}
       />
     </>
   );

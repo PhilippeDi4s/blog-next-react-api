@@ -5,7 +5,7 @@ import { InputText } from "@/components/ui/InputText";
 import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { roleOptions, Roles } from "@/lib/user/enums/roles";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../../ConfirmAdminActionModal";
 import { getFieldErrors } from "@/lib/forms/get-field-errors";
@@ -13,7 +13,14 @@ import { useUserAdminForm } from "@/lib/user/useUserAdminForm";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { InfoMessage } from "@/components/ui/InfoMessage";
 import { showMessage } from "@/lib/notifications/toast/show-message";
-import { ArchiveIcon, CircleCheckIcon, LockKeyholeIcon, LockKeyholeOpenIcon, MailIcon, UserIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  CircleCheckIcon,
+  LockKeyholeIcon,
+  LockKeyholeOpenIcon,
+  MailIcon,
+  UserIcon,
+} from "lucide-react";
 
 type UserAdminFormProps = {
   userId: string;
@@ -21,6 +28,9 @@ type UserAdminFormProps = {
 };
 
 export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
+  if (!userId) {
+    redirectWithNotice("*", Notice.USER_NOT_FOUND);
+  }
   const {
     current,
     setCurrent,
@@ -43,9 +53,9 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
   }
 
   useEffect(() => {
-  console.log("UserAdminForm montou");
-  return () => console.log("UserAdminForm desmontou");
-}, []);
+    console.log("UserAdminForm montou");
+    return () => console.log("UserAdminForm desmontou");
+  }, []);
 
   return (
     <>

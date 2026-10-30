@@ -12,7 +12,7 @@ export async function PostsList() {
     return (
       <ErrorMessage
         contentTitle="Ei 😅"
-        content="Não foi possível carregar os posts. Tente novamente em alguns instantes"
+        content={postsRes.errors[0]?.message ?? "Não foi possível carregar os posts. Tente novamente em alguns instantes"}
       />
     );
   }

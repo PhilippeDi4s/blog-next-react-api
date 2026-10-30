@@ -10,6 +10,7 @@ import { formatDate } from "@/utils/format-datetime";
 import {
   Heading1Icon,
   IdCardIcon,
+  ImageIcon,
   LinkIcon,
   MailIcon,
   TagIcon,
@@ -49,6 +50,14 @@ export function PostFiltersForm({
         type="text"
         icon={LinkIcon}
         placeholder="Slug"
+        defaultValue={filters.slug ?? ""}
+      />
+      <InputText
+        name="coverImageUrl"
+        labelText="Capa"
+        type="text"
+        icon={ImageIcon}
+        placeholder="URL da imagem"
         defaultValue={filters.slug ?? ""}
       />
       <InputText

@@ -2,8 +2,10 @@ import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { PaginatedResponse } from "@/lib/shared/types/pagination";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { LogResponseDto, LogSearchParamsDto } from "../schema";
+import { QueryResult } from "@/lib/shared/types/query";
+import { toQueryResult } from "@/utils/to-query-result";
 
-export async function findManyLogs(token: string, params?: LogSearchParamsDto) {
+export async function findManyLogs(token: string, params?: LogSearchParamsDto): Promise<QueryResult<PaginatedResponse<LogResponseDto>>> {
   const searchParams = new URLSearchParams();
   if (params?.id) {
     searchParams.set("id", params.id);
@@ -28,14 +30,15 @@ export async function findManyLogs(token: string, params?: LogSearchParamsDto) {
   }
 
   const query = searchParams.toString();
-  return authenticatedApiRequest<PaginatedResponse<LogResponseDto>>(
+  const result = await authenticatedApiRequest<PaginatedResponse<LogResponseDto>>(
     `/admin/activity-logs${query ? `?${query}` : ""}`,
     token,
     {},
   );
+  return toQueryResult(result);
 }
 
-export async function getLogs(params?: LogSearchParamsDto) {
+export async function getLogs(params?: LogSearchParamsDto): Promise<QueryResult<PaginatedResponse<LogResponseDto>>> {
   const token = await getLoginSessionOrRedirect();
   return findManyLogs(token, params);
 }

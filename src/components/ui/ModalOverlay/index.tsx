@@ -1,5 +1,6 @@
 "use client";
 import { XIcon } from "lucide-react";
+import { useEffect } from "react";
 import styles from "./styles.module.css";
 
 type ModalOverlayProps = {
@@ -8,6 +9,15 @@ type ModalOverlayProps = {
 };
 
 export function ModalOverlay({ children, onClose }: ModalOverlayProps) {
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
   return (
     <div
       className={styles.overlay}

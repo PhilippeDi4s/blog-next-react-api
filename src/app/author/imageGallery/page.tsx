@@ -28,7 +28,7 @@ async function ImageListRes() {
     return (
       <ErrorMessage
         contentTitle="Ei 😅"
-        content="Não foi possível carregar as imagens. Tente novamente em alguns instantes"
+        content={imagesRes.errors[0]?.message ?? "Não foi possível carregar as imagens. Tente novamente em alguns instantes"}
       />
     );
   }

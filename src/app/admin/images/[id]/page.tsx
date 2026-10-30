@@ -3,8 +3,8 @@ import { SpinLoader } from "@/components/feedBack/SpinLoader";
 import { BackButton } from "@/components/ui/BackButton";
 import { Heading } from "@/components/ui/Heading";
 import { getImagesById } from "@/lib/image/queries/admin-image";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { Suspense } from "react";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 type AdminPImageIdPageProps = {
   params: Promise<{ id: string }>;
@@ -29,7 +29,12 @@ export async function AdminPImageIdPageContent({
   const res = await getImagesById(id);
 
   if (!res.success) {
-    redirectWithNotice("*", Notice.IMAGE_NOT_FOUND);
+    return (
+      <ErrorMessage
+        contentTitle="Não foi possível carregar a imagem"
+        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
+      />
+    );
   }
 
   return <ImageAdminForm imageData={res.data} />;

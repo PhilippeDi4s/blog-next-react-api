@@ -31,6 +31,10 @@ type ImageAdminFormProps = {
 const DELETE_KEY = "deleteImage";
 
 export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
+  if (!imageData) {
+    redirectWithNotice("*", Notice.IMAGE_NOT_FOUND);
+  }
+
   const [imagePreview, setImagePreview] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [status, setStatus] = useState("");

@@ -52,7 +52,7 @@ async function PostListPageContent({ searchParams }: PostListPageProps) {
         pageTitle="Posts"
         contentTitle="Não foi possível carregar os posts"
         contentTitleClassName="text-4xl/tight md:text-5xl"
-        content={res.errors.map((error) => error.message).join(" ")}
+        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
       />
     );
   }

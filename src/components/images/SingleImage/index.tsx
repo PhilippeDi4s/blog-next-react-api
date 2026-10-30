@@ -16,6 +16,7 @@ type SingleImageProps = {
   isModalOpen: boolean;
   setModalClose: () => void;
   imageData: ImageData;
+  onImageDeleted?: (id: string) => void;
 };
 
 const infoContainerClass = "flex flex-col text-center w-full min-w-0";
@@ -26,6 +27,7 @@ export function SingleImage({
   isModalOpen,
   setModalClose,
   imageData,
+  onImageDeleted,
 }: SingleImageProps) {
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -108,7 +110,10 @@ export function SingleImage({
 
                 <DeleteImageButton
                   id={imageData.id!}
-                  onDeleted={setModalClose}
+                  onDeleted={() => {
+                    if (imageData.id) onImageDeleted?.(imageData.id);
+                    setModalClose();
+                  }}
                 />
               </div>
             </div>

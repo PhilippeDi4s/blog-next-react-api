@@ -17,6 +17,8 @@ import { AdminList } from "../../AdminList";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
+import { SingleImage } from "@/components/images/SingleImage";
 
 type AdminPostListProps = {
   posts: PostResponseDto[];
@@ -24,6 +26,16 @@ type AdminPostListProps = {
 
 export function AdminPostList({ posts }: AdminPostListProps) {
   const [isOpen, setIsOpen] = useState<string | null>(null);
+
+  if (!posts) {
+    return (
+      <ErrorMessage
+        content="Nenhum post Registrado"
+        contentTitle="Nenhum post encontrado"
+        pageTitle="Lista de Posts"
+      />
+    );
+  }
 
   function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {
     e.preventDefault();
@@ -58,7 +70,7 @@ export function AdminPostList({ posts }: AdminPostListProps) {
           ),
         },
         {
-          header: "Imagem Capa",
+          header: "Capa",
           headerIcon: ImageIcon,
           cell: (post) => {
             const cover = post.coverImage;
@@ -81,11 +93,12 @@ export function AdminPostList({ posts }: AdminPostListProps) {
                 </button>
 
                 {cover && coverUrl && (
-                  <ImagePreview
-                    imageSrc={coverUrl}
-                    isOpen={isOpen === cover.id}
-                    onClose={closePreview}
-                  />
+                  // <ImagePreview
+                  //   imageSrc={coverUrl}
+                  //   isOpen={isOpen === cover.id}
+                  //   onClose={closePreview}
+                  // />
+                  <SingleImage imageData={} isModalOpen={} setModalClose={} />
                 )}
               </div>
             );
@@ -101,31 +114,6 @@ export function AdminPostList({ posts }: AdminPostListProps) {
             </div>
           ),
           className: "max-w-60",
-        },
-        {
-          header: "Autor",
-          headerIcon: UserIcon,
-          cell: (post) => (
-            <div className="flex flex-col">
-              <span className="truncate">{post.author.name}</span>
-              <span className="truncate text-sm opacity-70">
-                {post.author.email}
-              </span>
-            </div>
-          ),
-          className: "max-w-60",
-        },
-        {
-          header: "ID Autor",
-          headerIcon: IdCardIcon,
-          cell: (post) => (
-            <CopyTextButton
-              buttonText="Copiar id"
-              textToCopy={post.author.id}
-              variant="ghost"
-              size="sm"
-            />
-          ),
         },
         {
           header: "Status",
@@ -161,6 +149,32 @@ export function AdminPostList({ posts }: AdminPostListProps) {
             );
           },
         },
+        {
+          header: "Autor",
+          headerIcon: UserIcon,
+          cell: (post) => (
+            <div className="flex flex-col">
+              <span className="truncate">{post.author.name}</span>
+              <span className="truncate text-sm opacity-70">
+                {post.author.email}
+              </span>
+            </div>
+          ),
+          className: "max-w-60",
+        },
+        {
+          header: "ID Autor",
+          headerIcon: IdCardIcon,
+          cell: (post) => (
+            <CopyTextButton
+              buttonText="Copiar id"
+              textToCopy={post.author.id}
+              variant="ghost"
+              size="sm"
+            />
+          ),
+        },
+
         {
           header: "Criado em",
           headerIcon: Calendar1Icon,

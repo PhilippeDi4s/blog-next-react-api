@@ -5,12 +5,19 @@ import { useState } from "react";
 import { SingleImage } from "../SingleImage";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 
 type ImageListProps = {
   images: ImageResponseDto[];
+  bottomCopyUrlButton?: boolean;
+  onImageDeleted?: (id: string) => void;
 };
 
-export function ImageList({ images }: ImageListProps) {
+export function ImageList({
+  images,
+  bottomCopyUrlButton = false,
+  onImageDeleted,
+}: ImageListProps) {
   const [modal, setModal] = useState(false);
   const [imageData, setImageData] = useState<Partial<ImageResponseDto>>({});
 
@@ -24,7 +31,7 @@ export function ImageList({ images }: ImageListProps) {
   }
 
   return (
-    <section
+    <div
       className={clsx(
         "w-full",
         "grid",
@@ -41,14 +48,16 @@ export function ImageList({ images }: ImageListProps) {
         imageData={imageData}
         isModalOpen={modal}
         setModalClose={closeModal}
+        onImageDeleted={onImageDeleted}
       />
 
       {images.map((image) => {
         return (
-          <button
-            onClick={() => openModal(image)}
-            key={image.id}
-            className="
+          <div className="flex flex-col gap-3" key={image.id}>
+            <button
+              type="button"
+              onClick={() => openModal(image)}
+              className="
             relative 
             aspect-square 
             overflow-hidden 
@@ -57,16 +66,26 @@ export function ImageList({ images }: ImageListProps) {
             transition
             lg:hover:scale-105
             "
-          >
-            <ImageWithFallback
-              src={image?.url}
-              alt="Imagem"
-              containerClassName="h-full"
-              imageClassName="object-cover"
-            />
-          </button>
+            >
+              <ImageWithFallback
+                src={image?.url}
+                alt="Imagem"
+                containerClassName="h-full"
+                imageClassName="object-cover"
+              />
+            </button>
+            {bottomCopyUrlButton && (
+              <CopyTextButton
+                buttonText="Copiar URL"
+                textToCopy={image.url}
+                variant="ghost"
+                size="sm"
+                className="w-fit mx-auto px-5"
+              />
+            )}
+          </div>
         );
       })}
-    </section>
+    </div>
   );
 }

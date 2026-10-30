@@ -11,7 +11,7 @@ export async function PostsListAuthor() {
     return (
       <ErrorMessage
         contentTitle="Ei 😅"
-        content="Tente fazer login novamente"
+        content={postsRes.errors[0]?.message ?? "Não foi possível carregar seus posts. Tente novamente em alguns instantes."}
       />
     );
   }
@@ -21,7 +21,7 @@ export async function PostsListAuthor() {
     return (
       <ErrorMessage
         contentTitle="Ei 😅"
-        content="Bora criar algum post??"
+        content="Nenhum post encontrado. Bora criar algum post?"
         pageTitle=" "
       />
     );

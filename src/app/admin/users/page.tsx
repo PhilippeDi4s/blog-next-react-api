@@ -54,7 +54,7 @@ async function UserListPageContent({ searchParams }: UserListPageProps) {
         pageTitle="Usuários"
         contentTitle="Não foi possível carregar os usuários"
         contentTitleClassName="text-4xl/tight md:text-5xl"
-        content={res.errors.map((e) => e.message).join(" ")}
+        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
       />
     );
   }

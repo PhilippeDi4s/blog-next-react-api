@@ -2,11 +2,13 @@ import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { UserResponseDto, UserSearchParamsDto } from "../schemas";
 import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { PaginatedResponse } from "@/lib/shared/types/pagination";
+import { QueryResult } from "@/lib/shared/types/query";
+import { toQueryResult } from "@/utils/to-query-result";
 
 export async function findManyUsers(
   token: string,
   params?: UserSearchParamsDto,
-) {
+): Promise<QueryResult<PaginatedResponse<UserResponseDto>>> {
   const searchParams = new URLSearchParams();
 
   if (params?.id) {
@@ -75,10 +77,10 @@ export async function findManyUsers(
     {},
   );
 
-  return res;
+  return toQueryResult(res);
 }
 
-export async function findUserById(token: string, id: string) {
+export async function findUserById(token: string, id: string): Promise<QueryResult<UserResponseDto>> {
   const res = await findManyUsers(token, { id });
 
   if (!res.success) return res;
@@ -88,20 +90,19 @@ export async function findUserById(token: string, id: string) {
   if (!user) {
     return {
       success: false as const,
-      status: 404,
       errors: [{ code: "404", message: "Usuário não encontrado" }],
     };
   }
 
-  return { success: true as const, data: user };
+  return { success: true as const, data: user, errors: [] };
 }
 
-export async function getUsers(params?: UserSearchParamsDto) {
+export async function getUsers(params?: UserSearchParamsDto): Promise<QueryResult<PaginatedResponse<UserResponseDto>>> {
   const jwtToken = await getLoginSessionOrRedirect();
   return findManyUsers(jwtToken, params);
 }
 
-export async function getUserById(id: string) {
+export async function getUserById(id: string): Promise<QueryResult<UserResponseDto>> {
   const jwtToken = await getLoginSessionOrRedirect();
   return findUserById(jwtToken, id);
 }

@@ -6,12 +6,28 @@ import { PostFormFields } from "@/components/post/PostFormFields";
 import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
 import { Button } from "@/components/ui/Button";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { getAllImagesAdminAction } from "@/app/actions/admin/image/get-all-images-admin-action";
+import type { FetchImages } from "@/lib/image/types/imageGalleryModalType";
+
+const fetchAdminGalleryImages: FetchImages = async () => {
+  const res = await getAllImagesAdminAction();
+
+  if (!res.success) {
+    return { success: false, errors: res.errors };
+  }
+
+  return { success: true, errors: res.errors, data: res.data.data };
+};
 
 type PostAdminFormProps = {
   initialData: PostResponseDto;
 };
 
 export function PostAdminForm({ initialData }: PostAdminFormProps) {
+  if (!initialData) {
+    redirectWithNotice("*", Notice.POST_NOT_FOUND);
+  }
+
   const {
     current,
     setCurrent,
@@ -55,6 +71,7 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
           }}
           onFieldChange={handleFieldChange}
           errors={fieldErrors}
+          fetchImages={fetchAdminGalleryImages}
         />
         <div className="flex gap-2 w-full">
           <Button

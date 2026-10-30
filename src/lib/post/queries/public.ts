@@ -1,8 +1,10 @@
 import { apiRequest } from "@/utils/api-request";
 import { cacheTag } from "next/cache";
 import { PostResponseDto } from "../schemas";
+import { toQueryResult } from "@/utils/to-query-result";
+import { QueryResult } from "@/lib/shared/types/query";
 
-export const findAllPublicPostsCached = async () => {
+export const findAllPublicPostsCached = async (): Promise<QueryResult<PostResponseDto[]>> => {
   "use cache";
 
   cacheTag("posts");
@@ -14,10 +16,10 @@ export const findAllPublicPostsCached = async () => {
     cache: "no-store",
   });
 
-  return postResponse;
+  return toQueryResult(postResponse);
 };
 
-export const findPublicPostBySlugCached = async (slug: string) => {
+export const findPublicPostBySlugCached = async (slug: string): Promise<QueryResult<PostResponseDto>> => {
   "use cache";
 
   cacheTag("posts");
@@ -29,5 +31,5 @@ export const findPublicPostBySlugCached = async (slug: string) => {
     },
     cache: "no-store",
   });
-  return postResponse;
+  return toQueryResult(postResponse);
 };

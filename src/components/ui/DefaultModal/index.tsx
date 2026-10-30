@@ -5,7 +5,7 @@ import { ModalOverlay } from "../ModalOverlay";
 
 type DefaultModalProps = {
   modalTitle?: React.ReactNode;
-  modalQuestion: React.ReactNode;
+  modalQuestion?: React.ReactNode;
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
@@ -43,8 +43,8 @@ export function DefaultModal({
         )}
         onClick={(e) => e.stopPropagation()}
       >
-          <h3 className="font-bold text-xl">{modalTitle}</h3>
-          <p>{modalQuestion}</p>
+        <h3 className="font-bold text-xl">{modalTitle}</h3>
+        <p>{modalQuestion}</p>
         <div className="mt-9 flex items-center justify-center gap-6 text-slate-100 flex-wrap">
           {children}
         </div>

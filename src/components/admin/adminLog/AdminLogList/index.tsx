@@ -25,6 +25,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import { AdminList } from "../../AdminList";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 const actionPresentation = {
   [ActionType.CREATED]: { Icon: CirclePlusIcon, className: "text-green-700" },
@@ -68,6 +69,15 @@ type AdminLogListProps = {
 };
 
 export function AdminLogList({ logs }: AdminLogListProps) {
+  if (!logs) {
+    return (
+      <ErrorMessage
+        content="Nenhum log Registrado"
+        contentTitle="Nenhum log encontrado"
+        pageTitle="Lista de Logs"
+      />
+    );
+  }
   return (
     <AdminList
       items={logs}

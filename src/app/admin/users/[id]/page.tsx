@@ -5,8 +5,8 @@ import { Heading } from "@/components/ui/Heading";
 import { getUserById } from "@/lib/user/queries/admin-user";
 import { AdminUserFormValuesSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 export const metadata: Metadata = {
   title: "Editar usuário",
@@ -33,7 +33,14 @@ export async function UserEditPageContent({ params }: UserIdPageProps) {
 
   const res = await getUserById(id);
 
-  if (!res.success) notFound();
+  if (!res.success) {
+    return (
+      <ErrorMessage
+        contentTitle="Não foi possível carregar o usuário"
+        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
+      />
+    );
+  }
 
   const parsedData = AdminUserFormValuesSchema.parse(res.data);
 

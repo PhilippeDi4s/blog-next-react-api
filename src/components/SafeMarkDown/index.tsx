@@ -33,9 +33,8 @@ export function SafeMarkdown({ markdown }: SafeMarkdownProps) {
             <ImageWithFallback
               src={typeof src === "string" ? src : undefined}
               alt={alt ?? ""}
-              className="relative mx-auto w-full"
+              containerClassName="relative mx-auto w-full"
               imageClassName="object-contain"
-              sizes="100vw"
               intrinsic
             />
           ),

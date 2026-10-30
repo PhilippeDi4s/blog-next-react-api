@@ -35,6 +35,7 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
 
           messages.forEach((msg) => showMessage.error(msg));
         });
+        return;
       }
 
       showMessage.success("Imagem deletada!");
@@ -47,7 +48,7 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
 
   return (
     <>
-      <Button variant="danger" onClick={openModal}>
+      <Button variant="danger" onClick={openModal} type="button">
         <Trash2Icon />
         Deletar Imagem
       </Button>

@@ -19,12 +19,22 @@ import {
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { UserResponseDto } from "@/lib/user/schemas";
 import { AdminList } from "../../AdminList";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 type AdminUserListProps = {
   users: UserResponseDto[];
 };
 
-export async function AdminUserList({users}: AdminUserListProps) {
+export async function AdminUserList({ users }: AdminUserListProps) {
+  if (!users) {
+    return (
+      <ErrorMessage
+        content="Nenhum usuário Registrado"
+        contentTitle="Nenhum usuário encontrado"
+        pageTitle="Lista de Usuários"
+      />
+    );
+  }
 
   return (
     <AdminList

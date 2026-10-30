@@ -32,14 +32,14 @@ export function ErrorMessage({
         )}
       >
         <div>
-          <h1
+          <h3
             className={clsx(
-              "mb-4 font-bold text-7xl/tight",
+              "mb-4 font-bold text-2xl/tight",
               contentTitleClassName,
             )}
           >
             {contentTitle}
-          </h1>
+          </h3>
           <div className="mt-16">{content}</div>
         </div>
       </section>

@@ -69,5 +69,8 @@ export async function updatePostAction(
   revalidateTag("posts", "max");
   revalidateTag(`post-${post.id}`, "max");
 
+  console.log("------------------------------")
+  console.log("ESTOU AQUI")
+  console.log("------------------------------")
   redirectWithNotice(`author/post/${post.id}`, Notice.POST_UPDATED);
 }

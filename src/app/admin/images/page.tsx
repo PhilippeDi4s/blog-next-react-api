@@ -53,7 +53,7 @@ async function ImageListPageContent({ searchParams }: ImageListPageProps) {
         pageTitle="Imagens"
         contentTitle="Não foi possível carregar as imagens"
         contentTitleClassName="text-4xl/tight md:text-5xl"
-        content={res.errors.map((error) => error.message).join(" ")}
+        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
       />
     );
   }

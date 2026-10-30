@@ -8,6 +8,7 @@ import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
 import { AdminList } from "../../AdminList";
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 type AdminImageListProps = {
   images: ImageResponseDto[];
@@ -15,6 +16,16 @@ type AdminImageListProps = {
 
 export function AdminImageList({ images }: AdminImageListProps) {
   const [isOpen, setIsOpen] = useState<string | null>(null);
+
+  if (!images) {
+    return (
+      <ErrorMessage
+        content="Nenhuma imagem Registrado"
+        contentTitle="Nenhuma imagem encontrada"
+        pageTitle="Lista de Imagens"
+      />
+    );
+  }
 
   function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {
     e.preventDefault();

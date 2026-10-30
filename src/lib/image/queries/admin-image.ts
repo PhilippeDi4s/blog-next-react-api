@@ -2,11 +2,13 @@ import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { PaginatedResponse } from "@/lib/shared/types/pagination";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ImageResponseDto, ImageSearchParamsDto } from "../schema";
+import { QueryResult } from "@/lib/shared/types/query";
+import { toQueryResult } from "@/utils/to-query-result";
 
 export async function findManyImages(
   token: string,
   params?: ImageSearchParamsDto,
-) {
+): Promise<QueryResult<PaginatedResponse<ImageResponseDto>>> {
   const searchParams = new URLSearchParams();
 
   if (params?.id) {
@@ -31,14 +33,15 @@ export async function findManyImages(
   }
 
   const query = searchParams.toString();
-  return authenticatedApiRequest<PaginatedResponse<ImageResponseDto>>(
+  const result = await authenticatedApiRequest<PaginatedResponse<ImageResponseDto>>(
     `/admin/images${query ? `?${query}` : ""}`,
     token,
     {},
   );
+  return toQueryResult(result);
 }
 
-export async function findImageById(token: string, id: string) {
+export async function findImageById(token: string, id: string): Promise<QueryResult<ImageResponseDto>> {
   const res = await findManyImages(token, { id });
   if (!res.success) return res;
 
@@ -47,20 +50,19 @@ export async function findImageById(token: string, id: string) {
   if (!image) {
     return {
       success: false as const,
-      status: 404,
       errors: [{ code: "404", message: "Imagem não encontrado" }],
     };
   }
 
-  return { success: true as const, data: image };
+  return { success: true as const, data: image, errors: [] };
 }
 
-export async function getImages(params?: ImageSearchParamsDto) {
+export async function getImages(params?: ImageSearchParamsDto): Promise<QueryResult<PaginatedResponse<ImageResponseDto>>> {
   const token = await getLoginSessionOrRedirect();
   return findManyImages(token, params);
 }
 
-export async function getImagesById(id: string) {
+export async function getImagesById(id: string): Promise<QueryResult<ImageResponseDto>> {
   const token = await getLoginSessionOrRedirect();
   return findImageById(token, id);
 }

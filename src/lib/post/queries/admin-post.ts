@@ -2,11 +2,13 @@ import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { PaginatedResponse } from "@/lib/shared/types/pagination";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { PostResponseDto, PostSearchParamsDto } from "../schemas";
+import { QueryResult } from "@/lib/shared/types/query";
+import { toQueryResult } from "@/utils/to-query-result";
 
 export async function findManyPosts(
   token: string,
   params?: PostSearchParamsDto,
-) {
+): Promise<QueryResult<PaginatedResponse<PostResponseDto>>> {
   const searchParams = new URLSearchParams();
 
   if (params?.id) {
@@ -36,14 +38,15 @@ export async function findManyPosts(
   }
 
   const query = searchParams.toString();
-  return authenticatedApiRequest<PaginatedResponse<PostResponseDto>>(
+  const result = await authenticatedApiRequest<PaginatedResponse<PostResponseDto>>(
     `/admin/posts${query ? `?${query}` : ""}`,
     token,
     {},
   );
+  return toQueryResult(result);
 }
 
-export async function findPostById(token: string, id: string) {
+export async function findPostById(token: string, id: string): Promise<QueryResult<PostResponseDto>> {
   const res = await findManyPosts(token, { id });
 
   if (!res.success) return res;
@@ -53,20 +56,19 @@ export async function findPostById(token: string, id: string) {
   if (!post) {
     return {
       success: false as const,
-      status: 404,
       errors: [{ code: "404", message: "Post não encontrado" }],
     };
   }
 
-  return { success: true as const, data: post };
+  return { success: true as const, data: post, errors: [] };
 }
 
-export async function getPosts(params?: PostSearchParamsDto) {
+export async function getPosts(params?: PostSearchParamsDto): Promise<QueryResult<PaginatedResponse<PostResponseDto>>> {
   const token = await getLoginSessionOrRedirect();
   return findManyPosts(token, params);
 }
 
-export async function getPostById(id: string) {
+export async function getPostById(id: string): Promise<QueryResult<PostResponseDto>> {
   const token = await getLoginSessionOrRedirect();
   return findPostById(token, id);
 }

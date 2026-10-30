@@ -3,11 +3,12 @@
 import { showMessage } from "@/lib/notifications/toast/show-message";
 import { uploadImageAction } from "@/app/actions/image/upload-image-action";
 import { Button } from "@/components/ui/Button";
-import { ImageUpIcon } from "lucide-react";
+import { ImageMinusIcon, ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
+import { ImagePreview } from "@/components/images/ImagePreview";
 
 type ImageUploaderProps = {
   showPreview: boolean;
@@ -25,7 +26,16 @@ export function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState("");
+  const [openImagePreview, setOpenImagePreview] = useState(false);
   const router = useRouter();
+
+  function handleOpenImagePreview() {
+    setOpenImagePreview(true);
+  }
+
+  function handleCloseImagePreview() {
+    setOpenImagePreview(false);
+  }
 
   function handleChooseFile() {
     if (!fileInputRef.current) return;
@@ -107,23 +117,37 @@ export function ImageUploader({
       </div>
 
       {!!imgUrl && showPreview && (
-        <div className="flex flex-col gap-8 mt-8">
-          <ImageWithFallback
-            alt="Imagem do post"
-            src={imgUrl}
-            className="relative w-96 max-h-96 max-w-96 rounded"
-            imageClassName="rounded object-contain"
-            sizes="384px"
-            intrinsic
-          />
-          <CopyTextButton
-            buttonText="Copiar URL da imagem"
-            textToCopy={imgUrl}
-            variant="default"
-            className="w-96"
-          />
+        <div className="flex gap-5 w-full flex-col mt-5">
+          <button onClick={handleOpenImagePreview} className="cursor-zoom-in">
+            <ImageWithFallback
+              alt="Imagem do post"
+              src={imgUrl}
+              containerClassName="relative w-80 h-70 rounded md:w-100 md:h-80"
+              imageClassName="rounded-2xl object-cover transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
+            />
+          </button>
+          <div className="flex w-full gap-3 items-center">
+            <CopyTextButton
+              buttonText="Copiar URL da imagem"
+              textToCopy={imgUrl}
+              variant="default"
+            />
+            <Button
+              type="button"
+              variant="danger"
+              onClick={() => setImgUrl("")}
+            >
+              <ImageMinusIcon /> Limpar preview
+            </Button>
+          </div>
         </div>
       )}
+
+      <ImagePreview
+        isOpen={openImagePreview}
+        onClose={handleCloseImagePreview}
+        imageSrc={imgUrl}
+      />
 
       <input
         ref={fileInputRef}

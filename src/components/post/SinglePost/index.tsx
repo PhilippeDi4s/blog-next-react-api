@@ -16,7 +16,7 @@ export async function SinglePost({ slug }: SinglePostProps) {
     return (
       <ErrorMessage
         contentTitle="Ops 😅"
-        content="Não foi possível carregar esse post. Tente novamente em alguns instantes"
+        content={postRes.errors[0]?.message ?? "Não foi possível carregar esse post. Tente novamente em alguns instantes"}
       />
     );
   }
