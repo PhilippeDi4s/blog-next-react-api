@@ -4,6 +4,7 @@ import { FieldError } from "@/lib/shared/types/error";
 type ApiRequestError = {
   errors: FieldError[];
   success: false;
+  status?: number;
 };
 
 type ApiRequestSuccess<T> = {
@@ -40,7 +41,7 @@ export async function apiRequest<T>(
             },
           ];
 
-      return { errors, success: false };
+      return { errors, success: false, status: res.status };
     }
     return { data: body as T, success: true };
   } catch (err) {

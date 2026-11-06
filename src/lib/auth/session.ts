@@ -4,9 +4,8 @@ import { Notice, redirectWithNotice } from "../notifications";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ActionResult } from "../shared/types/action";
 import { cache } from "react";
-import { notFound } from "next/navigation";
 
-type LoginSessionResult = { jwt: string } & ActionResult;
+type LoginSessionResult = { jwt: string; transient?: boolean } & ActionResult;
 
 const loginCookieName = process.env.LOGIN_COOKIE_NAME || "loginSession";
 
@@ -51,6 +50,7 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
       success: false,
       errors: res.errors,
       jwt: "",
+      transient: res.status !== 401,
     };
   }
 
@@ -69,6 +69,9 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
 export async function getLoginSessionOrRedirect() {
   const token = await getLoginSession();
   if (!token.jwt) {
+    if (token.transient) {
+      throw new Error("Não foi possível verificar a sessão. Tente novamente.");
+    }
     redirectWithNotice("login", Notice.AUTH_LOGIN_REQUIRED);
   }
   return token.jwt;
