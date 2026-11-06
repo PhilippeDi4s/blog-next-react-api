@@ -2,7 +2,7 @@
 
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ModalOverlay } from "@/components/ui/ModalOverlay";
-import { ImageResponseDto } from "@/lib/image/schema";
+import {  ImageResponseDto } from "@/lib/image/schema";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { formatDateTime } from "@/utils/format-datetime";
 import { UserIcon, MailIcon, Calendar1Icon } from "lucide-react";
@@ -10,12 +10,10 @@ import { DeleteImageButton } from "../DeleteImageButton";
 import { useState } from "react";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 
-type ImageData = Partial<ImageResponseDto>;
-
 type SingleImageProps = {
   isModalOpen: boolean;
   setModalClose: () => void;
-  imageData: ImageData;
+  imageData: ImageResponseDto;
   onImageDeleted?: (id: string) => void;
 };
 

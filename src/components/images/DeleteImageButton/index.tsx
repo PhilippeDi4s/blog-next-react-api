@@ -19,7 +19,12 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
   const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
 
-  async function handleDeleteImage(id: string) {
+  async function handleDeleteImage(
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: string,
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
     showMessage.dismiss();
     setIsPending(true);
 
@@ -62,7 +67,7 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
         <div className="flex flex-wrap gap-5 w-full items-center justify-center">
           <Button
             variant="default"
-            onClick={() => handleDeleteImage(id)}
+            onClick={(e) => handleDeleteImage(e, id)}
             disabled={isPending}
           >
             {isPending ? "Deletando..." : "Deletar"}

@@ -1,9 +1,7 @@
 "use client";
 
-import { getAllImagesOwnedAction } from "@/app/actions/image/get-all-images-owned-action";
 import { ImageGalleryModal } from "@/components/images/ImageGalleryModal";
 import { InfoMessage } from "@/components/ui/InfoMessage";
-import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { ImageUploader } from "@/components/user/ImageUploader";

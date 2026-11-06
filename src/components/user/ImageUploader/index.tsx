@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
+import { SpinLoader } from "@/components/feedBack/SpinLoader";
 
 type ImageUploaderProps = {
   showPreview: boolean;
@@ -27,6 +28,8 @@ export function ImageUploader({
   const [isUploading, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState("");
   const [openImagePreview, setOpenImagePreview] = useState(false);
+  const [loadedUrl, setLoadedUrl] = useState("");
+  const isImageLoading = !!imgUrl && loadedUrl !== imgUrl;
   const router = useRouter();
 
   function handleOpenImagePreview() {
@@ -116,15 +119,32 @@ export function ImageUploader({
         {actions}
       </div>
 
-      {!!imgUrl && showPreview && (
+      {isUploading && showPreview && (
+        <div className="mt-5 flex w-80 h-70 md:w-100 md:h-80 items-center justify-center">
+          <SpinLoader />
+        </div>
+      )}
+
+      {!!imgUrl && showPreview && !isUploading && (
         <div className="flex gap-5 w-full flex-col mt-5">
-          <button onClick={handleOpenImagePreview} className="cursor-zoom-in">
+          <button
+            onClick={handleOpenImagePreview}
+            className="cursor-zoom-in relative"
+            type="button"
+          >
             <ImageWithFallback
               alt="Imagem do post"
               src={imgUrl}
+              intrinsic
+              onLoad={() => setLoadedUrl(imgUrl)}
               containerClassName="relative w-80 h-70 rounded md:w-100 md:h-80"
               imageClassName="rounded-2xl object-cover transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
             />
+            {isImageLoading && (
+              <div className="absolute w-80 h-70  md:w-100 md:h-80 inset-0 flex items-center justify-center rounded-2xl bg-slate-800/70">
+                <SpinLoader />
+              </div>
+            )}
           </button>
           <div className="flex w-full gap-3 items-center">
             <CopyTextButton

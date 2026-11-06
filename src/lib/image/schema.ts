@@ -28,7 +28,7 @@ export const ImageResponseSchema = z.object({
   id: z.string(),
   url: z.string(),
   createdAt: z.string(),
-  uploadedBy: UserSummarySchema,
+  uploadedBy: UserSummarySchema.nullable(),
 });
 
 export const ImageSummarySchema = z.object({

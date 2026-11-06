@@ -12,29 +12,26 @@ import { withDateRanges } from "../sharedSchemas/dateRange";
 
 const ALLOWED_IMAGE_HOST = "res.cloudinary.com";
 
-const postSearchDateFilter = z.preprocess(
-  (value) => {
-    const emptyValue = emptyToUndefined(value);
-    if (typeof emptyValue !== "string") return emptyValue;
+const postSearchDateFilter = z.preprocess((value) => {
+  const emptyValue = emptyToUndefined(value);
+  if (typeof emptyValue !== "string") return emptyValue;
 
-    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(emptyValue);
-    if (!match) return emptyValue;
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(emptyValue);
+  if (!match) return emptyValue;
 
-    const [, day, month, year] = match;
-    const isoDate = `${year}-${month}-${day}`;
-    const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
+  const [, day, month, year] = match;
+  const isoDate = `${year}-${month}-${day}`;
+  const parsedDate = new Date(`${isoDate}T00:00:00.000Z`);
 
-    if (
-      Number.isNaN(parsedDate.getTime()) ||
-      parsedDate.toISOString().slice(0, 10) !== isoDate
-    ) {
-      return emptyValue;
-    }
+  if (
+    Number.isNaN(parsedDate.getTime()) ||
+    parsedDate.toISOString().slice(0, 10) !== isoDate
+  ) {
+    return emptyValue;
+  }
 
-    return isoDate;
-  },
-  z.coerce.date().optional(),
-);
+  return isoDate;
+}, z.coerce.date().optional());
 
 const PostBaseSchema = z.object({
   title: z
@@ -110,11 +107,14 @@ export const PostResponseSchema = z.object({
   published: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  coverImage: z.object({
-    id: z.string(),
-    uploadedBy: z.string().nullable(),
-    url: z.string().nullable(),
-  }),
+  coverImage: z
+    .object({
+      id: z.string(),
+      uploadedBy: UserSummarySchema.nullable(),
+      url: z.string(),
+      createdAt: z.string(),
+    })
+    .nullable(),
   author: UserSummarySchema,
   deletedAt: z.string().nullable(),
 });
@@ -139,27 +139,28 @@ export function toAdminPostFormValues(
   };
 }
 
-export const PostSearchParamsSchema = withDateRanges(z.object({
-  id: z.preprocess(emptyToUndefined, z.string().optional()),
-  title: z.preprocess(emptyToUndefined, z.string().optional()),
-  slug: z.preprocess(emptyToUndefined, z.string().optional()),
-  authorId: z.preprocess(emptyToUndefined, z.string().optional()),
-  authorName: z.preprocess(emptyToUndefined, z.string().optional()),
-  authorEmail: z.preprocess(emptyToUndefined, z.string().optional()),
-  published: booleanFilter(PublishedFilter.INCLUDE_ALL),
-  startDate: postSearchDateFilter,
-  endDate: postSearchDateFilter,
-  page: z.preprocess(
-    emptyToUndefined,
-    z.coerce.number().int().min(1).optional(),
-  ),
-  limit: z.preprocess(
-    emptyToUndefined,
-    z.coerce.number().int().min(1).optional(),
-  ),
-}),  [
-    { start: "startDate", end: "endDate" },
-  ],);
+export const PostSearchParamsSchema = withDateRanges(
+  z.object({
+    id: z.preprocess(emptyToUndefined, z.string().optional()),
+    title: z.preprocess(emptyToUndefined, z.string().optional()),
+    slug: z.preprocess(emptyToUndefined, z.string().optional()),
+    authorId: z.preprocess(emptyToUndefined, z.string().optional()),
+    authorName: z.preprocess(emptyToUndefined, z.string().optional()),
+    authorEmail: z.preprocess(emptyToUndefined, z.string().optional()),
+    published: booleanFilter(PublishedFilter.INCLUDE_ALL),
+    startDate: postSearchDateFilter,
+    endDate: postSearchDateFilter,
+    page: z.preprocess(
+      emptyToUndefined,
+      z.coerce.number().int().min(1).optional(),
+    ),
+    limit: z.preprocess(
+      emptyToUndefined,
+      z.coerce.number().int().min(1).optional(),
+    ),
+  }),
+  [{ start: "startDate", end: "endDate" }],
+);
 
 export type PostFormValuesDto = z.infer<typeof PostBaseSchema>;
 

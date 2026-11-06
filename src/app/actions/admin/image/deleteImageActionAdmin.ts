@@ -22,6 +22,7 @@ export async function deleteImageActionAdmin(
     Object.fromEntries(formData),
   );
   if (!parsed.success) {
+    console.log(getZodErrorMessages(parsed.error))
     return {
       success: false,
       errors: getZodErrorMessages(parsed.error),

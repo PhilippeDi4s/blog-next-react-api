@@ -5,34 +5,51 @@ import { cacheTag } from "next/cache";
 import { ImageResponseDto } from "../schema";
 import { QueryResult } from "@/lib/shared/types/query";
 import { toQueryResult } from "@/utils/to-query-result";
+import { PaginatedResponse } from "@/lib/shared/types/pagination";
 
-const findAllImagesOwnedCached = async (jwtToken: string | null): Promise<QueryResult<ImageResponseDto[]>> => {
+const findAllImagesOwnedCached = async (
+  jwtToken: string | null,
+  page: number,
+): Promise<QueryResult<PaginatedResponse<ImageResponseDto>>> => {
   "use cache";
   cacheTag("images");
 
-  const result = await authenticatedApiRequest<ImageResponseDto[]>(`/images/me`, jwtToken, {
+  const result = await authenticatedApiRequest<
+    PaginatedResponse<ImageResponseDto>
+  >(`/images/me?page=${page}`, jwtToken, {
     headers: { "Content-Type": "application/json" },
   });
   return toQueryResult(result);
 };
 
-const findImageByIdCached = async (id: string, jwtToken: string): Promise<QueryResult<ImageResponseDto>> => {
+const findImageByIdCached = async (
+  id: string,
+  jwtToken: string,
+): Promise<QueryResult<ImageResponseDto>> => {
   "use cache";
   cacheTag("images");
   cacheTag(`image-${id}`);
 
-  const result = await authenticatedApiRequest<ImageResponseDto>(`/images/${id}`, jwtToken, {
-    headers: { "Content-Type": "application/json" },
-  });
+  const result = await authenticatedApiRequest<ImageResponseDto>(
+    `/images/${id}`,
+    jwtToken,
+    {
+      headers: { "Content-Type": "application/json" },
+    },
+  );
   return toQueryResult(result);
 };
 
-export async function getAllImagesOwned(): Promise<QueryResult<ImageResponseDto[]>> {
+export async function getAllImagesOwned(
+  page: number,
+): Promise<QueryResult<PaginatedResponse<ImageResponseDto>>> {
   const jwtToken = await getLoginSessionOrRedirect();
-  return findAllImagesOwnedCached(jwtToken || null);
+  return findAllImagesOwnedCached(jwtToken || null, page);
 }
 
-export async function findImageById(id: string): Promise<QueryResult<ImageResponseDto>> {
+export async function findImageById(
+  id: string,
+): Promise<QueryResult<ImageResponseDto>> {
   const jwtToken = await getLoginSessionOrRedirect();
   return findImageByIdCached(id, jwtToken);
 }

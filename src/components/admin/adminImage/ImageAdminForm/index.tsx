@@ -21,7 +21,7 @@ import { useState } from "react";
 import { PendingAction } from "@/lib/shared/types/action";
 import { ConfirmActionAdminSchema } from "@/lib/sharedSchemas/confirmAdminAction";
 import { deleteImageActionAdmin } from "@/app/actions/admin/image/deleteImageActionAdmin";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { Notice, redirectWithNotice, showMessage } from "@/lib/notifications";
 import { ConfirmAdminActionModal } from "../../ConfirmAdminActionModal";
 
 type ImageAdminFormProps = {
@@ -103,17 +103,20 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
     formData.append("reason", reasons[DELETE_KEY] ?? "");
     formData.append("password", password);
 
-    console.log(Object.fromEntries(formData));
-
     const result = await deleteImageActionAdmin(imageData.id, formData);
 
     setSubmitting(false);
 
     if (!result.success) {
       for (const error of result.errors) {
-        if (error.field === "password") setPasswordError(error.message);
+        showMessage.error("Não foi possível deletar a imagem")
+        if (error.field === "password")
+          setPasswordError(error.message);
         if (error.field === "reason")
           setReasonErrors({ [DELETE_KEY]: error.message });
+        if(error.field !== "password" && error.field !== "reason"){
+          showMessage.error(error.message)
+        }
       }
       return;
     }
@@ -169,19 +172,19 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
         />
         <InputText
           disabled
-          defaultValue={imageData.uploadedBy.name}
+          defaultValue={imageData.uploadedBy?.name ?? "Não registrado"}
           icon={UserIcon}
           labelText="Usuário"
         />
         <InputText
           disabled
-          defaultValue={imageData.uploadedBy.email}
+          defaultValue={imageData.uploadedBy?.email ?? "Não registrado"}
           icon={MailIcon}
           labelText="E-mail do usuário"
         />
         <InputText
           disabled
-          defaultValue={imageData.uploadedBy.id}
+          defaultValue={imageData.uploadedBy?.id ?? "Não registrado"}
           icon={TagIcon}
           labelText="ID do usuário"
         />

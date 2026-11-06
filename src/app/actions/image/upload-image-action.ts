@@ -4,7 +4,7 @@ import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { ActionResult } from "@/lib/shared/types/action";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 type ImageActionResult = {
   url: string;
@@ -98,7 +98,7 @@ export async function uploadImageAction(
     };
   }
 
-  revalidateTag("images", "max");
+updateTag("images");
   const savediImageUrl = res.data.url;
   return {
     success: true,

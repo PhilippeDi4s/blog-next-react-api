@@ -19,14 +19,24 @@ export function ImageList({
   onImageDeleted,
 }: ImageListProps) {
   const [modal, setModal] = useState(false);
-  const [imageData, setImageData] = useState<Partial<ImageResponseDto>>({});
+  const imageInitialState: ImageResponseDto = {
+    createdAt: "",
+    id: "",
+    uploadedBy: {
+      id: "",
+      name: "",
+      email: "",
+    },
+    url: "",
+  };
+  const [imageData, setImageData] = useState<ImageResponseDto>(imageInitialState);
 
-  function openModal(imageData: Partial<ImageResponseDto>) {
-    setImageData(imageData);
+  function openModal(image: ImageResponseDto) {
+    setImageData(image);
     setModal(true);
   }
   function closeModal() {
-    setImageData({});
+    setImageData(imageInitialState);
     setModal(false);
   }
 

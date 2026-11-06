@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { AdminList } from "../../AdminList";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
-import { ImagePreview } from "@/components/images/ImagePreview";
 import { useState } from "react";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SingleImage } from "@/components/images/SingleImage";
@@ -25,7 +24,7 @@ type AdminPostListProps = {
 };
 
 export function AdminPostList({ posts }: AdminPostListProps) {
-  const [isOpen, setIsOpen] = useState<string | null>(null);
+  const [openImageId, setOpenImageId] = useState<string | null>(null);
 
   if (!posts) {
     return (
@@ -37,17 +36,18 @@ export function AdminPostList({ posts }: AdminPostListProps) {
     );
   }
 
-  function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {
+  const selectedImage =
+    posts.find((post) => post.coverImage?.id === openImageId)?.coverImage ??
+    null;
+
+  function openImage(e: React.MouseEvent<HTMLButtonElement>, id: string) {
     e.preventDefault();
     e.stopPropagation();
-    setIsOpen(id);
-  }
-
-  function closePreview() {
-    setIsOpen(null);
+    setOpenImageId(id);
   }
   return (
-    <AdminList
+    <>
+      <AdminList
       items={posts}
       getRowKey={(post) => post.id}
       getRowHref={(post) => `/admin/posts/${post.id}`}
@@ -79,8 +79,9 @@ export function AdminPostList({ posts }: AdminPostListProps) {
             return (
               <div className="relative w-[6rem] h-[6rem]">
                 <button
+                  type="button"
                   className="cursor-zoom-in h-full w-full disabled:cursor-default"
-                  onClick={(e) => cover && openPreview(e, cover.id)}
+                  onClick={(e) => cover && openImage(e, cover.id)}
                   disabled={!coverUrl}
                   data-no-row-hover
                 >
@@ -91,15 +92,6 @@ export function AdminPostList({ posts }: AdminPostListProps) {
                     imageClassName="rounded-xl object-cover object-top transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
                   />
                 </button>
-
-                {cover && coverUrl && (
-                  // <ImagePreview
-                  //   imageSrc={coverUrl}
-                  //   isOpen={isOpen === cover.id}
-                  //   onClose={closePreview}
-                  // />
-                  <SingleImage imageData={} isModalOpen={} setModalClose={} />
-                )}
               </div>
             );
           },
@@ -186,6 +178,15 @@ export function AdminPostList({ posts }: AdminPostListProps) {
           cell: (post) => formatDate(post.updatedAt),
         },
       ]}
-    />
+      />
+      {selectedImage?.url && (
+        <SingleImage
+          key={selectedImage.id}
+          imageData={selectedImage}
+          isModalOpen
+          setModalClose={() => setOpenImageId(null)}
+        />
+      )}
+    </>
   );
 }
