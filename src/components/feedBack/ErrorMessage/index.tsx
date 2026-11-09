@@ -15,6 +15,8 @@ export function ErrorMessage({
   contentTitleClassName,
   content,
 }: ErrorMessageProps) {
+  const titleSizeClassName = contentTitle.length <= 8 ? "text-6xl" : "text-4xl";
+
   return (
     <>
       <title>{pageTitle ? pageTitle : "Error"}</title>
@@ -34,7 +36,8 @@ export function ErrorMessage({
         <div>
           <h3
             className={clsx(
-              "mb-4 font-bold text-2xl/tight",
+              "mb-4 font-bold",
+              titleSizeClassName,
               contentTitleClassName,
             )}
           >
