@@ -26,6 +26,8 @@ type ManagePostFormProps =
 export function ManagePostForm(props: ManagePostFormProps) {
   const { mode } = props;
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const publicPost = mode === "update" ? props.publicPost : undefined;
 
   const serverAction =
@@ -73,8 +75,10 @@ export function ManagePostForm(props: ManagePostFormProps) {
         contentValue={contentValue}
         setContentValue={setContentValue}
         slug={formState.slug}
+        isUploading={isUploading}
+        setUploading={setIsUploading}
       />
-      <Button type="submit" className="mt-8" disabled={isPending}>
+      <Button type="submit" className="mt-8" disabled={isPending || isUploading}>
         {mode === "update" ? "Atualizar Post" : "Criar Post"}
       </Button>
     </form>

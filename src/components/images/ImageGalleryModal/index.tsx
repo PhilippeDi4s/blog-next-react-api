@@ -18,6 +18,7 @@ type ImageGalleryModalProps = {
   openGallery: () => void;
   closeGallery: () => void;
   fetchImages?: FetchImages;
+  disabled?: boolean;
 };
 
 export function ImageGalleryModal({
@@ -25,11 +26,12 @@ export function ImageGalleryModal({
   openGallery,
   closeGallery,
   fetchImages = getAllImagesOwnedAction,
+  disabled,
 }: ImageGalleryModalProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   return (
     <>
-      <Button type="button" variant="ghost" onClick={openGallery}>
+      <Button type="button" variant="ghost" onClick={openGallery} disabled={disabled}>
         <GalleryVerticalEndIcon />
         Galeria de imagens
       </Button>

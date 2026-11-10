@@ -41,6 +41,8 @@ type PostFormFieldsProps = {
   ) => void;
   errors?: FieldError[];
   fetchImages?: FetchImages;
+  isUploading: boolean;
+  setUploading: (state: boolean) => void;
 };
 
 export function PostFormFields({
@@ -54,9 +56,10 @@ export function PostFormFields({
   onFieldChange,
   errors,
   fetchImages,
+  isUploading,
+  setUploading,
 }: PostFormFieldsProps) {
   const [openImageGallery, setOpenImageGallery] = useState(false);
-
   function handleGalleryOpen() {
     setOpenImageGallery(true);
   }
@@ -132,8 +135,10 @@ export function PostFormFields({
       <ImageUploader
         showPreview={true}
         disabled={isPending}
+        setUploading={setUploading}
         actions={
           <ImageGalleryModal
+            disabled={isPending || isUploading}
             isOpen={openImageGallery}
             openGallery={handleGalleryOpen}
             closeGallery={handleGalleryClose}

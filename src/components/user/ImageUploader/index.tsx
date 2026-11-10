@@ -16,6 +16,7 @@ type ImageUploaderProps = {
   disabled?: boolean;
   actions?: React.ReactNode;
   className?: string;
+  setUploading: (state: boolean) => void;
 };
 
 export function ImageUploader({
@@ -23,9 +24,10 @@ export function ImageUploader({
   disabled,
   actions,
   className,
+  setUploading,
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, startTransition] = useTransition();
+  const [isUploadPending, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState("");
   const [openImagePreview, setOpenImagePreview] = useState(false);
   const [loadedUrl, setLoadedUrl] = useState("");
@@ -81,27 +83,36 @@ export function ImageUploader({
     formData.append("file", file);
 
     fileInput.value = "";
+    setUploading(true);
+
     startTransition(async () => {
-      const result = await uploadImageAction(formData);
+      try {
+        const result = await uploadImageAction(formData);
 
-      showMessage.dismiss();
-      if (result.errors.length > 0) {
-        result.errors.forEach((error) => {
-          const messages = Array.isArray(error.message)
-            ? error.message
-            : [error.message];
-          messages.forEach((msg) => showMessage.error(msg));
-        });
-        return;
+        showMessage.dismiss();
+
+        if (result.errors.length > 0) {
+          result.errors.forEach((error) => {
+            const messages = Array.isArray(error.message)
+              ? error.message
+              : [error.message];
+
+            messages.forEach((msg) => showMessage.error(msg));
+          });
+
+          return;
+        }
+
+        setImgUrl(result.url);
+
+        if (!showPreview) {
+          router.refresh();
+        }
+
+        showMessage.success("Imagem adicionada à sua galeria!");
+      } finally {
+        setUploading(false);
       }
-
-      setImgUrl(result.url);
-
-      if (!showPreview) {
-        router.refresh();
-      }
-
-      showMessage.success("Imagem adicionada à sua galeria!");
     });
   }
   return (
@@ -111,7 +122,7 @@ export function ImageUploader({
           type="button"
           onClick={handleChooseFile}
           className={className}
-          disabled={isUploading || disabled}
+          disabled={isUploadPending || disabled}
         >
           <ImageUpIcon /> Enviar uma imagem
         </Button>
@@ -119,13 +130,13 @@ export function ImageUploader({
         {actions}
       </div>
 
-      {isUploading && showPreview && (
+      {isUploadPending && showPreview && (
         <div className="mt-5 flex w-80 h-70 md:w-100 md:h-80 items-center justify-center">
           <SpinLoader />
         </div>
       )}
 
-      {!!imgUrl && showPreview && !isUploading && (
+      {!!imgUrl && showPreview && !isUploadPending && (
         <div className="flex gap-5 w-full flex-col mt-5">
           <button
             onClick={handleOpenImagePreview}
@@ -176,7 +187,7 @@ export function ImageUploader({
         type="file"
         accept="image/*"
         onChange={handleChange}
-        disabled={isUploading || disabled}
+        disabled={isUploadPending || disabled}
       />
     </div>
   );

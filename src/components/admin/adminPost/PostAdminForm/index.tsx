@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { getAllImagesAdminAction } from "@/app/actions/admin/image/get-all-images-admin-action";
 import type { FetchImages } from "@/lib/image/types/fetchImagesType";
+import { useState } from "react";
 
 const fetchAdminGalleryImages: FetchImages = async (page) => {
   const res = await getAllImagesAdminAction(page);
@@ -27,6 +28,7 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
   if (!initialData) {
     redirectWithNotice("*", Notice.POST_NOT_FOUND);
   }
+  const [isUploading, setIsUploading] = useState(false);
 
   const {
     current,
@@ -72,6 +74,8 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
           onFieldChange={handleFieldChange}
           errors={fieldErrors}
           fetchImages={fetchAdminGalleryImages}
+          setUploading={setIsUploading}
+          isUploading={isUploading}
         />
         <div className="flex gap-2 w-full">
           <Button
@@ -84,7 +88,7 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
           <Button
             variant="default"
             type="button"
-            disabled={modalProps.submitting}
+            disabled={modalProps.submitting || isUploading}
             onClick={handleCancel}
           >
             Cancelar
