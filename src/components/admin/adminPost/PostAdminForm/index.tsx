@@ -7,16 +7,16 @@ import { usePostAdminForm } from "@/lib/post/usePostAdminForm";
 import { Button } from "@/components/ui/Button";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { getAllImagesAdminAction } from "@/app/actions/admin/image/get-all-images-admin-action";
-import type { FetchImages } from "@/lib/image/types/imageGalleryModalType";
+import type { FetchImages } from "@/lib/image/types/fetchImagesType";
 
-const fetchAdminGalleryImages: FetchImages = async () => {
-  const res = await getAllImagesAdminAction();
+const fetchAdminGalleryImages: FetchImages = async (page) => {
+  const res = await getAllImagesAdminAction(page);
 
   if (!res.success) {
     return { success: false, errors: res.errors };
   }
 
-  return { success: true, errors: res.errors, data: res.data.data };
+  return { success: true, errors: res.errors, data: res.data };
 };
 
 type PostAdminFormProps = {

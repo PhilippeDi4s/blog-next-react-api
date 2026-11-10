@@ -6,7 +6,7 @@ import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { ImageUploader } from "@/components/user/ImageUploader";
 import { MarkdownEditor } from "@/components/user/MarkdownEditor";
-import { FetchImages } from "@/lib/image/types/imageGalleryModalType";
+import { FetchImages } from "@/lib/image/types/fetchImagesType";
 import { FieldError } from "@/lib/shared/types/error";
 import {
   CheckCheckIcon,
