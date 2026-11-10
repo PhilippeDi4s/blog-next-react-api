@@ -9,6 +9,7 @@ type DefaultModalProps = {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  isDismissible?: boolean;
 };
 
 export function DefaultModal({
@@ -17,10 +18,11 @@ export function DefaultModal({
   children,
   isOpen,
   onClose,
+  isDismissible,
 }: DefaultModalProps) {
   if (!isOpen) return;
   return (
-    <ModalOverlay onClose={onClose}>
+    <ModalOverlay onClose={onClose} isDismissible={isDismissible}>
       <div
         className={clsx(
           "p-6",

@@ -6,9 +6,14 @@ import styles from "./styles.module.css";
 type ModalOverlayProps = {
   children: React.ReactNode;
   onClose: () => void;
+  isDismissible?: boolean;
 };
 
-export function ModalOverlay({ children, onClose }: ModalOverlayProps) {
+export function ModalOverlay({
+  children,
+  isDismissible = true,
+  onClose,
+}: ModalOverlayProps) {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
 
@@ -18,18 +23,19 @@ export function ModalOverlay({ children, onClose }: ModalOverlayProps) {
       document.body.style.overflow = previousOverflow;
     };
   }, []);
+
+  function handleCloseModal(e: React.MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isDismissible) {
+      onClose();
+    }
+  }
   return (
-    <div
-      className={styles.overlay}
-      onClick={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        onClose();
-      }}
-    >
+    <div className={styles.overlay} onClick={(e) => handleCloseModal(e)}>
       <button
         className="mt-2 ml-0 md:mt-5 md:ml-5 bg-mauve-800 p-2 rounded-full cursor-pointer transition hover:scale-105"
-        onClick={onClose}
+        onClick={handleCloseModal}
       >
         <XIcon />
       </button>

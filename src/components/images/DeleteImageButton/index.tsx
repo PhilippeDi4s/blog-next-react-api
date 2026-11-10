@@ -59,6 +59,7 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
       </Button>
 
       <DefaultModal
+        isDismissible={!isPending}
         isOpen={modal}
         onClose={closeModal}
         modalTitle="Apagar Imagem"

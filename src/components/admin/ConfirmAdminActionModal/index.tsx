@@ -43,7 +43,7 @@ export function ConfirmAdminActionModal(props: ConfirmAdminActionsModalProps) {
   }
 
   return (
-    <ModalOverlay onClose={handleCancel}>
+    <ModalOverlay onClose={handleCancel} isDismissible={!props.submitting}>
       <div
         className={clsx(
           "fixed",
