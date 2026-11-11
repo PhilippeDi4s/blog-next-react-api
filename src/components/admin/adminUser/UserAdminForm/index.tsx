@@ -15,12 +15,15 @@ import { InfoMessage } from "@/components/ui/InfoMessage";
 import { showMessage } from "@/lib/notifications/toast/show-message";
 import {
   ArchiveIcon,
+  CheckIcon,
   CircleCheckIcon,
   LockKeyholeIcon,
   LockKeyholeOpenIcon,
+  LogOutIcon,
   MailIcon,
   UserIcon,
 } from "lucide-react";
+import { SessionStatus } from "@/lib/user/enums/sessionStatus";
 
 type UserAdminFormProps = {
   userId: string;
@@ -51,11 +54,6 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
     setCurrent(initialData);
     redirectWithNotice("admin/users", Notice.ACTION_CANCELLED);
   }
-
-  useEffect(() => {
-    console.log("UserAdminForm montou");
-    return () => console.log("UserAdminForm desmontou");
-  }, []);
 
   return (
     <>
@@ -164,16 +162,31 @@ export function UserAdminForm({ userId, initialData }: UserAdminFormProps) {
             },
           ]}
         />
-        {current.sessionExpiresAt && (
+        {current.sessionStatus === SessionStatus.ACTIVE && (
           <>
-            <InputCheckbox
-              labelText="Forçar logout"
+            <InputSelect
+            defaultValue={current.isLogged ? "true" : "false"}
+            labelText="Status da seção"
               name="isLogged"
+              options={[
+                {
+                  label: "Logado",
+                  value: "true",
+                  icon: CheckIcon,
+                  iconClassName: "text-green-600",
+                },
+                {
+                  label: "Forçar LogOut",
+                  value: "false",
+                  icon: LogOutIcon,
+                  iconClassName: "text-red-600",
+                },
+              ]}
               error={errorsByField.isLogged}
-              onChange={(e) => {
+              onChange={(value) => {
                 setCurrent((prev) => ({
                   ...prev,
-                  isLogged: !e.target.checked,
+                  isLogged: value === "true",
                 }));
               }}
             />

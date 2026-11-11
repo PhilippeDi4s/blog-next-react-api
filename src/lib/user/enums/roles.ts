@@ -15,10 +15,12 @@ export const roleOptions = [
     value: Roles.ADMIN,
     label: roleLabels[Roles.ADMIN],
     icon: ShieldIcon,
+    iconClassName: "text-purple-600",
   },
   {
     value: Roles.USER,
     label: roleLabels[Roles.USER],
     icon: User2Icon,
+    iconClassName: "text-blue-600",
   },
 ];

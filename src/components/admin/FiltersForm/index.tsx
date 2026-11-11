@@ -3,8 +3,6 @@
 import { Button } from "@/components/ui/Button";
 import clsx from "clsx";
 import {
-  ChevronDown,
-  ChevronUp,
   ChevronUpIcon,
   FilterXIcon,
   FunnelIcon,
@@ -99,9 +97,9 @@ export function FiltersForm({
               {children}
             </form>
 
-            <div className="sticky left-0 flex w-full flex-wrap justify-center gap-6 py-4">
-              <Button type="submit" form={id} className="w-[40%] font-semibold">
-                <FunnelIcon size={18} strokeWidth={2.5} />
+            <div className="sticky left-0 flex w-full flex-wrap justify-center gap-2 md:gap-5 py-4">
+              <Button type="submit" form={id} className="max-w-70 min-w-59 w-[40%] font-semibold whitespace-nowrap">
+                <FunnelIcon size={18} strokeWidth={2.5} className="shrink-0"/>
                 {submitLabel}
               </Button>
 
@@ -110,9 +108,9 @@ export function FiltersForm({
                 form={id}
                 variant="danger"
                 onClick={handleReset}
-                className="w-[40%] font-semibold"
+                className="max-w-70 min-w-59 w-[40%] font-semibold whitespace-nowrap"
               >
-                <FilterXIcon size={18} strokeWidth={2.5} />
+                <FilterXIcon size={18} strokeWidth={2.5} className="shrink-0"/>
                 {resetLabel}
               </Button>
             </div>

@@ -141,6 +141,7 @@ export const AdminUserFormValuesSchema = UserResponseSchema.pick({
   isBlocked: true,
   isLogged: true,
   sessionExpiresAt: true,
+  sessionStatus: true,
   deletedAt: true,
 });
 

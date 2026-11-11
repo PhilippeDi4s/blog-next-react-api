@@ -188,7 +188,11 @@ export function useAdminForm<T extends Record<string, unknown>>(
     }
 
     if (formErrors.length) {
-      showMessage.error(formErrorMessage);
+      showMessage.dismiss()
+      showMessage.error(formErrorMessage)
+      formErrors.map((error) => {
+        showMessage.error(error.message);
+      });
     }
   }
 
