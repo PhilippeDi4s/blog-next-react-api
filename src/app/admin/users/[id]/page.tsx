@@ -48,7 +48,7 @@ export async function UserEditPageContent({ params }: UserIdPageProps) {
 
   return (
     <>
-      <UserProfileDataAdmin userId={id} />
+      <UserProfileDataAdmin user={res.data} />
       <Heading as="h1">Editar Usuário</Heading>
       <UserAdminForm initialData={parsedData} userId={id} />
     </>
