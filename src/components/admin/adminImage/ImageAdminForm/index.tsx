@@ -7,15 +7,10 @@ import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { ImageWithFallback } from "@/components/ui/ImageFallback";
-import { formatDateTime } from "@/utils/format-datetime";
 import {
-  CalendarIcon,
   CheckCircle2Icon,
   LinkIcon,
-  MailIcon,
-  TagIcon,
   TrashIcon,
-  UserIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { PendingAction } from "@/lib/shared/types/action";
@@ -109,13 +104,12 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
 
     if (!result.success) {
       for (const error of result.errors) {
-        showMessage.error("Não foi possível deletar a imagem")
-        if (error.field === "password")
-          setPasswordError(error.message);
+        showMessage.error("Não foi possível deletar a imagem");
+        if (error.field === "password") setPasswordError(error.message);
         if (error.field === "reason")
           setReasonErrors({ [DELETE_KEY]: error.message });
-        if(error.field !== "password" && error.field !== "reason"){
-          showMessage.error(error.message)
+        if (error.field !== "password" && error.field !== "reason") {
+          showMessage.error(error.message);
         }
       }
       return;
@@ -132,7 +126,7 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
         <ImageWithFallback
           alt=""
           src={imageData.url}
-          containerClassName="w-[80%] h-100 object-cover mx-auto"
+          containerClassName="w-full h-50 md:w-[80%] md:h-100 object-cover mx-auto"
           imageClassName="object-cover cursor-zoom-in rounded-xl transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
         />
       </button>
@@ -145,7 +139,7 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
         className="flex flex-col gap-6"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="w-full grid grid-cols-2 gap-5 items-end">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
           <InputText
             disabled
             defaultValue={imageData.url}
@@ -156,38 +150,9 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
             buttonText="Copiar URL"
             textToCopy={imageData.url}
             variant="default"
+            className="whitespace-nowrap"
           />
         </div>
-        <InputText
-          disabled
-          defaultValue={imageData.id}
-          icon={TagIcon}
-          labelText="ID da imagem"
-        />
-        <InputText
-          disabled
-          defaultValue={formatDateTime(imageData.createdAt)}
-          labelText="Data de upload"
-          icon={CalendarIcon}
-        />
-        <InputText
-          disabled
-          defaultValue={imageData.uploadedBy?.name ?? "Não registrado"}
-          icon={UserIcon}
-          labelText="Usuário"
-        />
-        <InputText
-          disabled
-          defaultValue={imageData.uploadedBy?.email ?? "Não registrado"}
-          icon={MailIcon}
-          labelText="E-mail do usuário"
-        />
-        <InputText
-          disabled
-          defaultValue={imageData.uploadedBy?.id ?? "Não registrado"}
-          icon={TagIcon}
-          labelText="ID do usuário"
-        />
         <InputSelect
           name="deleteImage"
           defaultValue=""

@@ -22,12 +22,11 @@ export function InfoMessage({ children, size = "sm" }: InfoMessageProps) {
         "flex",
         "items-center",
         "gap-2",
-        "mt-[-1rem]",
         "leading-4",
         "md:leading-6",
       )}
     >
-      <AlertCircleIcon size={15} />
+      <AlertCircleIcon size={15} className="shrink-0"/>
       {children}
     </span>
   );

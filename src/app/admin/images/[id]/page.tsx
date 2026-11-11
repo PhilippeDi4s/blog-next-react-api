@@ -5,6 +5,7 @@ import { Heading } from "@/components/ui/Heading";
 import { getImagesById } from "@/lib/image/queries/admin-image";
 import { Suspense } from "react";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
+import { ImageDataAdmin } from "@/components/admin/adminImage/ImageDataAdmin";
 
 type AdminPImageIdPageProps = {
   params: Promise<{ id: string }>;
@@ -14,7 +15,6 @@ export default function AdminPImageIdPage({ params }: AdminPImageIdPageProps) {
   return (
     <section className="flex flex-col gap-3">
       <BackButton pathLabel="Admin / Lista de Imagens" />
-      <Heading as="h1">Editar Imagem</Heading>
       <Suspense fallback={<SpinLoader />}>
         <AdminPImageIdPageContent params={params} />
       </Suspense>
@@ -32,10 +32,18 @@ export async function AdminPImageIdPageContent({
     return (
       <ErrorMessage
         contentTitle="Não foi possível carregar a imagem"
-        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
+        content={
+          res.errors[0]?.message ?? "Tente novamente em alguns instantes."
+        }
       />
     );
   }
 
-  return <ImageAdminForm imageData={res.data} />;
+  return (
+    <>
+      <ImageDataAdmin image={res.data} />
+      <Heading as="h1">Editar Imagem</Heading>
+      <ImageAdminForm imageData={res.data} />
+    </>
+  );
 }
