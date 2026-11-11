@@ -7,6 +7,7 @@ import {
 import clsx from "clsx";
 import { LucideIcon } from "lucide-react";
 import { useId } from "react";
+import { twMerge } from "tailwind-merge";
 
 type InputTextProps = {
   labelText?: string;
@@ -28,7 +29,11 @@ export function InputText({
         {labelTetx}
       </label>
       <div className={inputWrapper}>
-        <input id={id} {...props} className={clsx(inputStyle, className)} />
+        <input
+          id={id}
+          {...props}
+          className={twMerge(`${inputStyle} ${className}`)}
+        />
         {Icon ? <Icon className={inputLeftIcon} /> : null}
       </div>
       {error && <span className={inputError}>{error}</span>}

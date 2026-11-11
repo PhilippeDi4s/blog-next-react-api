@@ -1,4 +1,4 @@
-import { ImageUploader } from "@/components/user/ImageUploader";
+import { ImageUploader } from "@/components/post/ImageUploader";
 import { InfiniteImageGallery } from "@/components/images/InfiniteImageGallery";
 import { Metadata } from "next";
 

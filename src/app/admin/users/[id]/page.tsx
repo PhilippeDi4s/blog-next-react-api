@@ -7,6 +7,7 @@ import { AdminUserFormValuesSchema } from "@/lib/user/schemas";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
+import { UserProfileDataAdmin } from "@/components/admin/adminUser/UserProfileDataAdmin";
 
 export const metadata: Metadata = {
   title: "Editar usuário",
@@ -16,11 +17,10 @@ type UserIdPageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default function AdminUserIdPage({ params }: UserIdPageProps) {
+export default async function AdminUserIdPage({ params }: UserIdPageProps) {
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-4">
       <BackButton pathLabel="Admin / Lista de Usuários" />
-      <Heading as="h1">Editar Usuário</Heading>
       <Suspense fallback={<SpinLoader />}>
         <UserEditPageContent params={params} />
       </Suspense>
@@ -37,12 +37,20 @@ export async function UserEditPageContent({ params }: UserIdPageProps) {
     return (
       <ErrorMessage
         contentTitle="Não foi possível carregar o usuário"
-        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
+        content={
+          res.errors[0]?.message ?? "Tente novamente em alguns instantes."
+        }
       />
     );
   }
 
   const parsedData = AdminUserFormValuesSchema.parse(res.data);
 
-  return <UserAdminForm initialData={parsedData} userId={id} />;
+  return (
+    <>
+      <UserProfileDataAdmin userId={id} />
+      <Heading as="h1">Editar Usuário</Heading>
+      <UserAdminForm initialData={parsedData} userId={id} />
+    </>
+  );
 }

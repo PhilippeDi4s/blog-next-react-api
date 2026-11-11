@@ -1,4 +1,8 @@
-import { BtnSize, BtnVariants, getButtonClasses } from "@/lib/styles/button-style";
+import {
+  BtnSize,
+  BtnVariants,
+  getButtonClasses,
+} from "@/lib/styles/button-style";
 
 type ButtonProps = {
   variant?: BtnVariants;
@@ -8,6 +12,7 @@ type ButtonProps = {
 export function Button({
   variant = "default",
   size = "md",
+  className,
   ...props
 }: ButtonProps) {
   return (
@@ -16,7 +21,7 @@ export function Button({
       className={getButtonClasses({
         variant,
         size,
-        className: props.className,
+        className,
       })}
     />
   );

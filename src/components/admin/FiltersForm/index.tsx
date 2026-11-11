@@ -1,9 +1,8 @@
 "use client";
 
+import { CollapsibleSection } from "@/components/layout/CollapsibleSection";
 import { Button } from "@/components/ui/Button";
-import clsx from "clsx";
 import {
-  ChevronUpIcon,
   FilterXIcon,
   FunnelIcon,
   SlidersHorizontalIcon,
@@ -31,7 +30,6 @@ export function FiltersForm({
 }: FiltersFormProps) {
   const router = useRouter();
   const [resetKey, setResetKey] = useState(0);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -60,63 +58,48 @@ export function FiltersForm({
   }
 
   return (
-    <>
-      <div className="flex items-center gap-4">
-        <Button
-          type="button"
-          variant="default"
-          onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+    <CollapsibleSection
+      toggleBtnContent={
+        <>
+          <SlidersHorizontalIcon />  Filtros 
+        </>
+      }
+      toggleBtnClassName="max-w-60"
+      btnVariant="default"
+    >
+      <div className="w-full min-w-0 overflow-x-auto admin-scrollbar">
+        <form
+          id={id}
+          method="GET"
+          key={`${filtersKey}-${resetKey}`}
+          onSubmit={handleSubmit}
+          className="flex w-max min-w-full flex-nowrap items-center justify-start gap-8 pt-0 p-3 *:shrink-0"
         >
-          <SlidersHorizontalIcon /> Filtros
-          <ChevronUpIcon
-            className={clsx(
-              "transition duration-500",
-              isFiltersOpen ? "rotate-0" : "rotate-180",
-            )}
-          />
-        </Button>
-      </div>
-      <div
-        className={clsx(
-          "grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-in-out",
-          isFiltersOpen
-            ? "grid-rows-[1fr] opacity-100 visible"
-            : "grid-rows-[0fr] opacity-0 invisible",
-        )}
-        aria-hidden={!isFiltersOpen}
-      >
-        <div className="min-h-0 overflow-hidden">
-          <div className="w-full min-w-0 overflow-x-auto admin-scrollbar">
-            <form
-              id={id}
-              method="GET"
-              key={`${filtersKey}-${resetKey}`}
-              onSubmit={handleSubmit}
-              className="flex w-max min-w-full flex-nowrap items-center justify-start gap-8 pt-0 p-3 *:shrink-0"
-            >
-              {children}
-            </form>
+          {children}
+        </form>
 
-            <div className="sticky left-0 flex w-full flex-wrap justify-center gap-2 md:gap-5 py-4">
-              <Button type="submit" form={id} className="max-w-70 min-w-59 w-[40%] font-semibold whitespace-nowrap">
-                <FunnelIcon size={18} strokeWidth={2.5} className="shrink-0"/>
-                {submitLabel}
-              </Button>
+        <div className="sticky left-0 flex w-full flex-wrap justify-center gap-2 md:gap-5 py-4">
+          <Button
+            type="submit"
+            form={id}
+            className="max-w-70 min-w-59 w-[40%] font-semibold whitespace-nowrap"
+          >
+            <FunnelIcon size={18} strokeWidth={2.5} className="shrink-0" />
+            {submitLabel}
+          </Button>
 
-              <Button
-                type="button"
-                form={id}
-                variant="danger"
-                onClick={handleReset}
-                className="max-w-70 min-w-59 w-[40%] font-semibold whitespace-nowrap"
-              >
-                <FilterXIcon size={18} strokeWidth={2.5} className="shrink-0"/>
-                {resetLabel}
-              </Button>
-            </div>
-          </div>
+          <Button
+            type="button"
+            form={id}
+            variant="danger"
+            onClick={handleReset}
+            className="max-w-70 min-w-59 w-[40%] font-semibold whitespace-nowrap"
+          >
+            <FilterXIcon size={18} strokeWidth={2.5} className="shrink-0" />
+            {resetLabel}
+          </Button>
         </div>
       </div>
-    </>
+    </CollapsibleSection>
   );
 }

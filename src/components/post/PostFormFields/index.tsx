@@ -4,8 +4,8 @@ import { ImageGalleryModal } from "@/components/images/ImageGalleryModal";
 import { InfoMessage } from "@/components/ui/InfoMessage";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
-import { ImageUploader } from "@/components/user/ImageUploader";
-import { MarkdownEditor } from "@/components/user/MarkdownEditor";
+import { ImageUploader } from "@/components/post/ImageUploader";
+import { MarkdownEditor } from "@/components/post/MarkdownEditor";
 import { FetchImages } from "@/lib/image/types/fetchImagesType";
 import { FieldError } from "@/lib/shared/types/error";
 import {

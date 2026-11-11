@@ -1,6 +1,7 @@
 import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
 
-export type BtnVariants = "danger" | "default" | "ghost";
+export type BtnVariants = "danger" | "default" | "ghost" | "unstyled";
 export type BtnSize = "sm" | "md" | "lg";
 
 type GetButtonClassesParams = {
@@ -18,6 +19,7 @@ export function getButtonClasses({
     default: clsx("bg-blue-600 text-blue-100"),
     danger: clsx("bg-red-600 text-red-100"),
     ghost: clsx("bg-transparent border border-slate-200 text-slate-100"),
+    unstyled: "text-white border-none bg-trasnparent"
   };
 
   const btnSize: Record<BtnSize, string> = {
@@ -26,16 +28,18 @@ export function getButtonClasses({
     lg: clsx("text-lg/tight py-4 px-6 gap-3"),
   };
 
-  return clsx(
-    btnVariants[variant],
-    btnSize[size],
-    "rounded-xl",
-    "transition",
-    "cursor-pointer",
-    "hover:brightness-50",
-    "flex items-center justify-center",
-    "disabled:opacity-50",
-    "disabled:pointer-events-none",
-    className,
+  return twMerge(
+    clsx(
+      btnVariants[variant],
+      btnSize[size],
+      "rounded-xl",
+      "transition",
+      "cursor-pointer",
+      "hover:brightness-50",
+      "flex items-center justify-center",
+      "disabled:opacity-50",
+      "disabled:pointer-events-none",
+      className,
+    ),
   );
 }
