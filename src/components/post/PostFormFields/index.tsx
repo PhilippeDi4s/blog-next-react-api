@@ -43,6 +43,7 @@ type PostFormFieldsProps = {
   fetchImages?: FetchImages;
   isUploading: boolean;
   setUploading: (state: boolean) => void;
+  isAdminForm?: boolean;
 };
 
 export function PostFormFields({
@@ -58,6 +59,7 @@ export function PostFormFields({
   fetchImages,
   isUploading,
   setUploading,
+  isAdminForm = false,
 }: PostFormFieldsProps) {
   const [openImageGallery, setOpenImageGallery] = useState(false);
   function handleGalleryOpen() {
@@ -70,17 +72,6 @@ export function PostFormFields({
 
   return (
     <>
-      {id !== undefined && (
-        <InputText
-          labelText="ID"
-          name="id"
-          readOnly
-          disabled
-          defaultValue={id}
-          type="text"
-          icon={TagIcon}
-        />
-      )}
       {slug != null && (
         <>
           <InputText
@@ -91,19 +82,21 @@ export function PostFormFields({
             type="text"
             icon={LinkIcon}
           />
-          <InfoMessage size="md">
+          <InfoMessage size="sm">
             Slug é atualizada automaticamente ao salvar, a partir do título
           </InfoMessage>
         </>
       )}
-      <InputText
-        labelText="Autor(a)"
-        readOnly
-        disabled
-        defaultValue={authorName}
-        type="text"
-        icon={User2Icon}
-      />
+      {!isAdminForm && (
+        <InputText
+          labelText="Autor(a)"
+          readOnly
+          disabled
+          defaultValue={authorName}
+          type="text"
+          icon={User2Icon}
+        />
+      )}
       <InputText
         labelText="Título"
         placeholder="Digite o Título do post"

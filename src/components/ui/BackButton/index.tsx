@@ -15,7 +15,7 @@ export function BackButton({ className, pathLabel }: BackButtonProps) {
     router.back();
   }
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-3 items-center text-sm md:text-[1rem]">
       <button
         className={clsx(
           "w-fit flex items-center gap-3 py-2 px-4 rounded-xl border border-white/50 cursor-pointer transition hover:scale-105 hover:bg-white/20",

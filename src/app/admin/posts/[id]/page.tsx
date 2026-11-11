@@ -6,6 +6,7 @@ import { getPostById } from "@/lib/post/queries/admin-post";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
+import { PostDataAdmin } from "@/components/admin/adminPost/PostDataAdmin";
 
 export const metadata: Metadata = {
   title: "Editar post",
@@ -17,9 +18,8 @@ type AdminPostIdPageProps = {
 
 export default function AdminPostIdPage({ params }: AdminPostIdPageProps) {
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-4">
       <BackButton pathLabel="Admin / Lista de Posts" />
-      <Heading as="h1">Editar Post</Heading>
       <Suspense fallback={<SpinLoader />}>
         <AdminPostIdPageContent params={params} />
       </Suspense>
@@ -35,10 +35,19 @@ export async function AdminPostIdPageContent({ params }: AdminPostIdPageProps) {
     return (
       <ErrorMessage
         contentTitle="Não foi possível carregar o post"
-        content={res.errors[0]?.message ?? "Tente novamente em alguns instantes."}
+        content={
+          res.errors[0]?.message ?? "Tente novamente em alguns instantes."
+        }
       />
     );
   }
 
-  return <PostAdminForm initialData={res.data} />;
+  return (
+    <>
+      <PostDataAdmin post={res.data} />
+      <Heading as="h1">Editar Post</Heading>
+
+      <PostAdminForm initialData={res.data} />
+    </>
+  );
 }

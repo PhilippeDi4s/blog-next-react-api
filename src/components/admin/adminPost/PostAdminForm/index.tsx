@@ -76,6 +76,7 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
           fetchImages={fetchAdminGalleryImages}
           setUploading={setIsUploading}
           isUploading={isUploading}
+          isAdminForm={true}
         />
         <div className="flex gap-2 w-full">
           <Button
