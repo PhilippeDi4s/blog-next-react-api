@@ -6,7 +6,7 @@ import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { actionTypeOptions } from "@/lib/logs/enums/actionType";
 import { entityTypeOptions } from "@/lib/logs/enums/entityType";
-import type { LogSearchParamsDto } from "@/lib/logs/schema";
+import { LogSearchParamsDto } from "@/lib/logs/schemas/log-schemas";
 import { formatDate } from "@/utils/format-datetime";
 import { IdCardIcon, LayersIcon, TagIcon, UserIcon } from "lucide-react";
 

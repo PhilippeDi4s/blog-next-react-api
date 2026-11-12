@@ -1,11 +1,15 @@
 import { getLoginSessionOrRedirect } from "@/lib/auth/session";
 import { PaginatedResponse } from "@/lib/shared/types/pagination";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { LogResponseDto, LogSearchParamsDto } from "../schema";
 import { QueryResult } from "@/lib/shared/types/query";
 import { toQueryResult } from "@/utils/to-query-result";
+import { LogSearchParamsDto } from "../schemas/log-schemas";
+import { ActivityLog } from "../types/log-types";
 
-export async function findManyLogs(token: string, params?: LogSearchParamsDto): Promise<QueryResult<PaginatedResponse<LogResponseDto>>> {
+export async function findManyLogs(
+  token: string,
+  params?: LogSearchParamsDto,
+): Promise<QueryResult<PaginatedResponse<ActivityLog>>> {
   const searchParams = new URLSearchParams();
   if (params?.id) {
     searchParams.set("id", params.id);
@@ -14,7 +18,8 @@ export async function findManyLogs(token: string, params?: LogSearchParamsDto): 
     if (params?.actorId) searchParams.set("actorId", params.actorId);
     if (params?.entityType) searchParams.set("entityType", params.entityType);
     if (params?.entityId) searchParams.set("entityId", params.entityId);
-    if (params?.affectedUserId) searchParams.set("affectedUserId", params.affectedUserId);
+    if (params?.affectedUserId)
+      searchParams.set("affectedUserId", params.affectedUserId);
     if (params?.startDate) {
       searchParams.set("startDate", params.startDate.toISOString());
     }
@@ -30,7 +35,7 @@ export async function findManyLogs(token: string, params?: LogSearchParamsDto): 
   }
 
   const query = searchParams.toString();
-  const result = await authenticatedApiRequest<PaginatedResponse<LogResponseDto>>(
+  const result = await authenticatedApiRequest<PaginatedResponse<ActivityLog>>(
     `/admin/activity-logs${query ? `?${query}` : ""}`,
     token,
     {},
@@ -38,7 +43,9 @@ export async function findManyLogs(token: string, params?: LogSearchParamsDto): 
   return toQueryResult(result);
 }
 
-export async function getLogs(params?: LogSearchParamsDto): Promise<QueryResult<PaginatedResponse<LogResponseDto>>> {
+export async function getLogs(
+  params?: LogSearchParamsDto,
+): Promise<QueryResult<PaginatedResponse<ActivityLog>>> {
   const token = await getLoginSessionOrRedirect();
   return findManyLogs(token, params);
 }

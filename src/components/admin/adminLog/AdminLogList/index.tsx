@@ -1,7 +1,6 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ACTION_TYPE_LABELS, ActionType } from "@/lib/logs/enums/actionType";
 import { ENTITY_TYPE_LABELS } from "@/lib/logs/enums/entityType";
-import { LogResponseDto } from "@/lib/logs/schema";
 import { formatDate } from "@/utils/format-datetime";
 import {
   ActivityIcon,
@@ -26,6 +25,7 @@ import {
 } from "lucide-react";
 import { AdminList } from "../../AdminList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
+import { ActivityLog } from "@/lib/logs/types/log-types";
 
 const actionPresentation = {
   [ActionType.CREATED]: { Icon: CirclePlusIcon, className: "text-green-700" },
@@ -65,7 +65,7 @@ const actionPresentation = {
 >;
 
 type AdminLogListProps = {
-  logs: LogResponseDto[];
+  logs: ActivityLog[];
 };
 
 export function AdminLogList({ logs }: AdminLogListProps) {
@@ -81,8 +81,8 @@ export function AdminLogList({ logs }: AdminLogListProps) {
   return (
     <AdminList
       items={logs}
-      getRowKey={(log) => log.activityLogId}
-      getRowHref={(log) => `/admin/logs/${log.activityLogId}`}
+      getRowKey={(log) => log.id}
+      getRowHref={(log) => `/admin/logs/${log.id}`}
       noDataMessage={{
         pageTitle: "Logs",
         emptyMessageTitle: "Nenhum registro encontrado",
@@ -95,7 +95,7 @@ export function AdminLogList({ logs }: AdminLogListProps) {
           cell: (log) => (
             <CopyTextButton
               buttonText="Copiar id"
-              textToCopy={log.activityLogId}
+              textToCopy={log.id}
               variant="ghost"
               size="sm"
             />

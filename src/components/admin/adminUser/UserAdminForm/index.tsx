@@ -2,10 +2,9 @@
 
 import { AdminUserFormValuesDto } from "@/lib/user/schemas";
 import { InputText } from "@/components/ui/InputText";
-import { InputCheckbox } from "@/components/ui/InputCheckbox";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { roleOptions, Roles } from "@/lib/user/enums/roles";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmAdminActionModal } from "../../ConfirmAdminActionModal";
 import { getFieldErrors } from "@/lib/forms/get-field-errors";

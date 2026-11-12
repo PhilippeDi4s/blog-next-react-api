@@ -12,7 +12,7 @@ type InputTextAreaProps = {
   labelText: string;
   className?: string;
   icon?: LucideIcon;
-  error: string | null;
+  error?: string | null;
 } & Omit<React.ComponentProps<"textarea">, "className">;
 
 export function InputTextArea({

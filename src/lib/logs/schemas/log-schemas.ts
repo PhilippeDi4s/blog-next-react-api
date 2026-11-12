@@ -1,21 +1,8 @@
-import { z } from "zod";
-import { UserSummarySchema } from "../user/schemas";
-import { ActionType } from "./enums/actionType";
-import { EntityType } from "./enums/entityType";
-import { emptyToUndefined } from "../sharedSchemas/confirmAdminAction";
-import { withDateRanges } from "../sharedSchemas/dateRange";
-
-export const LogResponseSchema = z.object({
-  activityLogId: z.string(),
-  actor: UserSummarySchema,
-  action: z.enum(ActionType),
-  entityType: z.enum(EntityType),
-  entityId: z.string(),
-  affectedUser: UserSummarySchema.nullable(),
-  reason: z.string().nullable(),
-  metadata: z.record(z.string(), z.unknown()).nullable(),
-  createdAt: z.string(),
-});
+import { emptyToUndefined } from "@/lib/sharedSchemas/confirmAdminAction";
+import { withDateRanges } from "@/lib/sharedSchemas/dateRange";
+import z from "zod";
+import { ActionType } from "../enums/actionType";
+import { EntityType } from "../enums/entityType";
 
 export const LogSearchParamsSchema = withDateRanges(
   z.object({
@@ -39,5 +26,4 @@ export const LogSearchParamsSchema = withDateRanges(
   [{ start: "startDate", end: "endDate" }],
 );
 
-export type LogResponseDto = z.infer<typeof LogResponseSchema>;
 export type LogSearchParamsDto = z.infer<typeof LogSearchParamsSchema>;

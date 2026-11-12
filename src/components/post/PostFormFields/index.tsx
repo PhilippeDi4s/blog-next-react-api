@@ -14,7 +14,6 @@ import {
   Heading1Icon,
   ImageIcon,
   LinkIcon,
-  TagIcon,
   TextQuoteIcon,
   User2Icon,
 } from "lucide-react";
@@ -52,7 +51,6 @@ export function PostFormFields({
   authorName,
   contentValue,
   setContentValue,
-  id,
   slug,
   onFieldChange,
   errors,
