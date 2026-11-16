@@ -36,7 +36,7 @@ export async function AdminPostIdPageContent({ params }: AdminPostIdPageProps) {
       <ErrorMessage
         contentTitle="Não foi possível carregar o post"
         content={
-          res.errors[0]?.message ?? "Tente novamente em alguns instantes."
+           "Tente novamente em alguns instantes."
         }
       />
     );

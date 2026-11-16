@@ -23,6 +23,7 @@ export function InfoMessage({ children, size = "sm" }: InfoMessageProps) {
         "items-center",
         "gap-2",
         "leading-4",
+        "-mt-5!",
         "md:leading-6",
       )}
     >

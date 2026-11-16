@@ -4,7 +4,7 @@ import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { ActionResult } from "@/lib/shared/types/action";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
-import { updateTag } from "next/cache";
+import { refresh, updateTag } from "next/cache";
 
 type ImageActionResult = {
   url: string;

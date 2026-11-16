@@ -28,27 +28,25 @@ export function DeleteImageButton({ id, onDeleted }: DeleteImageProps) {
     showMessage.dismiss();
     setIsPending(true);
 
-    try {
-      const res = await deleteImageAction(id);
-      if (res.errors.length > 0) {
-        showMessage.dismiss();
-
-        res.errors.forEach((error) => {
-          const messages = Array.isArray(error.message)
-            ? error.message
-            : [error.message];
-
-          messages.forEach((msg) => showMessage.error(msg));
-        });
-        return;
-      }
-
-      showMessage.success("Imagem deletada!");
-      closeModal();
-      onDeleted?.();
-    } finally {
+    const res = await deleteImageAction(id);
+    if (res.errors.length > 0) {
       setIsPending(false);
+      showMessage.dismiss();
+
+      res.errors.forEach((error) => {
+        const messages = Array.isArray(error.message)
+          ? error.message
+          : [error.message];
+
+        messages.forEach((msg) => showMessage.error(msg));
+      });
+      return;
     }
+
+    setIsPending(false);
+    showMessage.success("Imagem deletada!");
+    closeModal();
+    onDeleted?.();
   }
 
   return (

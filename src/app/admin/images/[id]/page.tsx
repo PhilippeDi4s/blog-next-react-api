@@ -33,7 +33,7 @@ export async function AdminPImageIdPageContent({
       <ErrorMessage
         contentTitle="Não foi possível carregar a imagem"
         content={
-          res.errors[0]?.message ?? "Tente novamente em alguns instantes."
+          "Tente novamente em alguns instantes."
         }
       />
     );

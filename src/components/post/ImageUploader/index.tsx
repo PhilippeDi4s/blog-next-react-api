@@ -16,7 +16,8 @@ type ImageUploaderProps = {
   disabled?: boolean;
   actions?: React.ReactNode;
   className?: string;
-  setUploading: (state: boolean) => void;
+  setUploading?: (state: boolean) => void;
+  onUploaded?: () => void;
 };
 
 export function ImageUploader({
@@ -25,6 +26,7 @@ export function ImageUploader({
   actions,
   className,
   setUploading,
+  onUploaded,
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadPending, startTransition] = useTransition();
@@ -83,7 +85,7 @@ export function ImageUploader({
     formData.append("file", file);
 
     fileInput.value = "";
-    setUploading(true);
+    setUploading?.(true);
 
     startTransition(async () => {
       try {
@@ -105,13 +107,16 @@ export function ImageUploader({
 
         setImgUrl(result.url);
 
+        setImgUrl(result.url);
+        onUploaded?.();
+
         if (!showPreview) {
           router.refresh();
         }
 
         showMessage.success("Imagem adicionada à sua galeria!");
       } finally {
-        setUploading(false);
+        setUploading?.(false);
       }
     });
   }
@@ -124,7 +129,8 @@ export function ImageUploader({
           className={className}
           disabled={isUploadPending || disabled}
         >
-          <ImageUpIcon /> Enviar uma imagem
+          <ImageUpIcon />{" "}
+          {isUploadPending ? "Enviando..." : "Enviar uma imagem"}
         </Button>
 
         {actions}

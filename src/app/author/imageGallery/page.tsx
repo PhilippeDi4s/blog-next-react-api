@@ -1,16 +1,10 @@
-import { ImageUploader } from "@/components/post/ImageUploader";
-import { InfiniteImageGallery } from "@/components/images/InfiniteImageGallery";
+import { ImageGallerySection } from "@/components/images/ImageGallerySection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Image Gallery",
+  title: "Galeria de imagens",
 };
 
 export default function ImageGalleryPage() {
-  return (
-    <>
-      <ImageUploader showPreview={false} />
-      <InfiniteImageGallery />
-    </>
-  );
+  return <ImageGallerySection />;
 }
