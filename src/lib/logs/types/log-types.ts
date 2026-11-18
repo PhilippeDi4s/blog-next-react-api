@@ -1,23 +1,21 @@
 import { ActionType } from "@/lib/logs/enums/actionType";
 import type { EntityType } from "@/lib/logs/enums/entityType";
+import { Roles } from "@/lib/user/enums/roles";
 import { UserSummaryDto } from "@/lib/user/schemas";
 
-type Snapshot = Record<string, unknown>;
-type RoleSnapshot = { role: string };
+type Snapshot<T> = Record<string, T>;
 
-// Espelha o back: Base/Create/Update/DeleteLogMetadata<T>
 type BaseLogMetadata = { isAdminAction: boolean };
 type CreateLogMetadata<T> = BaseLogMetadata & { created: T };
 type UpdateLogMetadata<T> = BaseLogMetadata & { before: T; after: T };
 type DeleteLogMetadata<T> = BaseLogMetadata & { deleted: T };
 
-// Espelha o LogMetadataMap do back, uma linha por action
-type LogMetadataMap = {
-  [ActionType.CREATED]: CreateLogMetadata<Snapshot>;
-  [ActionType.UPDATED]: UpdateLogMetadata<Snapshot>;
-  [ActionType.DELETED]: DeleteLogMetadata<Snapshot>;
-  [ActionType.PROMOTE]: UpdateLogMetadata<RoleSnapshot>;
-  [ActionType.DEMOTE]: UpdateLogMetadata<RoleSnapshot>;
+type LogMetadataMap<T> = {
+  [ActionType.CREATED]: CreateLogMetadata<Snapshot<T>>;
+  [ActionType.UPDATED]: UpdateLogMetadata<Snapshot<T>>;
+  [ActionType.DELETED]: DeleteLogMetadata<Snapshot<T>>;
+  [ActionType.PROMOTE]: UpdateLogMetadata<UserLogSnapshot>;
+  [ActionType.DEMOTE]: UpdateLogMetadata<UserLogSnapshot>;
   [ActionType.RESTORED]: BaseLogMetadata & { deletedAt: string | null };
   [ActionType.LOGIN]: BaseLogMetadata;
   [ActionType.LOGOUT]: BaseLogMetadata;
@@ -29,7 +27,7 @@ type LogMetadataMap = {
 };
 
 type ActivityLogBase = {
-  id: string;
+  activityLogId: string;
   actor: UserSummaryDto;
   affectedUser?: UserSummaryDto;
   entityType: EntityType;
@@ -41,6 +39,29 @@ type ActivityLogBase = {
 export type ActivityLog = {
   [A in ActionType]: ActivityLogBase & {
     action: A;
-    metadata: LogMetadataMap[A];
+    metadata: LogMetadataMap<unknown>[A];
   };
 }[ActionType];
+
+export type PostLogSnapshot = {
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  coverImage: string | null;
+  published: boolean;
+  updatedAt: string;
+};
+
+export type UserLogSnapshot = {
+  name: string;
+  email: string;
+  role: Roles;
+};
+
+export type ImageLogSnapshot = {
+  url: string;
+  folder: string;
+  createdAt: string;
+  uploadedById: string | null;
+};

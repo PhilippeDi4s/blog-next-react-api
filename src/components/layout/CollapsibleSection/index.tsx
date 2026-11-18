@@ -40,7 +40,7 @@ export function CollapsibleSection({
       </Button>
       <div
         className={clsx(
-          "grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-in-out",
+          "grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-in-out w-full",
           isSectionOpen
             ? "grid-rows-[1fr] opacity-100 visible"
             : "grid-rows-[0fr] opacity-0 invisible",

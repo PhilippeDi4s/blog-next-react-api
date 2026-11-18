@@ -35,6 +35,8 @@ export const Notice = {
   IMAGE_UPLOADED: "image-uploaded",
   IMAGE_DELETED: "image-deleted",
   IMAGE_NOT_FOUND: "image-not-found",
+
+  LOG_NOT_FOUND: "log-not-found",
 } as const;
 
 export type NoticeKey = (typeof Notice)[keyof typeof Notice];
@@ -189,6 +191,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
 
   [Notice.IMAGE_NOT_FOUND]: {
     message: "Imagem não encontrada",
+    type: "error",
+  },
+
+  [Notice.LOG_NOT_FOUND]: {
+    message: "Log não encontrado",
     type: "error",
   },
 };

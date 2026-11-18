@@ -78,11 +78,12 @@ export function AdminLogList({ logs }: AdminLogListProps) {
       />
     );
   }
+
   return (
     <AdminList
       items={logs}
-      getRowKey={(log) => log.id}
-      getRowHref={(log) => `/admin/logs/${log.id}`}
+      getRowKey={(log) => log.activityLogId}
+      getRowHref={(log) => `/admin/logs/${log.activityLogId}`}
       noDataMessage={{
         pageTitle: "Logs",
         emptyMessageTitle: "Nenhum registro encontrado",
@@ -95,7 +96,7 @@ export function AdminLogList({ logs }: AdminLogListProps) {
           cell: (log) => (
             <CopyTextButton
               buttonText="Copiar id"
-              textToCopy={log.id}
+              textToCopy={log.activityLogId}
               variant="ghost"
               size="sm"
             />

@@ -6,7 +6,7 @@ import { EntityType } from "../enums/entityType";
 
 export const LogSearchParamsSchema = withDateRanges(
   z.object({
-    id: z.preprocess(emptyToUndefined, z.string().optional()),
+    activityLogId: z.preprocess(emptyToUndefined, z.string().optional()),
     action: z.preprocess(emptyToUndefined, z.enum(ActionType).optional()),
     actorId: z.preprocess(emptyToUndefined, z.string().optional()),
     entityType: z.preprocess(emptyToUndefined, z.enum(EntityType).optional()),

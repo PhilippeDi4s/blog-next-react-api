@@ -169,7 +169,7 @@ export function InputSelect({
         onClick={() => setIsOpen((open) => !open)}
         className={clsx(
           inputStyle,
-          "flex items-center justify-between bg-slate-700! pl-3! text-left w-full",
+          "flex items-center justify-between bg-slate-700 pl-3! text-left w-full",
           className,
           {
             "ring-blue-600": isOpen,

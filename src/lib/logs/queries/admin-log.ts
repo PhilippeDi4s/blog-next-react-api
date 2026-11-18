@@ -11,8 +11,8 @@ export async function findManyLogs(
   params?: LogSearchParamsDto,
 ): Promise<QueryResult<PaginatedResponse<ActivityLog>>> {
   const searchParams = new URLSearchParams();
-  if (params?.id) {
-    searchParams.set("id", params.id);
+  if (params?.activityLogId) {
+    searchParams.set("activityLogId", params.activityLogId);
   } else {
     if (params?.action) searchParams.set("action", params.action);
     if (params?.actorId) searchParams.set("actorId", params.actorId);
@@ -41,6 +41,13 @@ export async function findManyLogs(
     {},
   );
   return toQueryResult(result);
+}
+
+export async function getLogById(
+  id: string,
+): Promise<QueryResult<PaginatedResponse<ActivityLog>>> {
+  const token = await getLoginSessionOrRedirect();
+  return findManyLogs(token, { activityLogId: id });
 }
 
 export async function getLogs(

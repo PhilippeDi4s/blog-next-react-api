@@ -23,11 +23,11 @@ export function InputTextArea({
 }: InputTextAreaProps) {
   const id = useId();
   return (
-    <div className="flex flex-col gap-1">
+    <div className={clsx("flex flex-col gap-1", className)}>
       <label htmlFor={id}>{labelText}</label>
       <div className={inputWrapper}>
         <textarea
-          className={clsx(inputStyle, className, "min-h-32 resize-none")}
+          className={clsx(inputStyle, "min-h-32 resize-none")}
           id={id}
           {...props}
         ></textarea>
