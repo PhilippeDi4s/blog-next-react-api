@@ -6,7 +6,6 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { ImageResponseDto } from "@/lib/image/schema";
-import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import {
   CheckCircle2Icon,
   LinkIcon,
@@ -30,7 +29,6 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
     redirectWithNotice("*", Notice.IMAGE_NOT_FOUND);
   }
 
-  const [imagePreview, setImagePreview] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [reasons, setReasons] = useState<Record<string, string>>({});
@@ -53,14 +51,6 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
           },
         ]
       : [];
-
-  function openPreview() {
-    setImagePreview(true);
-  }
-
-  function closePreview() {
-    setImagePreview(false);
-  }
 
   function resetModalState() {
     setReasons({});
@@ -122,18 +112,11 @@ export function ImageAdminForm({ imageData }: ImageAdminFormProps) {
 
   return (
     <>
-      <button onClick={openPreview} className="w-full my-5">
-        <ImageWithFallback
-          alt=""
-          src={imageData.url}
-          containerClassName="w-full h-50 md:w-[80%] md:h-100 object-cover mx-auto"
-          imageClassName="object-cover cursor-zoom-in rounded-xl transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
-        />
-      </button>
       <ImagePreview
         imageSrc={imageData.url}
-        isOpen={imagePreview}
-        onClose={closePreview}
+        triggerClassName="w-full my-5"
+        thumbnailContainerClassName="w-full h-50 md:w-[80%] md:h-100 mx-auto"
+        thumbnailImageClassName="object-cover cursor-zoom-in rounded-xl transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
       />
       <form
         className="flex flex-col gap-6"

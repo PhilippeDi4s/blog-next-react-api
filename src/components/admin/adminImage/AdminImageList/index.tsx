@@ -4,9 +4,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ImageResponseDto } from "@/lib/image/schema";
 import { formatDate } from "@/utils/format-datetime";
 import { Calendar1Icon, ImageIcon, UserIcon } from "lucide-react";
-import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
-import { useState } from "react";
 import { AdminList } from "../../AdminList";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
@@ -15,8 +13,6 @@ type AdminImageListProps = {
 };
 
 export function AdminImageList({ images }: AdminImageListProps) {
-  const [isOpen, setIsOpen] = useState<string | null>(null);
-
   if (!images) {
     return (
       <ErrorMessage
@@ -25,16 +21,6 @@ export function AdminImageList({ images }: AdminImageListProps) {
         pageTitle="Lista de Imagens"
       />
     );
-  }
-
-  function openPreview(e: React.MouseEvent<HTMLButtonElement>, id: string) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsOpen(id);
-  }
-
-  function closePreview() {
-    setIsOpen(null);
   }
 
   return (
@@ -53,22 +39,11 @@ export function AdminImageList({ images }: AdminImageListProps) {
           headerIcon: ImageIcon,
           cell: (image) => (
             <div className="relative w-[6rem] h-[6rem]">
-              <button
-                className="cursor-pointer h-full w-full"
-                onClick={(e) => openPreview(e, image.id)}
-                data-no-row-hover
-              >
-                <ImageWithFallback
-                  alt=""
-                  src={image.url}
-                  containerClassName="w-full h-full"
-                  imageClassName="cursor-zoom-in rounded-xl object-cover object-top transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
-                />
-              </button>
               <ImagePreview
                 imageSrc={image.url}
-                isOpen={isOpen === image.id}
-                onClose={closePreview}
+                triggerClassName="h-full w-full"
+                thumbnailContainerClassName="w-full h-full"
+                thumbnailImageClassName="cursor-zoom-in rounded-xl object-cover object-top transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
               />
             </div>
           ),

@@ -7,7 +7,6 @@ import { ImageMinusIcon, ImageUpIcon } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { ImageWithFallback } from "@/components/ui/ImageFallback";
 import { ImagePreview } from "@/components/images/ImagePreview";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
 
@@ -31,18 +30,9 @@ export function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadPending, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState("");
-  const [openImagePreview, setOpenImagePreview] = useState(false);
   const [loadedUrl, setLoadedUrl] = useState("");
   const isImageLoading = !!imgUrl && loadedUrl !== imgUrl;
   const router = useRouter();
-
-  function handleOpenImagePreview() {
-    setOpenImagePreview(true);
-  }
-
-  function handleCloseImagePreview() {
-    setOpenImagePreview(false);
-  }
 
   function handleChooseFile() {
     if (!fileInputRef.current) return;
@@ -144,25 +134,21 @@ export function ImageUploader({
 
       {!!imgUrl && showPreview && !isUploadPending && (
         <div className="flex gap-5 w-full flex-col mt-5">
-          <button
-            onClick={handleOpenImagePreview}
-            className="cursor-zoom-in relative"
-            type="button"
+          <ImagePreview
+            imageSrc={imgUrl}
+            alt="Imagem do post"
+            intrinsic
+            triggerClassName="cursor-zoom-in relative"
+            thumbnailContainerClassName="relative w-80 h-70 rounded md:w-100 md:h-80"
+            thumbnailImageClassName="rounded-2xl object-cover transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
+            onImageLoad={() => setLoadedUrl(imgUrl)}
           >
-            <ImageWithFallback
-              alt="Imagem do post"
-              src={imgUrl}
-              intrinsic
-              onLoad={() => setLoadedUrl(imgUrl)}
-              containerClassName="relative w-80 h-70 rounded md:w-100 md:h-80"
-              imageClassName="rounded-2xl object-cover transition hover:scale-105 hover:ring-2 hover:ring-blue-500"
-            />
             {isImageLoading && (
               <div className="absolute w-80 h-70  md:w-100 md:h-80 inset-0 flex items-center justify-center rounded-2xl bg-slate-800/70">
                 <SpinLoader />
               </div>
             )}
-          </button>
+          </ImagePreview>
           <div className="flex w-full gap-3 items-center">
             <CopyTextButton
               buttonText="Copiar URL da imagem"
@@ -179,12 +165,6 @@ export function ImageUploader({
           </div>
         </div>
       )}
-
-      <ImagePreview
-        isOpen={openImagePreview}
-        onClose={handleCloseImagePreview}
-        imageSrc={imgUrl}
-      />
 
       <input
         ref={fileInputRef}
