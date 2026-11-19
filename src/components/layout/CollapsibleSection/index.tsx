@@ -12,6 +12,7 @@ type CollapsibleSectionProps = {
   toggleBtnContent: React.ReactNode;
   toggleBtnClassName?: string;
   btnVariant?: BtnVariants;
+  defaultOpen?: boolean;
 };
 
 export function CollapsibleSection({
@@ -20,8 +21,9 @@ export function CollapsibleSection({
   toggleBtnContent,
   toggleBtnClassName,
   btnVariant = "unstyled",
+  defaultOpen=false
 }: CollapsibleSectionProps) {
-  const [isSectionOpen, setIsSectionOpen] = useState(false);
+  const [isSectionOpen, setIsSectionOpen] = useState(defaultOpen);
   return (
     <>
       <Button

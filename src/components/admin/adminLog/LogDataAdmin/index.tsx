@@ -1,16 +1,15 @@
 "use client";
 
 import { CollapsibleSection } from "@/components/layout/CollapsibleSection";
-import { Heading } from "@/components/ui/Heading";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { InputTextArea } from "@/components/ui/InputTextArea";
 import { entityTypeOptions } from "@/lib/logs/enums/entityType";
 import { ActivityLog } from "@/lib/logs/types/log-types";
 import { MailIcon, MessageSquareIcon, TagIcon, UserIcon } from "lucide-react";
-import { SnapshotMetadata } from "../metadata/SnapshotMetadata";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { renderMetadataAdmin } from "../metadata/render-metadata-admin";
+import { formatDate } from "@/utils/format-datetime";
 
 type LogDataAdminProps = {
   log: ActivityLog;
@@ -32,12 +31,6 @@ export function LogDataAdmin({ log }: LogDataAdminProps) {
       >
         <InputText
           disabled
-          labelText="ID do ator"
-          defaultValue={log.actor.id}
-          icon={TagIcon}
-        />
-        <InputText
-          disabled
           labelText="Nome do ator"
           defaultValue={log.actor.name}
           icon={UserIcon}
@@ -48,6 +41,44 @@ export function LogDataAdmin({ log }: LogDataAdminProps) {
           defaultValue={log.actor.email}
           icon={MailIcon}
         />
+        <InputText
+          disabled
+          labelText="Papel do ator"
+          defaultValue={log.actor.role}
+          icon={MailIcon}
+        />
+        <InputText
+          disabled
+          labelText="Status da conta"
+          defaultValue={log.actor.isBlocked ? "Bloqueado" : "Não bloqueado"}
+          icon={UserIcon}
+        />
+        <InputText
+          disabled
+          labelText="ID do ator"
+          defaultValue={log.actor.id}
+          icon={TagIcon}
+        />
+        <InputText
+          disabled
+          labelText="Criado em"
+          defaultValue={formatDate(log.actor.createdAt)}
+          icon={UserIcon}
+        />
+        <InputText
+          disabled
+          labelText="Atualizado em"
+          defaultValue={formatDate(log.actor.updatedAt)}
+          icon={UserIcon}
+        />
+        {log.actor.deletedAt && (
+          <InputText
+            disabled
+            labelText="Excluido em"
+            defaultValue={formatDate(log.actor.deletedAt)}
+            icon={UserIcon}
+          />
+        )}
       </CollapsibleSection>
       <CollapsibleSection
         toggleBtnContent={<>Usuário afetado</>}
@@ -56,24 +87,67 @@ export function LogDataAdmin({ log }: LogDataAdminProps) {
       >
         <InputText
           disabled
-          labelText="ID do usuário"
-          defaultValue={log.actor.id}
-          icon={TagIcon}
-        />
-        <InputText
-          disabled
           labelText="Nome do usuário"
-          defaultValue={log.actor.name}
+          defaultValue={log.affectedUser?.name}
           icon={UserIcon}
         />
         <InputText
           disabled
           labelText="E-mail do usuário"
-          defaultValue={log.actor.email}
+          defaultValue={log.affectedUser?.email}
           icon={MailIcon}
         />
+        <InputText
+          disabled
+          labelText="Papel do usuário"
+          defaultValue={log.affectedUser?.role}
+          icon={MailIcon}
+        />
+        <InputText
+          disabled
+          labelText="Status da conta"
+          defaultValue={
+            log.affectedUser?.isBlocked ? "Bloqueado" : "Não bloqueado"
+          }
+          icon={UserIcon}
+        />
+        <InputText
+          disabled
+          labelText="ID do usuário"
+          defaultValue={log.affectedUser?.id}
+          icon={TagIcon}
+        />
+        <InputText
+          disabled
+          labelText="Criado em"
+          defaultValue={
+            log.affectedUser?.createdAt
+              ? formatDate(log.affectedUser.createdAt)
+              : ""
+          }
+          icon={UserIcon}
+        />
+        <InputText
+          disabled
+          labelText="Atualizado em"
+          defaultValue={
+            log.affectedUser?.updatedAt
+              ? formatDate(log.affectedUser.updatedAt)
+              : ""
+          }
+          icon={UserIcon}
+        />
+        {log.actor.deletedAt && (
+          <InputText
+            disabled
+            labelText="Excluido em"
+            defaultValue={formatDate(log.actor.deletedAt)}
+            icon={UserIcon}
+          />
+        )}
       </CollapsibleSection>
       <CollapsibleSection
+        defaultOpen={true}
         toggleBtnContent={<>Log da Atividade</>}
         className="grid grid-cols-1 gap-5 md:grid-cols-3 px-4 pb-6  border-b border-white/50"
         toggleBtnClassName={toggleBtnStyle}
@@ -107,8 +181,8 @@ export function LogDataAdmin({ log }: LogDataAdminProps) {
         )}
       </CollapsibleSection>
       <CollapsibleSection
+        defaultOpen={true}
         toggleBtnContent={<>Metadata</>}
-        className=""
         toggleBtnClassName={toggleBtnStyle}
       >
         {renderMetadataAdmin(log)}

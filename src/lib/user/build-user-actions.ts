@@ -20,13 +20,12 @@ export function buildUserActions(
     actions.push({
       key: "updateUser",
       label: "Atualizar nome/email",
-      needsPassword: true,
+      needsPassword: false,
       run: (reason) =>
         updateUserAdminAction(userId, {
           name: formPayload.name,
           email: formPayload.email,
           reason,
-          password,
         }),
     });
   }

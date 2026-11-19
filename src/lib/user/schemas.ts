@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { Roles } from "./enums/roles";
 import {
+  AdminReasonSchema,
   booleanFilter,
   ConfirmActionAdminSchema,
   emptyToUndefined,
@@ -124,7 +125,7 @@ export const UserResponseSchema = z.object({
   deletedAt: z.string().nullable(),
 });
 
-export const AdminUpdateUserSchema = ConfirmActionAdminSchema.extend(
+export const AdminUpdateUserSchema = AdminReasonSchema.extend(
   UpdateUserSchema.shape,
 );
 

@@ -3,6 +3,17 @@ import type { EntityType } from "@/lib/logs/enums/entityType";
 import { Roles } from "@/lib/user/enums/roles";
 import { UserSummaryDto } from "@/lib/user/schemas";
 
+type UserLog = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  deletedAt: string | null;
+  isBlocked: string;
+  role: string;
+  updatedAt: string;
+};
+
 type Snapshot<T> = Record<string, T>;
 
 type BaseLogMetadata = { isAdminAction: boolean };
@@ -28,8 +39,8 @@ type LogMetadataMap<T> = {
 
 type ActivityLogBase = {
   activityLogId: string;
-  actor: UserSummaryDto;
-  affectedUser?: UserSummaryDto;
+  actor: UserLog;
+  affectedUser?: UserLog;
   entityType: EntityType;
   entityId: string;
   reason: string | null;
