@@ -1,59 +1,107 @@
-import { CollapsibleSection } from "@/components/layout/CollapsibleSection";
+import { StatusMessage } from "@/components/admin/adminLog/metadata/StatusMessage";
+import type { StatusTone } from "@/components/admin/adminLog/metadata/StatusMessage";
+import {
+  getDiffClassName,
+  UpdateMetadataSections,
+  type DiffVariant,
+} from "@/components/admin/adminLog/metadata/UpdateMetadataSections";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { ActionType } from "@/lib/logs/enums/actionType";
 import { ActivityLog, UserLogSnapshot } from "@/lib/logs/types/log-types";
 import { roleOptions } from "@/lib/user/enums/roles";
-import { MailIcon, UserIcon } from "lucide-react";
+import {
+  KeyRoundIcon,
+  LogInIcon,
+  LogOutIcon,
+  MailIcon,
+  type LucideIcon,
+  UserCheckIcon,
+  UserIcon,
+  UserXIcon,
+} from "lucide-react";
 
 type UserMetadataProps = {
   log: ActivityLog;
 };
 
 const STATUS_MESSAGES: Partial<
-  Record<ActionType, { text: string; className?: string }>
+  Record<
+    ActionType,
+    { text: string; icon: LucideIcon; tone: StatusTone }
+  >
 > = {
   [ActionType.BLOCK_USER]: {
     text: "Usuário foi bloqueado",
-    className: "text-red-700",
+    icon: UserXIcon,
+    tone: "danger",
   },
   [ActionType.UNBLOCK_USER]: {
     text: "Usuário foi desbloqueado",
-    className: "text-green-700",
+    icon: UserCheckIcon,
+    tone: "success",
   },
-  [ActionType.LOGIN]: { text: "Usuário fez login" },
-  [ActionType.LOGOUT]: { text: "Usuário foi deslogado" },
-  [ActionType.PASSWORD_CHANGE]: { text: "Usuário alterou sua senha" },
+  [ActionType.LOGIN]: {
+    text: "Usuário fez login",
+    icon: LogInIcon,
+    tone: "success",
+  },
+  [ActionType.LOGOUT]: {
+    text: "Usuário foi deslogado",
+    icon: LogOutIcon,
+    tone: "danger",
+  },
+  [ActionType.PASSWORD_CHANGE]: {
+    text: "Usuário alterou sua senha",
+    icon: KeyRoundIcon,
+    tone: "warning",
+  },
 };
 
-function UserFields({ snapshot }: { snapshot?: Partial<UserLogSnapshot> }) {
+function UserFields({
+  snapshot,
+  variant,
+  changedKeys,
+}: {
+  snapshot?: Partial<UserLogSnapshot>;
+  variant?: DiffVariant;
+  changedKeys?: ReadonlySet<string>;
+}) {
   if (!snapshot) return null;
+  const fieldClassName = (key: string) =>
+    getDiffClassName(variant ?? "before", changedKeys?.has(key) ?? false);
 
   return (
     <>
       {snapshot.name !== undefined && (
-        <InputText
-          labelText="Nome"
-          icon={UserIcon}
-          disabled
-          defaultValue={snapshot.name}
-        />
+        <div className={fieldClassName("name")}>
+          <InputText
+            labelText="Nome"
+            icon={UserIcon}
+            disabled
+            defaultValue={snapshot.name}
+          />
+        </div>
       )}
       {snapshot.email !== undefined && (
-        <InputText
-          labelText="E-mail"
-          icon={MailIcon}
-          disabled
-          defaultValue={snapshot.email}
-        />
+        <div className={fieldClassName("email")}>
+          <InputText
+            labelText="E-mail"
+            icon={MailIcon}
+            disabled
+            defaultValue={snapshot.email}
+          />
+        </div>
       )}
       {snapshot.role !== undefined && (
-        <InputSelect
-          labelText="Cargo"
-          options={roleOptions}
-          defaultValue={snapshot.role}
-          disabled
-        />
+        <div className={fieldClassName("role")}>
+          <InputSelect
+            labelText="Cargo"
+            options={roleOptions}
+            defaultValue={snapshot.role}
+            disabled
+          />
+        </div>
       )}
     </>
   );
@@ -68,14 +116,17 @@ export function UserMetadata({ log }: UserMetadataProps) {
       const after = log.metadata.after as Partial<UserLogSnapshot>;
 
       return (
-        <>
-          <CollapsibleSection toggleBtnContent={<>Antes</>}>
-            <UserFields snapshot={before} />
-          </CollapsibleSection>
-          <CollapsibleSection toggleBtnContent={<>Depois</>}>
-            <UserFields snapshot={after} />
-          </CollapsibleSection>
-        </>
+        <UpdateMetadataSections
+          before={before}
+          after={after}
+          renderFields={(snapshot, variant, changedKeys) => (
+            <UserFields
+              snapshot={snapshot}
+              variant={variant}
+              changedKeys={changedKeys}
+            />
+          )}
+        />
       );
     }
 
@@ -96,11 +147,7 @@ export function UserMetadata({ log }: UserMetadataProps) {
     default: {
       const message = STATUS_MESSAGES[log.action];
       if (!message) return null;
-      return (
-        <span className={`text-xl ${message.className ?? ""}`}>
-          {message.text}
-        </span>
-      );
+      return <StatusMessage {...message} />;
     }
   }
 }

@@ -18,6 +18,7 @@ type InputTextAreaProps = {
 export function InputTextArea({
   labelText,
   className,
+  icon: Icon = MessageSquareIcon,
   error,
   ...props
 }: InputTextAreaProps) {
@@ -31,7 +32,7 @@ export function InputTextArea({
           id={id}
           {...props}
         ></textarea>
-        <MessageSquareIcon className={clsx(inputLeftIcon, "top-3")} />
+        <Icon className={clsx(inputLeftIcon, "top-3")} />
       </div>
       <span className={clsx(inputError)}>{error}</span>
     </div>

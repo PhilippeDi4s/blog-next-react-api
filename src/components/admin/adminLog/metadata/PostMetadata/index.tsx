@@ -1,5 +1,10 @@
+import { StatusMessage } from "@/components/admin/adminLog/metadata/StatusMessage";
+import {
+  getDiffClassName,
+  UpdateMetadataSections,
+  type DiffVariant,
+} from "@/components/admin/adminLog/metadata/UpdateMetadataSections";
 import { ImagePreview } from "@/components/images/ImagePreview";
-import { CollapsibleSection } from "@/components/layout/CollapsibleSection";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { InputText } from "@/components/ui/InputText";
 import { InputTextArea } from "@/components/ui/InputTextArea";
@@ -7,56 +12,103 @@ import { ActionType } from "@/lib/logs/enums/actionType";
 import { ActivityLog, PostLogSnapshot } from "@/lib/logs/types/log-types";
 import { publishedFilterOptions } from "@/lib/post/enums/publishedFilter";
 import { formatDate } from "@/utils/format-datetime";
+import {
+  ArchiveRestoreIcon,
+  Calendar1Icon,
+  FileTextIcon,
+  LinkIcon,
+} from "lucide-react";
 
 type PostMetadataProps = {
   log: ActivityLog;
 };
 
-function PostFields({ snapshot }: { snapshot?: Partial<PostLogSnapshot> }) {
+function PostFields({
+  snapshot,
+  variant,
+  changedKeys,
+}: {
+  snapshot?: Partial<PostLogSnapshot>;
+  variant?: DiffVariant;
+  changedKeys?: ReadonlySet<string>;
+}) {
   if (!snapshot) return null;
+  const fieldClassName = (key: string) =>
+    getDiffClassName(variant ?? "before", changedKeys?.has(key) ?? false);
 
   return (
     <>
       {snapshot.title !== undefined && (
-        <InputText labelText="Título" disabled defaultValue={snapshot.title} />
+        <div className={fieldClassName("title")}>
+          <InputText
+            labelText="Título"
+            icon={FileTextIcon}
+            disabled
+            defaultValue={snapshot.title}
+          />
+        </div>
       )}
       {snapshot.slug !== undefined && (
-        <InputText labelText="Slug" disabled defaultValue={snapshot.slug} />
+        <div className={fieldClassName("slug")}>
+          <InputText
+            labelText="Slug"
+            icon={LinkIcon}
+            disabled
+            defaultValue={snapshot.slug}
+          />
+        </div>
       )}
       {snapshot.excerpt !== undefined && (
         <InputTextArea
+          className={`md:col-span-full ${fieldClassName("excerpt")}`}
           labelText="Resumo"
+          icon={FileTextIcon}
           disabled
           defaultValue={snapshot.excerpt}
         />
       )}
       {snapshot.content !== undefined && (
         <InputTextArea
+          className={`md:col-span-full ${fieldClassName("content")}`}
           labelText="Conteúdo"
+          icon={FileTextIcon}
           disabled
           defaultValue={snapshot.content}
         />
       )}
       {snapshot.published !== undefined && (
-        <InputSelect
-          labelText="Publicado"
-          options={publishedFilterOptions}
-          defaultValue={snapshot.published ? "true" : "false"}
-          disabled
-        />
+        <div className={fieldClassName("published")}>
+          <InputSelect
+            labelText="Publicado"
+            options={publishedFilterOptions}
+            defaultValue={snapshot.published ? "true" : "false"}
+            disabled
+          />
+        </div>
       )}
       {snapshot.coverImage !== undefined &&
         (snapshot.coverImage ? (
-          <ImagePreview imageSrc={snapshot.coverImage} />
+          <div
+            className={`md:col-span-full ${fieldClassName("coverImage")}`}
+          >
+            <ImagePreview imageSrc={snapshot.coverImage} />
+          </div>
         ) : (
-          <span>Sem imagem de capa</span>
+          <div
+            className={`md:col-span-full ${fieldClassName("coverImage")}`}
+          >
+            <span>Sem imagem de capa</span>
+          </div>
         ))}
       {snapshot.updatedAt !== undefined && (
-        <InputText
-          labelText="Atualizado em"
-          disabled
-          defaultValue={formatDate(snapshot.updatedAt)}
-        />
+        <div className={fieldClassName("updatedAt")}>
+          <InputText
+            labelText="Atualizado em"
+            icon={Calendar1Icon}
+            disabled
+            defaultValue={formatDate(snapshot.updatedAt)}
+          />
+        </div>
       )}
     </>
   );
@@ -69,14 +121,17 @@ export function PostMetadata({ log }: PostMetadataProps) {
       const after = log.metadata.after as Partial<PostLogSnapshot>;
 
       return (
-        <>
-          <CollapsibleSection toggleBtnContent={<>Antes</>}>
-            <PostFields snapshot={before} />
-          </CollapsibleSection>
-          <CollapsibleSection toggleBtnContent={<>Depois</>}>
-            <PostFields snapshot={after} />
-          </CollapsibleSection>
-        </>
+        <UpdateMetadataSections
+          before={before}
+          after={after}
+          renderFields={(snapshot, variant, changedKeys) => (
+            <PostFields
+              snapshot={snapshot}
+              variant={variant}
+              changedKeys={changedKeys}
+            />
+          )}
+        />
       );
     }
 
@@ -91,7 +146,13 @@ export function PostMetadata({ log }: PostMetadataProps) {
       );
 
     case ActionType.RESTORED:
-      return <span className="text-xl">Post foi restaurado</span>;
+      return (
+        <StatusMessage
+          text="Post foi restaurado"
+          icon={ArchiveRestoreIcon}
+          tone="success"
+        />
+      );
 
     default:
       return null;

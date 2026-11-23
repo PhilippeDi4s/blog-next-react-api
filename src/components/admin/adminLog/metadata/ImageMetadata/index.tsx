@@ -3,6 +3,7 @@ import { InputText } from "@/components/ui/InputText";
 import { ActionType } from "@/lib/logs/enums/actionType";
 import { ActivityLog, ImageLogSnapshot } from "@/lib/logs/types/log-types";
 import { formatDate } from "@/utils/format-datetime";
+import { Calendar1Icon, ImageIcon, UserIcon } from "lucide-react";
 
 type ImageMetadataProps = {
   log: ActivityLog;
@@ -20,12 +21,18 @@ function ImageFields({
       {snapshot.url !== undefined && (
         <>
           <ImagePreview imageSrc={snapshot.url} />
-          <InputText labelText="URL" disabled defaultValue={snapshot.url} />
+          <InputText
+            labelText="URL"
+            icon={ImageIcon}
+            disabled
+            defaultValue={snapshot.url}
+          />
         </>
       )}
       {snapshot.createdAt !== undefined && (
         <InputText
           labelText="Criada em"
+          icon={Calendar1Icon}
           disabled
           defaultValue={formatDate(snapshot.createdAt)}
         />
@@ -33,6 +40,7 @@ function ImageFields({
       {snapshot.uploadedById !== undefined && (
         <InputText
           labelText="ID de quem enviou"
+          icon={UserIcon}
           disabled
           defaultValue={snapshot.uploadedById ?? "Não registrado"}
         />
