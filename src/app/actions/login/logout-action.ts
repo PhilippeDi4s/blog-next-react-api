@@ -19,5 +19,5 @@ export async function logoutAction(): Promise<ActionResult> {
     };
   }
 
-  redirectWithNotice("login", Notice.USER_LOGOUT);
+  redirectWithNotice("", Notice.USER_LOGOUT);
 }

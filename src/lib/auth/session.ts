@@ -1,3 +1,5 @@
+'use server'
+
 import { cookies } from "next/headers";
 import { UserResponseDto } from "../user/schemas";
 import { Notice, redirectWithNotice } from "../notifications";

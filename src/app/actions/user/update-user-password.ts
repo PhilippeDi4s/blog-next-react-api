@@ -1,3 +1,5 @@
+"use server";
+
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { ActionResult } from "@/lib/shared/types/action";

@@ -1,3 +1,5 @@
+"use server";
+
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { parseFormData } from "@/lib/forms/parse-form-data";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
