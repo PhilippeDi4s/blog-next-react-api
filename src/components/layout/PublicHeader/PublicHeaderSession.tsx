@@ -1,23 +1,22 @@
-import { cookies } from "next/headers";
+import { getLoginSession } from "@/lib/auth/session";
 import { PublicUserMenu } from "./PublicUserMenu";
-
-type HeaderUser = { name: string; role: string; isLogged: boolean; isBlocked: boolean };
+import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 export async function PublicHeaderSession() {
-  const cookieName = process.env.LOGIN_COOKIE_NAME || "loginSession";
-  const token = (await cookies()).get(cookieName)?.value;
-  if (!token) return <PublicUserMenu />;
+  const res = await getLoginSession();
+  if (!res.jwt) return <PublicUserMenu />;
 
-  try {
-    const response = await fetch(`${process.env.API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-    });
-    if (!response.ok) return <PublicUserMenu />;
-    const user = (await response.json()) as HeaderUser;
-    if (!user.isLogged || user.isBlocked) return <PublicUserMenu />;
-    return <PublicUserMenu user={user} />;
-  } catch {
-    return <PublicUserMenu />;
+  if (!res.success && res.jwt) {
+    return (
+      <ErrorMessage
+        content={
+          "Não foi possível verificar sua sessão. Tente entrar novamente."
+        }
+        contentTitle="Erro na sessão"
+        pageTitle="Erro ao verificar sessão"
+      />
+    );
   }
+  
+  return <PublicUserMenu user={res.data} />;
 }

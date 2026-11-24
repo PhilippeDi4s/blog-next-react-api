@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import { cookies } from "next/headers";
 import { UserResponseDto } from "../user/schemas";
@@ -7,7 +7,7 @@ import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ActionResult } from "../shared/types/action";
 import { cache } from "react";
 
-type LoginSessionResult = { jwt: string; transient?: boolean } & ActionResult;
+type LoginSessionResult = { jwt: string; transient?: boolean } & ActionResult<UserResponseDto>;
 
 const loginCookieName = process.env.LOGIN_COOKIE_NAME || "loginSession";
 
@@ -62,6 +62,7 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
   if (!user.isLogged) redirectWithNotice("login", Notice.SESSION_REVOKED);
 
   return {
+    data: user,
     success: true,
     errors: [],
     jwt,
