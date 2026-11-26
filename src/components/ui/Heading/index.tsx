@@ -8,8 +8,8 @@ type HeadingProps = {
 
 export function Heading({ className, as: Tag = "h1", children }: HeadingProps) {
   const headingStyle = {
-    h1: "text-2xl font-extrabold",
-    h2: "text-xl font-bold",
+    h1: "text-4xl font-extrabold",
+    h2: "text-2xl font-bold",
     h3: "text-lg font-semibold",
   };
 
