@@ -2,11 +2,18 @@
 
 import { logoutAction } from "@/app/actions/login/logout-action";
 import { LinkButton } from "@/components/ui/Link";
-import { getButtonClasses } from "@/lib/styles/button-style";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { LogOutIcon, ShieldIcon, UserIcon, UserRoundIcon } from "lucide-react";
+import {
+  LogInIcon,
+  LogOutIcon,
+  PencilIcon,
+  ShieldIcon,
+  UserRoundIcon,
+} from "lucide-react";
 import { UserResponseDto } from "@/lib/user/schemas";
+import { showMessage } from "@/lib/notifications";
+import { Button } from "@/components/ui/Button";
 
 type PublicUserMenuProps = {
   user?: UserResponseDto;
@@ -15,6 +22,7 @@ type PublicUserMenuProps = {
 export function PublicUserMenu({ user }: PublicUserMenuProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     function closeOnOutside(event: PointerEvent) {
@@ -35,20 +43,31 @@ export function PublicUserMenu({ user }: PublicUserMenuProps) {
     };
   }, []);
 
+  function handleLogout() {
+    showMessage.dismiss();
+    startTransition(async () => {
+      const res = await logoutAction();
+      if (!res.success) {
+        showMessage.error("Erro inesperado, tente novamente mais tarde");
+      }
+    });
+  }
+
   if (!user)
     return (
       <LinkButton
         href="/login"
         variant="default"
         size="sm"
-        className="bg-white text-slate-900"
+        className="bg-slate-200 text-slate-900 py-2 px-3 md:px-5 md:py-3 md:gap-2"
       >
+        <LogInIcon className="w-5 h-5" />
         Entrar
       </LinkButton>
     );
   const menuItems = [
     { label: "Meu perfil", href: "/user/profile", icon: UserRoundIcon },
-    { label: "Área do autor", href: "/author/post", icon: UserIcon },
+    { label: "Área do autor", href: "/author/post", icon: PencilIcon },
     ...(user.role === "admin"
       ? [{ label: "Painel admin", href: "/admin/users", icon: ShieldIcon }]
       : []),
@@ -103,20 +122,17 @@ export function PublicUserMenu({ user }: PublicUserMenuProps) {
               {label}
             </Link>
           ))}
-          <form
-            action={async () => {
-              await logoutAction();
-            }}
+          <Button
+            role="menuitem"
+            type="button"
+            variant="unstyled"
+            className="w-full justify-start hover:bg-slate-600 hover:brightness-100 rounded-none"
+            onClick={handleLogout}
+            disabled={isPending}
           >
-            <button
-              role="menuitem"
-              type="submit"
-              className={`flex items-center text-slate-200 w-full justify-start gap-3 px-3 py-2 md:px-4 md:py-3 hover:bg-slate-600 cursor-pointer`}
-            >
-              <LogOutIcon size={18} />
-              Sair
-            </button>
-          </form>
+            <LogOutIcon size={18} className="text-red-500" />
+            {isPending ? "Saindo..." : "Sair"}
+          </Button>
         </div>
       )}
     </div>

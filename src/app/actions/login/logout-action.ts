@@ -8,16 +8,17 @@ import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 export async function logoutAction(): Promise<ActionResult> {
   const token = await getLoginSessionOrRedirect();
 
-  const res = await authenticatedApiRequest("auth/logout", token, {
+  const res = await authenticatedApiRequest("/auth/logout", token, {
     method: "POST",
   });
 
   if (!res.success) {
+    console.log(res.errors);
     return {
       success: false,
       errors: res.errors,
     };
   }
 
-  redirectWithNotice("", Notice.USER_LOGOUT);
+  redirectWithNotice("/", Notice.USER_LOGOUT);
 }

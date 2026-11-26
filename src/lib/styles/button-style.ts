@@ -39,6 +39,7 @@ export function getButtonClasses({
       "flex items-center justify-center",
       "disabled:opacity-50",
       "disabled:pointer-events-none",
+      "disabled:cursor-not-allowed",
       className,
     ),
   );
