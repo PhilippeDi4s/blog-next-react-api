@@ -24,7 +24,7 @@ export async function PostFeatured() {
         <PostImage
           src={post.coverImage?.url}
           alt={post.title}
-          containerClassName="h-80"
+          containerClassName="h-60 md:h-80"
         />
 
         <PostSummary

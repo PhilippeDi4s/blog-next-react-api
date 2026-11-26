@@ -14,11 +14,16 @@ export function PostDate({ createdAt }: PostDateProps) {
         "text-sm",
         "dark:text-slate-400",
         "flex",
-        "gap-2",
+        "flex-wrap",
+        "gap-x-2",
       )}
       dateTime={createdAt}
     >
-      {formatDateTime(createdAt)} | <RelativeDateTime date={createdAt} />
+      <span className="whitespace-nowrap">{formatDateTime(createdAt)}</span>
+      <span aria-hidden="true">|</span>
+      <span className="whitespace-nowrap">
+        <RelativeDateTime date={createdAt} />
+      </span>
     </time>
   );
 }
