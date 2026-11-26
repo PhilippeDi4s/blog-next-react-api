@@ -6,6 +6,7 @@ import { Notice, redirectWithNotice } from "../notifications";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { ActionResult } from "../shared/types/action";
 import { cache } from "react";
+import { USER_SESSION_CACHE_TAG } from "@/lib/user/cache-tags";
 
 type LoginSessionResult = { jwt: string; transient?: boolean } & ActionResult<UserResponseDto>;
 
@@ -17,6 +18,10 @@ export async function createLoginSession(
 ) {
   const cookieStore = await cookies();
 
+  if (cookieStore.get(loginCookieName)) {
+    cookieStore.delete(loginCookieName);
+  }
+
   cookieStore.set(loginCookieName, cookieValue, {
     httpOnly: true,
     secure: true,
@@ -24,6 +29,11 @@ export async function createLoginSession(
     path: "/",
     maxAge: expiresIn,
   });
+}
+
+export async function clearLoginSession() {
+  const cookieStore = await cookies();
+  cookieStore.delete(loginCookieName);
 }
 
 export async function getLoginSession(): Promise<LoginSessionResult> {
@@ -45,6 +55,7 @@ export async function getLoginSession(): Promise<LoginSessionResult> {
 
   const res = await authenticatedApiRequest<UserResponseDto>(`/auth/me`, jwt, {
     cache: "no-cache",
+    next: { tags: [USER_SESSION_CACHE_TAG] },
   });
 
   if (!res.success) {
