@@ -2,9 +2,10 @@
 
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { parseFormData } from "@/lib/forms/parse-form-data";
-import { Notice, redirectWithNotice } from "@/lib/notifications";
+import { Notice, redirectWithNotice, showMessage } from "@/lib/notifications";
 import { FormActionResult } from "@/lib/shared/types/action";
 import {
+  UpdateUserResponseDto,
   UpdateUserSchema,
   UserFormStateDto,
   UserFormStateSchema,
@@ -35,7 +36,7 @@ export async function UpdateUserAction(
     };
   }
 
-  const res = await authenticatedApiRequest("user/me", validation.token, {
+  const res = await authenticatedApiRequest("/user/me", validation.token, {
     method: "PATCH",
     body: JSON.stringify(parsed.data),
     headers: {
@@ -49,6 +50,12 @@ export async function UpdateUserAction(
       errors: res.errors,
       formState: parsed.data,
     };
+  }
+
+  const user = res.data as UpdateUserResponseDto;
+
+  if(!user.requiresReauthentication){
+      redirectWithNotice("user/profile", Notice.USER_UPDATED);
   }
 
   redirectWithNotice("login", Notice.USER_UPDATED);

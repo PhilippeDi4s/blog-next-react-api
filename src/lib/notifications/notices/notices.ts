@@ -64,6 +64,11 @@ export const noticeConfig: Record<NoticeKey, NoticeConfig> = {
     type: "success",
   },
 
+  // [Notice.USER_UPDATED_PASSWORD]: {
+  //   message: "Ao atualizar informações pessoais, é necessário fazer login novamente",
+  //   type: "info",
+  // },
+
   [Notice.USER_DELETED]: {
     message: "Usuário removido com sucesso.",
     type: "success",

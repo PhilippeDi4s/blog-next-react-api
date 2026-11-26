@@ -125,6 +125,10 @@ export const UserResponseSchema = z.object({
   deletedAt: z.string().nullable(),
 });
 
+export const UpdateUserResponseSchema = UserResponseSchema.extend({
+  requiresReauthentication: z.boolean()
+})
+
 export const UserProfileResponseSchema = UserResponseSchema.extend({
   publishedPostsCount: z.number().int().nonnegative(),
 });
@@ -208,6 +212,7 @@ export type LoginDto = z.infer<typeof LoginSchema>;
 export type LoginFormStateDto = z.infer<typeof LoginFormStateSchema>;
 
 export type UserResponseDto = z.infer<typeof UserResponseSchema>;
+export type UpdateUserResponseDto = z.infer<typeof UpdateUserResponseSchema>;
 export type UserProfileResponseDto = z.infer<typeof UserProfileResponseSchema>;
 
 export type AdminUpdateUserDto = z.infer<typeof AdminUpdateUserSchema>;

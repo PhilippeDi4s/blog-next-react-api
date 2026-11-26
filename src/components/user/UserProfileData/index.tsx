@@ -19,6 +19,7 @@ export function UserProfileData({ profile }: UserProfileDataProps) {
     <CollapsibleCard
       toggleBtnContent={<>Dados do perfil</>}
       className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2"
+      defaultOpen={true}
     >
       <ProfileValue label="Nome" icon={UserIcon} value={profile.name} />
       <ProfileValue label="E-mail" icon={MailIcon} value={profile.email} />

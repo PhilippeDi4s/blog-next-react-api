@@ -31,7 +31,7 @@ export async function UpdateUserPasswordAction(
   }
 
   const res = await authenticatedApiRequest(
-    "user/me/password",
+    "/user/me/password",
     validation.token,
     {
       method: "PATCH",

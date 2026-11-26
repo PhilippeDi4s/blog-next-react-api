@@ -4,8 +4,6 @@ import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 
 export async function PublicHeaderSession() {
   const res = await getLoginSession();
-  if (!res.jwt) return <PublicUserMenu />;
-
   if (!res.success && res.jwt) {
     return (
       <ErrorMessage
@@ -17,6 +15,7 @@ export async function PublicHeaderSession() {
       />
     );
   }
-  
+  if (!res.jwt || !res.data?.isLogged) return <PublicUserMenu />;
+
   return <PublicUserMenu user={res.data} />;
 }
