@@ -49,7 +49,9 @@ export function ManagePostForm(props: ManagePostFormProps) {
   const { formState } = state;
   const [contentValue, setContentValue] = useState(publicPost?.content || "");
   const authorName =
-    mode === "create" ? props.currentUserName : formState.author.name;
+    mode === "create"
+      ? props.currentUserName
+      : (formState.author?.name ?? "Usuário excluído");
 
   useEffect(() => {
     if (state.errors.length > 0) {

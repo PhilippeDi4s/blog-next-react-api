@@ -146,9 +146,9 @@ export function AdminPostList({ posts }: AdminPostListProps) {
           headerIcon: UserIcon,
           cell: (post) => (
             <div className="flex flex-col">
-              <span className="truncate">{post.author.name}</span>
+              <span className="truncate">{post.author?.name ?? "Usuário excluído"}</span>
               <span className="truncate text-sm opacity-70">
-                {post.author.email}
+                {post.author?.email ?? "—"}
               </span>
             </div>
           ),
@@ -160,7 +160,7 @@ export function AdminPostList({ posts }: AdminPostListProps) {
           cell: (post) => (
             <CopyTextButton
               buttonText="Copiar id"
-              textToCopy={post.author.id}
+              textToCopy={post.author?.id ?? ""}
               variant="ghost"
               size="sm"
             />

@@ -65,9 +65,9 @@ export function AdminImageList({ images }: AdminImageListProps) {
           headerIcon: UserIcon,
           cell: (image) => (
             <div className="flex flex-col">
-              <span className="truncate">{image.uploadedBy.name}</span>
+              <span className="truncate">{image.uploadedBy?.name ?? "Usuário excluído"}</span>
               <span className="truncate text-sm opacity-70">
-                {image.uploadedBy.email}
+                {image.uploadedBy?.email ?? "—"}
               </span>
             </div>
           ),

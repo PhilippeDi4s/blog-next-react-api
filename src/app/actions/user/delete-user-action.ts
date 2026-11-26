@@ -1,3 +1,5 @@
+"use server";
+
 import { validateActionRequest } from "@/lib/auth/validate-action-request";
 import { Notice, redirectWithNotice } from "@/lib/notifications";
 import { ActionResult } from "@/lib/shared/types/action";
@@ -13,7 +15,7 @@ export async function DeleteUserAction(): Promise<ActionResult> {
     };
   }
 
-  const res = await authenticatedApiRequest("user/me", validation.token, {
+  const res = await authenticatedApiRequest("/user/me", validation.token, {
     method: "DELETE",
   });
 

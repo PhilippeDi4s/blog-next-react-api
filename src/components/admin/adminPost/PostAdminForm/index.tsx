@@ -63,7 +63,7 @@ export function PostAdminForm({ initialData }: PostAdminFormProps) {
         <PostFormFields
           id={initialData.id}
           slug={initialData.slug}
-          authorName={initialData.author.name}
+          authorName={initialData.author?.name ?? "Usuário excluído"}
           formState={current}
           isPending={modalProps.submitting}
           contentValue={current.content}

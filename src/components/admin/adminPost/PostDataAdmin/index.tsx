@@ -42,19 +42,19 @@ export async function PostDataAdmin({ post }: PostDataAdminProps) {
               disabled
               labelText="ID do autor"
               icon={TagIcon}
-              defaultValue={post.author.id}
+              defaultValue={post.author?.id ?? "Usuário excluído"}
             />
             <InputText
               disabled
               labelText="Nome do autor"
               icon={UserRoundIcon}
-              defaultValue={post.author.name}
+              defaultValue={post.author?.name ?? "Usuário excluído"}
             />
             <InputText
               disabled
               labelText="E-mail do autor"
               icon={MailIcon}
-              defaultValue={post.author.email}
+              defaultValue={post.author?.email ?? "—"}
             />
           </div>
         </div>

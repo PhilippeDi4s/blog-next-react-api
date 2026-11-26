@@ -35,7 +35,7 @@ export async function SinglePost({ slug }: SinglePostProps) {
         <PostHeading>{post.title}</PostHeading>
 
         <p>
-          {post.author.name} | {<PostDate createdAt={post.createdAt} />}
+          {post.author?.name ?? "Usuário excluído"} | {<PostDate createdAt={post.createdAt} />}
         </p>
 
         <p className="mb-8 text-xl italic">{post.excerpt}</p>

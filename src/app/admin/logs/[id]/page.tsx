@@ -1,6 +1,7 @@
 import { LogDataAdmin } from "@/components/admin/adminLog/LogDataAdmin";
 import { ErrorMessage } from "@/components/feedBack/ErrorMessage";
 import { SpinLoader } from "@/components/feedBack/SpinLoader";
+import { BackButton } from "@/components/ui/BackButton";
 import { getLogById } from "@/lib/logs/queries/admin-log";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -15,9 +16,12 @@ type AdminLogIdPageProps = {
 
 export default function AdminLogIdPage({ params }: AdminLogIdPageProps) {
   return (
-    <Suspense fallback={<SpinLoader />}>
-      <AdminLogIdPageContent params={params} />
-    </Suspense>
+    <section className="flex flex-col gap-4">
+      <BackButton pathLabel="Admin / Lista de Logs" />
+      <Suspense fallback={<SpinLoader />}>
+        <AdminLogIdPageContent params={params} />
+      </Suspense>
+    </section>
   );
 }
 

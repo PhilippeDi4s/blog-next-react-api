@@ -34,7 +34,7 @@ export const ImageResponseSchema = z.object({
 export const ImageSummarySchema = z.object({
   id: z.string().default(""),
   url: z.string().default(""),
-  uploadedBy: UserSummarySchema,
+  uploadedBy: UserSummarySchema.nullable(),
 });
 
 export const ImageSearchParamsSchema = withDateRanges(

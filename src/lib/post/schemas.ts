@@ -88,7 +88,7 @@ export const PostFormStateSchema = PostBaseSchema.extend({
   title: z.string().default(""),
   excerpt: z.string().default(""),
   slug: z.string().default(""),
-  author: UserSummarySchema.optional().default({
+  author: UserSummarySchema.nullable().default({
     id: "",
     email: "",
     name: "",
@@ -115,7 +115,7 @@ export const PostResponseSchema = z.object({
       createdAt: z.string(),
     })
     .nullable(),
-  author: UserSummarySchema,
+  author: UserSummarySchema.nullable(),
   deletedAt: z.string().nullable(),
 });
 
