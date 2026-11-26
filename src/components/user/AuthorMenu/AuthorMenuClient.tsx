@@ -8,6 +8,7 @@ import {
   HomeIcon,
   ImageIcon,
   ShieldUserIcon,
+  UserRoundIcon,
 } from "lucide-react";
 
 type AuthorMenuClientProps = {
@@ -25,6 +26,12 @@ export function AuthorMenuClient({ isAdmin = false }: AuthorMenuClientProps) {
     : null;
   const items: MenuItem[] = [
     { label: "Home", href: "/", icon: HomeIcon, external: true },
+    {
+      label: "Meu perfil",
+      href: "/user/profile",
+      icon: UserRoundIcon,
+      external: true,
+    },
     {
       label: "Posts",
       href: "/author/post",

@@ -7,6 +7,12 @@ import { FileTextIcon, HomeIcon, ImageIcon, PenLineIcon, UserIcon } from "lucide
 const items: MenuItem[] = [
   { label: "Home", href: "/", icon: HomeIcon, external: true },
   {
+    label: "Meu perfil",
+    href: "/user/profile",
+    icon: UserIcon,
+    external: true,
+  },
+  {
     label: "Usuários",
     href: "/admin/users",
     icon: UserIcon,
